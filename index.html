@@ -728,9 +728,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     </button>
 
     <div id="cmpResult">
-      <div class="cmp-card">
-        <h2>Resumen General</h2>
-        <div class="resumen-grid" id="cmpStats"></div>
+      <div class="cmp-card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2 style="margin-bottom:6px;">Resumen General</h2>
+          <div class="resumen-grid" id="cmpStats"></div>
+        </div>
+        <button onclick="cmpDescargar()" style="background:var(--dark);color:white;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">⬇️ Descargar Excel</button>
       </div>
       <div class="cmp-card">
         <h2>Detalle por Sección</h2>
