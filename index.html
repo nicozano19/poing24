@@ -1958,10 +1958,13 @@ async function cmpGenerarExcel() {
     if(r.diff===0)bg=GREEN;
     else if(r.diff!=null&&r.diff>0)bg=YELLOW;
     else if(r.diff!=null&&r.diff<0)bg=RED;
-    row.getCell(1).fill=fill(bg);row.getCell(1).font={bold:true,size:10};row.getCell(1).alignment=center;
-    if(r.diff!=null&&r.diff!==0){row.getCell(6).fill=fill(bg);row.getCell(6).font={bold:true};}
-    [4,5,6,7,8].forEach(i=>{const c=row.getCell(i);c.alignment={horizontal:'right',vertical:'middle'};if(i>=7&&row.getCell(i).value!=='')c.numFmt='$#,##0.00';});
-    row.eachCell(c=>{c.border={bottom:{style:'hair',color:{argb:'FFE0E0E0'}}};});
+    row.eachCell((c,i)=>{
+      c.fill=fill(bg);
+      c.border={bottom:{style:'thin',color:{argb:'FFD0D0D0'}},top:{style:'thin',color:{argb:'FFD0D0D0'}}};
+      if(i===1){c.font={bold:true,size:10};c.alignment=center;}
+      if(i===6&&r.diff!=null&&r.diff!==0){c.font={bold:true};}
+    });
+    [4,5,6,7,8].forEach(i=>{const c=row.getCell(i);c.alignment={horizontal:'right',vertical:'middle'};if(i>=7&&c.value!=='')c.numFmt='$#,##0.00';});
   });
   return wb;
 }
@@ -1971,7 +1974,9 @@ async function cmpDescargar() {
   const wb = await cmpGenerarExcel();
   const buf=await wb.xlsx.writeBuffer();
   const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  const fname=`comparacion_${(getLocal()||'LOCAL').replace(/\s/g,'_')}_${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}.xlsx`;
+  const hasRemito = Object.keys(cmp_jsonData).some(k => k.startsWith('remito_'));
+  const tipo = hasRemito ? 'control_remito' : 'conteo_diario';
+  const fname=`${tipo}_${(getLocal()||'LOCAL').replace(/\s/g,'_')}_${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}.xlsx`;
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
 
