@@ -1545,7 +1545,7 @@ function r_buildForm(d) {
   const content = document.getElementById('r-content');
   content.innerHTML = '';
   let idx = 0;
-  const total = d.items.filter(i=>i.tipo==='item').length;
+  const total = d.items.filter(i=>i.tipo!=='seccion').length;
   document.getElementById('r-countTotal').textContent = total;
   document.getElementById('r-countPending').textContent = total;
   d.items.forEach(item => {
@@ -1577,7 +1577,7 @@ function r_onInput(i) {
 }
 
 function r_updateStats() {
-  const total = r_data ? r_data.items.filter(i=>i.tipo==='item').length : 0;
+  const total = r_data ? r_data.items.filter(i=>i.tipo!=='seccion').length : 0;
   const filled = Object.keys(r_received).length;
   document.getElementById('r-countFilled').textContent = filled;
   document.getElementById('r-countPending').textContent = total-filled;
@@ -1607,7 +1607,7 @@ async function r_enviar() {
   if (!fechaControl) { alert('Falta la fecha'); return; }
   const [y,m,d] = fechaControl.split('-');
   const fechaFmt = `${d}/${m}/${y}`;
-  const items = r_data.items.filter(i=>i.tipo==='item');
+  const items = r_data.items.filter(i=>i.tipo!=='seccion');
   const resultado = items.map((item,i) => ({nro_remito:item.nro_remito,sku:item.sku,nombre:item.nombre,recibido:r_received[i]??null}));
   const sinContar = resultado.filter(i=>i.recibido===null).length;
   const remitosNros = (r_data.remitos||[]).join('-');
