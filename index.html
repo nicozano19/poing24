@@ -614,9 +614,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     <div class="load-screen">
       <div class="load-icon">📦</div>
       <div class="load-title">Control de Remito</div>
-      <div class="load-sub">Cargá el archivo JSON del remito<br>para empezar el control.</div>
+
+      <!-- Base de datos status -->
+      <div id="r-dbStatus" style="font-size:12px;background:#f8f9fa;border-radius:10px;padding:10px 14px;width:100%;max-width:340px;text-align:left;margin-bottom:4px;">
+        <span style="color:var(--red)">⚠️</span> Sin base de datos — Cargá el Excel de Daruma para usar el PDF
+      </div>
+      <input type="file" id="r-dbInput" accept=".xlsx,.xls" style="display:none" onchange="dbLoadFromExcel(this.files)">
+      <button onclick="document.getElementById('r-dbInput').click()" style="font-size:11px;background:none;border:1px solid #ccc;border-radius:8px;padding:5px 12px;cursor:pointer;color:var(--gray);margin-bottom:12px;">📊 Actualizar base de datos</button>
+
+      <!-- Load buttons -->
       <input type="file" id="r-fileInput" accept=".json" style="display:none" onchange="r_loadRemito(event)">
-      <button class="btn-load" onclick="document.getElementById('r-fileInput').click()">📂 Cargar remito</button>
+      <button class="btn-load" onclick="document.getElementById('r-fileInput').click()">📂 Cargar remito (JSON)</button>
+
+      <input type="file" id="r-pdfInput" accept=".pdf" multiple style="display:none" onchange="r_loadPDF(this.files)">
+      <button class="btn-load" id="r-pdfBtn" onclick="document.getElementById('r-pdfInput').click()" style="margin-top:8px;background:var(--dark);" disabled>📄 Cargar PDF Daruma</button>
+
       <button class="btn-demo" onclick="r_loadDemo()" style="margin-top:10px;">Ver demo</button>
     </div>
     <!-- Historial de controles -->
@@ -831,6 +843,78 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 <!-- ════════════════════════════════════════════════════════════════════════ -->
 <script>
 
+/* ── DARUMA DB ───────────────────────────────────────────────────────────── */
+const DARUMA_DB_LS = 'poing24_darumaDB_v2';
+let _darumaDB     = {};   // {sku: {nombre, costo}}
+let _darumaByName = {};   // {nombre_normalizado: sku}
+
+function dbNorm(s) {
+  return String(s).toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+}
+function dbBuildIndex() {
+  _darumaByName = {};
+  Object.entries(_darumaDB).forEach(([sku,d]) => { _darumaByName[dbNorm(d.nombre)] = sku; });
+}
+function dbSave(dateStr) {
+  try { localStorage.setItem(DARUMA_DB_LS, JSON.stringify({data:_darumaDB, updated:dateStr, count:Object.keys(_darumaDB).length})); } catch(e){}
+}
+function dbLoad() {
+  try {
+    const raw = localStorage.getItem(DARUMA_DB_LS);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    _darumaDB = p.data||{};
+    dbBuildIndex();
+    dbUpdateStatus(p.updated, p.count);
+  } catch(e){}
+}
+function dbLookup(pdfName) {
+  const key = dbNorm(pdfName);
+  if (_darumaByName[key]) return _darumaByName[key];
+  for (const [n,sku] of Object.entries(_darumaByName)) {
+    if (n.includes(key) || key.includes(n)) return sku;
+  }
+  return null;
+}
+function dbLoadFromExcel(files) {
+  if (!files||!files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});
+      _darumaDB = {}; let n=0;
+      for (let i=1;i<rows.length;i++) {
+        const r=rows[i]; const sku=String(r[1]||'').trim();
+        if (sku.startsWith('sku-')) { _darumaDB[sku.substring(4)]={nombre:String(r[2]||'').trim(),costo:r[7]!=null?Number(r[7]):null}; n++; }
+      }
+      dbBuildIndex();
+      const d = new Date().toLocaleDateString('es-AR');
+      dbSave(d); dbUpdateStatus(d,n);
+      showModal('✅','Base de datos actualizada',`${n.toLocaleString()} productos cargados correctamente.`);
+    } catch(err){ showModal('❌','Error',`Error al leer el Excel: ${err.message}`); }
+  };
+  reader.readAsArrayBuffer(files[0]);
+}
+function dbUpdateStatus(date, count) {
+  const el = document.getElementById('r-dbStatus');
+  if (!el) return;
+  const n = Number(count);
+  if (n > 0) {
+    el.innerHTML = `<span style="color:var(--green)">✅</span> Base de datos lista — <b>${n.toLocaleString()} productos</b> — Actualizada: ${date}`;
+    el.style.color = '#555';
+    const btn = document.getElementById('r-pdfBtn');
+    if (btn) btn.disabled = false;
+  } else {
+    el.innerHTML = `<span style="color:var(--red)">⚠️</span> Sin base de datos — Cargá el Excel de Daruma para usar el PDF`;
+    el.style.color = 'var(--red)';
+    const btn = document.getElementById('r-pdfBtn');
+    if (btn) btn.disabled = true;
+  }
+}
+
 /* ── LOCALES ─────────────────────────────────────────────────────────────── */
 const LOCALES = ['Kiosco Nico','RIVADAVIA','JBJUSTO','GAONA','AVELLANEDA','BELGRANO'];
 const LOCAL_LS = 'kiosko_local_v1';
@@ -885,6 +969,7 @@ function localBuildGrid() {
     });
   }
   setLocal(_local);
+  dbLoad(); // load persistent Daruma DB
 }
 
 /* ── DRAWER ──────────────────────────────────────────────────────────────── */
@@ -1531,6 +1616,123 @@ function r_loadRemito(e) {
 
 function r_nuevo() { r_clearState(); location.reload(); }
 
+async function r_parseSinglePDF(file) {
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+  let allItems = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const vp = page.getViewport({scale:1});
+    const content = await page.getTextContent();
+    content.items.forEach(it => {
+      const str = it.str.trim();
+      if (!str) return;
+      allItems.push({x: it.transform[4], y: vp.height - it.transform[5], str, pg: p});
+    });
+  }
+  allItems.sort((a,b) => a.pg!==b.pg ? a.pg-b.pg : Math.abs(a.y-b.y)<8 ? a.x-b.x : a.y-b.y);
+  const lines = [];
+  let cur = [], curY = null;
+  allItems.forEach(it => {
+    if (curY === null || Math.abs(it.y - curY) <= 8) { cur.push(it); if (curY===null) curY=it.y; }
+    else { if (cur.length) lines.push(cur); cur=[it]; curY=it.y; }
+  });
+  if (cur.length) lines.push(cur);
+
+  let nroRemito='', fechaRemito='', deposito='', realizadoPor='';
+  let tableStart=-1, colCantX=null;
+  const rawText = allItems.map(i=>i.str).join(' ');
+  const rmRaw = rawText.match(/Remito\s+de\s+Ingreso\s+#\s*(\d+)/i);
+  if (rmRaw) nroRemito = rmRaw[1];
+
+  for (let li=0; li<lines.length; li++) {
+    const ln = lines[li]; const txt = ln.map(c=>c.str).join(' ');
+    const rm = txt.match(/Remito\s+de\s+Ingreso\s+#\s*(\d+)/i); if (rm) nroRemito=rm[1];
+    const fm = txt.match(/Fecha[:\s]+(\d{2}\/\d{2}\/\d{4})/); if (fm) fechaRemito=fm[1];
+    const dm = txt.match(/Dep[oó]sito[:\s]+(.+)/i); if (dm) deposito=dm[1].replace(/\s{2,}.*/,'').trim();
+    const rpm = txt.match(/Realizado\s+por[:\s]+(.+)/i); if (rpm) realizadoPor=rpm[1].trim();
+    const hasP = ln.some(c=>/^Producto$/i.test(c.str));
+    const hasC = ln.some(c=>/^Cantidad$/i.test(c.str));
+    if (hasP && hasC) {
+      tableStart = li+1;
+      const cItem = ln.find(c=>/^Cantidad$/i.test(c.str));
+      colCantX = cItem ? cItem.x : null;
+      break;
+    }
+  }
+
+  if (!nroRemito) throw new Error(`No se encontró el número de remito en "${file.name}".`);
+  if (tableStart < 0) throw new Error(`No se encontró la tabla de productos en "${file.name}".`);
+
+  const items = []; let pendingName = '';
+  for (let li=tableStart; li<lines.length; li++) {
+    const ln = lines[li]; const txt = ln.map(c=>c.str).join(' ');
+    if (/^Total\b/i.test(txt) || /firma/i.test(txt)) break;
+    if (!ln.length) continue;
+    let namePart='', qty=null;
+    if (colCantX !== null) {
+      const nameItems = ln.filter(c => c.x < colCantX-15);
+      const qtyItem   = ln.find(c => c.x >= colCantX-15 && c.x < colCantX+80 && /^\d+$/.test(c.str));
+      namePart = nameItems.map(c=>c.str).join(' ').trim();
+      if (qtyItem) qty = parseInt(qtyItem.str);
+    } else {
+      const m = txt.match(/^(.+?)\s{2,}(\d+)\s/);
+      if (m) { namePart=m[1].trim(); qty=parseInt(m[2]); }
+      else namePart = txt;
+    }
+    if (namePart && qty !== null) {
+      const fullName = pendingName ? pendingName+' '+namePart : namePart;
+      pendingName = '';
+      const sku = dbLookup(fullName);
+      items.push({tipo:'item', sku: sku||null, nombre: fullName, recibido: null, nro_remito: nroRemito});
+    } else if (namePart) {
+      pendingName = pendingName ? pendingName+' '+namePart : namePart;
+    }
+  }
+  if (items.length === 0) throw new Error(`No se encontraron productos en "${file.name}".`);
+  return { nroRemito, fechaRemito, deposito, realizadoPor, items };
+}
+
+async function r_loadPDF(files) {
+  if (!files || files.length === 0) return;
+  if (Object.keys(_darumaDB).length === 0) {
+    showModal('⚠️','Sin base de datos','Primero cargá el Excel de Daruma usando el botón "Actualizar base de datos".');
+    return;
+  }
+  if (!window.pdfjsLib) {
+    try {
+      await new Promise((res,rej) => { const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    } catch(e) { showModal('❌','Error','No se pudo cargar PDF.js. Verificá la conexión.'); return; }
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  try {
+    const results = [];
+    for (const file of Array.from(files)) {
+      results.push(await r_parseSinglePDF(file));
+    }
+
+    // Combine all PDFs into one JSON
+    const allNros  = results.map(r => r.nroRemito);
+    const allItems = results.flatMap(r => r.items);
+
+    const sinSKU = allItems.filter(i=>!i.sku).length;
+    const data = {
+      local: getLocal() || 'POING24',
+      remitos: allNros,
+      fecha_control: new Date().toLocaleDateString('es-AR'),
+      responsable: '',
+      items: allItems
+    };
+    r_clearState();
+    r_buildForm(data);
+    if (sinSKU > 0) showModal('⚠️','PDF cargado con advertencias', `${allItems.length-sinSKU} productos con SKU.<br>${sinSKU} producto${sinSKU>1?'s':''} sin SKU — no encontrado${sinSKU>1?'s':''} en la base de datos.`);
+  } catch(e) {
+    console.error('PDF parse error:', e);
+    showModal('❌','Error al procesar PDF', e.message);
+  }
+}
+
 function r_buildForm(d) {
   r_data = d;
   Object.keys(r_received).forEach(k => delete r_received[k]);
@@ -1906,7 +2108,7 @@ function cmpRenderResult() {
   const reconteo = cmp_resultData.filter(r=>r.diff!=null&&r.diff!==0);
   if (reconteo.length > 0) {
     const txt = `📋 DIFERENCIAS — ${getLocal()||'LOCAL'}\n` +
-      reconteo.map(r=>`• sku-${r.sku} ${r.nombre}: conteo ${r.conteo??'—'} / stock ${r.stock??'—'} (${r.diff>0?'+':''}${r.diff})`).join('\n');
+      reconteo.map(r=>`• ${r.nombre}: conteo ${r.conteo??'—'}`).join('\n');
     document.getElementById('reconteoText').textContent = txt;
     if (waBox) waBox.style.display = 'block';
   } else {
@@ -1922,6 +2124,7 @@ async function cmpGenerarExcel() {
     DARK:'1F3864', DARK2:'2C3E50', WHITE:'FFFFFF',
     GREEN_BG:'D5F5E3', GREEN_FG:'1E8449',
     RED_BG:'FADBD8',   RED_FG:'C0392B',
+    BLUE_BG:'DBEAFE',  BLUE_FG:'1D4ED8',
     GRAY_BG:'EAECEE',  GRAY_FG:'717D7E',
     SECT_BG:'BDD7EE',  SECT_FG:'1F3864',
   };
@@ -2008,7 +2211,8 @@ async function cmpGenerarExcel() {
       let bg, fg, estado;
       if (diff === null)  { bg=COL.GRAY_BG;  fg=COL.GRAY_FG;  estado='No contado'; }
       else if (diff === 0){ bg=COL.GREEN_BG; fg=COL.GREEN_FG; estado='OK'; }
-      else                { bg=COL.RED_BG;   fg=COL.RED_FG;   estado='Diferencia'; }
+      else if (diff > 0)  { bg=COL.BLUE_BG;  fg=COL.BLUE_FG;  estado='Sobrante'; }
+      else                { bg=COL.RED_BG;   fg=COL.RED_FG;   estado='Faltante'; }
       ws.getCell(`A${rowIdx}`).value = String(r.sku);
       ws.getCell(`B${rowIdx}`).value = r.nombre || d.nombre || '';
       ws.getCell(`C${rowIdx}`).value = cnt !== null ? cnt : '';
