@@ -1868,9 +1868,9 @@ function cmpComparar() {
 }
 
 function cmpRenderResult() {
-  const tbody = document.getElementById('cmpResultBody');
-  if (!tbody) return;
-  tbody.innerHTML = cmp_resultData.map(r => {
+  const detalle = document.getElementById('cmpDetalle');
+  if (!detalle) return;
+  const rows = cmp_resultData.map(r => {
     let cls = '', icon = '';
     if (r.diff === 0) { cls='row-ok'; icon='✅'; }
     else if (r.diff != null && r.diff > 0) { cls='row-sobre'; icon='⬆️'; }
@@ -1887,6 +1887,14 @@ function cmpRenderResult() {
       <td class="td-num">${r.valorDiff != null ? '$'+r.valorDiff.toLocaleString('es-AR',{minimumFractionDigits:2}) : '—'}</td>
     </tr>`;
   }).join('');
+  detalle.innerHTML = `<div style="overflow-x:auto"><table class="cmp-table">
+    <thead><tr>
+      <th></th><th>SKU</th><th>Producto</th>
+      <th class="td-num">Conteo</th><th class="td-num">Stock</th><th class="td-num">Dif.</th>
+      <th class="td-num">Costo</th><th class="td-num">Valor Dif.</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
   const total = cmp_resultData.length;
   const ok    = cmp_resultData.filter(r=>r.diff===0).length;
   const diffs = cmp_resultData.filter(r=>r.diff!=null&&r.diff!==0).length;
