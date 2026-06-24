@@ -735,17 +735,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         </div>
         <button onclick="cmpDescargar()" style="background:var(--dark);color:white;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">⬇️ Descargar Excel</button>
       </div>
-      <div class="cmp-card">
-        <h2>Detalle por Sección</h2>
-        <div id="cmpDetalle"></div>
+      <div class="cmp-card" id="waMsgBox" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <h2 style="margin:0;">📱 Diferencias (WhatsApp)</h2>
+          <button class="btn-copy" onclick="cmpCopiar()">📋 Copiar</button>
+        </div>
+        <pre id="reconteoText" style="white-space:pre-wrap;font-family:inherit;font-size:13px;background:#f8f9fa;border-radius:8px;padding:12px;margin:0;line-height:1.5;min-height:40px;"></pre>
       </div>
-    </div>
-
-    <div class="cmp-card" id="reconteoBox">
-      <h2>📋 Mensaje de Reconteo (WhatsApp)</h2>
-      <div id="reconteoText"></div>
-      <button class="btn-copy" onclick="cmpCopiar()">📋 Copiar</button>
-      <button class="btn-dl" onclick="cmpDescargar()">⬇️ Descargar Excel</button>
     </div>
   </div>
 </div>
@@ -1894,53 +1890,28 @@ function cmpComparar() {
     return Math.abs(b.diff) - Math.abs(a.diff);
   });
   cmpRenderResult();
-  const _reconteoBox = document.getElementById('reconteoBox');
-  if (_reconteoBox) _reconteoBox.style.display = 'none';
   const _cmpResult = document.getElementById('cmpResult');
   if (_cmpResult) _cmpResult.style.display = 'block';
   try { cmpGenerarExcel().then(wb => { cmp_wb = wb; }).catch(e => console.warn('Excel gen error:', e)); } catch(e) { console.warn('Excel gen error:', e); }
 }
 
 function cmpRenderResult() {
-  const detalle = document.getElementById('cmpDetalle');
-  if (!detalle) return;
-  const rows = cmp_resultData.map(r => {
-    let cls = '', icon = '';
-    if (r.diff === 0) { cls='row-ok'; icon='✅'; }
-    else if (r.diff != null && r.diff > 0) { cls='row-sobre'; icon='⬆️'; }
-    else if (r.diff != null && r.diff < 0) { cls='row-faltan'; icon='⬇️'; }
-    else { cls='row-nodata'; icon='❓'; }
-    return `<tr class="${cls}">
-      <td>${icon}</td>
-      <td class="td-sku">sku-${r.sku}</td>
-      <td>${r.nombre}</td>
-      <td class="td-num">${r.conteo ?? '—'}</td>
-      <td class="td-num">${r.stock ?? '—'}</td>
-      <td class="td-num td-diff">${r.diff != null ? (r.diff>0?'+':'')+r.diff : '—'}</td>
-      <td class="td-num">${r.costo != null ? '$'+r.costo.toLocaleString('es-AR') : '—'}</td>
-      <td class="td-num">${r.valorDiff != null ? '$'+r.valorDiff.toLocaleString('es-AR',{minimumFractionDigits:2}) : '—'}</td>
-    </tr>`;
-  }).join('');
-  detalle.innerHTML = `<div style="overflow-x:auto"><table class="cmp-table">
-    <thead><tr>
-      <th></th><th>SKU</th><th>Producto</th>
-      <th class="td-num">Conteo</th><th class="td-num">Stock</th><th class="td-num">Dif.</th>
-      <th class="td-num">Costo</th><th class="td-num">Valor Dif.</th>
-    </tr></thead>
-    <tbody>${rows}</tbody>
-  </table></div>`;
   const total = cmp_resultData.length;
   const ok    = cmp_resultData.filter(r=>r.diff===0).length;
   const diffs = cmp_resultData.filter(r=>r.diff!=null&&r.diff!==0).length;
   const nodata= cmp_resultData.filter(r=>r.diff==null).length;
   document.getElementById('cmpStats').innerHTML = `<span style="color:var(--green)">✅ ${ok} OK</span> · <span style="color:var(--red)">⚠️ ${diffs} diferencias</span> · <span style="color:var(--gray)">❓ ${nodata} sin datos</span> · Total: ${total}`;
-  // Mensaje de reconteo
+  // Mensaje WhatsApp de diferencias
+  const waBox = document.getElementById('waMsgBox');
   const reconteo = cmp_resultData.filter(r=>r.diff!=null&&r.diff!==0);
   if (reconteo.length > 0) {
-    const txt = `📋 RECONTEO PENDIENTE — ${getLocal()||'LOCAL'}\n` +
+    const txt = `📋 DIFERENCIAS — ${getLocal()||'LOCAL'}\n` +
       reconteo.map(r=>`• sku-${r.sku} ${r.nombre}: conteo ${r.conteo??'—'} / stock ${r.stock??'—'} (${r.diff>0?'+':''}${r.diff})`).join('\n');
     document.getElementById('reconteoText').textContent = txt;
-    document.getElementById('reconteoBox').style.display = 'block';
+    if (waBox) waBox.style.display = 'block';
+  } else {
+    document.getElementById('reconteoText').textContent = '✅ Sin diferencias — todo el stock OK.';
+    if (waBox) waBox.style.display = 'block';
   }
 }
 
@@ -1997,15 +1968,15 @@ async function cmpGenerarExcel() {
   cmp_sections.forEach(sec => {
     const sheetName = sec.seccion.replace(/[\/\\?\*\[\]:]/g,'').substring(0,31);
     const ws = wb.addWorksheet(sheetName);
-    ws.columns = [{width:12},{width:40},{width:10},{width:14},{width:12},{width:12}];
+    ws.columns = [{width:12},{width:40},{width:10},{width:14},{width:12},{width:12},{width:13},{width:16}];
     // Row 1: Title
-    ws.mergeCells('A1:F1');
+    ws.mergeCells('A1:H1');
     const t1 = ws.getCell('A1');
     t1.value = `${sec.seccion} — ${localStr}`;
     t1.font = fnt(COL.WHITE,true,13); t1.fill = fill(COL.DARK); t1.alignment = centerA;
     ws.getRow(1).height = 26;
     // Row 2: Info
-    ws.mergeCells('A2:F2');
+    ws.mergeCells('A2:H2');
     const t2 = ws.getCell('A2');
     t2.value = `Responsable: ${sec.responsable}   |   Fecha: ${sec.fecha}`;
     t2.font = fnt(COL.WHITE,false,10); t2.fill = fill(COL.DARK2); t2.alignment = leftA;
@@ -2013,14 +1984,14 @@ async function cmpGenerarExcel() {
     // Row 3: empty
     ws.addRow([]); ws.getRow(3).height = 8;
     // Row 4: Headers
-    const hrow = ws.addRow(['SKU','Producto','Conteo','Stock Daruma','Diferencia','Estado']);
+    const hrow = ws.addRow(['SKU','Producto','Conteo','Stock Daruma','Diferencia','Estado','Costo Unit.','Valor Dif.']);
     hrow.eachCell(c => { c.font=fnt(COL.WHITE,true); c.fill=fill(COL.DARK); c.alignment=centerA; });
     ws.getRow(4).height = 18;
     // Rows 5+: data
     let rowIdx = 5;
     sec.rows.forEach(r => {
       if (r.tipo === 'seccion') {
-        ws.mergeCells(`A${rowIdx}:F${rowIdx}`);
+        ws.mergeCells(`A${rowIdx}:H${rowIdx}`);
         const sc = ws.getCell(`A${rowIdx}`);
         sc.value = r.nombre;
         sc.font = fnt(COL.SECT_FG,true,10); sc.fill = fill(COL.SECT_BG); sc.alignment = centerA;
@@ -2028,9 +1999,11 @@ async function cmpGenerarExcel() {
         rowIdx++; return;
       }
       const d = cmp_daruma[r.sku] || {};
-      const cnt   = r.cnt;
-      const stock = d.stock != null ? d.stock : null;
-      const diff  = cnt !== null && stock !== null ? cnt - stock : null;
+      const cnt    = r.cnt;
+      const stock  = d.stock != null ? d.stock : null;
+      const diff   = cnt !== null && stock !== null ? cnt - stock : null;
+      const costo  = d.costo != null ? d.costo : null;
+      const valDif = diff !== null && costo !== null ? diff * costo : null;
       const diffStr = diff !== null ? (diff > 0 ? '+'+diff : String(diff)) : '';
       let bg, fg, estado;
       if (diff === null)  { bg=COL.GRAY_BG;  fg=COL.GRAY_FG;  estado='No contado'; }
@@ -2042,12 +2015,15 @@ async function cmpGenerarExcel() {
       ws.getCell(`D${rowIdx}`).value = stock !== null ? stock : '';
       ws.getCell(`E${rowIdx}`).value = diffStr;
       ws.getCell(`F${rowIdx}`).value = estado;
-      ['A','B','C','D','E','F'].forEach((col, ci) => {
+      ws.getCell(`G${rowIdx}`).value = costo !== null ? costo : '';
+      ws.getCell(`H${rowIdx}`).value = valDif !== null ? valDif : '';
+      ['A','B','C','D','E','F','G','H'].forEach((col, ci) => {
         const cell = ws.getCell(`${col}${rowIdx}`);
         cell.fill = fill(bg);
         cell.font = (ci===4 && diff!==null && diff!==0) ? {...fnt(fg), bold:true} : fnt(fg);
-        cell.alignment = (ci>=2 && ci<=4) ? rightA : leftA;
+        cell.alignment = (ci>=2 && ci<=4) || ci>=6 ? rightA : leftA;
         cell.border = {bottom:{style:'hair',color:{argb:'FFE0E0E0'}}};
+        if (ci>=6 && cell.value !== '') cell.numFmt = '$#,##0.00';
       });
       ws.getRow(rowIdx).height = 15;
       rowIdx++;
