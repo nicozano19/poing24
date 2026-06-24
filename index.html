@@ -1780,6 +1780,7 @@ async function cmpDeleteItem(itemId, isCloud, type) {
 let cmp_daruma = {};
 let cmp_jsonData = {};
 let cmp_resultData = [];
+let cmp_sections = [];
 let cmp_wb = null;
 
 function cmpDrag(e,id){e.preventDefault();document.getElementById(id).classList.add('dragover');}
@@ -1853,15 +1854,29 @@ function cmpShowError(msg) {
 function cmpComparar() {
   document.getElementById('cmpError').style.display = 'none';
   const allItems = {};
-  Object.values(cmp_jsonData).forEach(json => {
+  cmp_sections = [];
+  Object.entries(cmp_jsonData).forEach(([key, json]) => {
+    const isRemito = key.startsWith('remito_');
     const items = Array.isArray(json) ? json : (json.items || []);
+    const seccion = isRemito
+      ? `Remito ${(json.remitos||[]).map(r=>'#'+r).join(', ')}`
+      : (json.seccion || 'Sin sección');
+    const responsable = json.responsable || json.local || '';
+    const fecha = json.fecha || json.fecha_control || '';
+    const secData = {seccion, responsable, fecha, rows: []};
     items.forEach(it => {
-      if (it.tipo === 'seccion' || !it.sku) return;
+      if (it.tipo === 'seccion') {
+        secData.rows.push({tipo: 'seccion', nombre: it.nombre});
+        return;
+      }
+      if (!it.sku) return;
       const sku = String(it.sku).trim();
-      if (!allItems[sku]) allItems[sku] = { nombre: it.nombre, conteos: [], sku };
       const cnt = it.conteo != null ? Number(it.conteo) : (it.recibido != null ? Number(it.recibido) : null);
+      if (!allItems[sku]) allItems[sku] = { nombre: it.nombre, conteos: [], sku };
       if (cnt !== null) allItems[sku].conteos.push(cnt);
+      secData.rows.push({tipo: 'item', sku, nombre: it.nombre, cnt});
     });
+    cmp_sections.push(secData);
   });
   cmp_resultData = Object.values(allItems).map(it => {
     const d = cmp_daruma[it.sku] || {};
@@ -1932,40 +1947,113 @@ function cmpRenderResult() {
 async function cmpGenerarExcel() {
   const wb = new ExcelJS.Workbook();
   wb.creator = 'POING24';
-  const ws = wb.addWorksheet('Comparación');
-  const DARK='1F3864', GREEN='C6EFCE', RED='FFDDC1', YELLOW='FFEB9C', GRAY='D9D9D9', WHITE='FFFFFF';
+  const COL = {
+    DARK:'1F3864', DARK2:'2C3E50', WHITE:'FFFFFF',
+    GREEN_BG:'D5F5E3', GREEN_FG:'1E8449',
+    RED_BG:'FADBD8',   RED_FG:'C0392B',
+    GRAY_BG:'EAECEE',  GRAY_FG:'717D7E',
+    SECT_BG:'BDD7EE',  SECT_FG:'1F3864',
+  };
   const fill = c => ({type:'pattern',pattern:'solid',fgColor:{argb:'FF'+c}});
-  const hFont = {bold:true,color:{argb:'FF'+WHITE},size:11};
-  const center = {horizontal:'center',vertical:'middle'};
-  // Título
-  ws.mergeCells('A1:H1');
-  const t=ws.getCell('A1');
-  t.value=`COMPARACIÓN DE STOCK — ${(getLocal()||'LOCAL').toUpperCase()} — ${new Date().toLocaleDateString('es-AR')}`;
-  t.font={bold:true,color:{argb:'FF'+WHITE},size:13};t.fill=fill(DARK);t.alignment=center;
-  ws.getRow(1).height=26;
-  // Headers
-  const hdrs=['Estado','SKU','Producto','Conteo','Stock Daruma','Diferencia','Costo Unit.','Valor Diferencia'];
-  const hrow=ws.addRow(hdrs);
-  hrow.eachCell(c=>{c.font=hFont;c.fill=fill(DARK);c.alignment=center;});
-  ws.getRow(2).height=18;
-  ws.columns=[{width:8},{width:14},{width:40},{width:10},{width:14},{width:12},{width:13},{width:18}];
-  // Datos
-  cmp_resultData.forEach(r=>{
-    const estado = r.diff===0?'OK':r.diff!=null?(r.diff>0?'Sobrante':'Faltante'):'Sin datos';
-    const row=ws.addRow([estado,'sku-'+r.sku,r.nombre,r.conteo??'',r.stock??'',r.diff!=null?r.diff:'',r.costo!=null?r.costo:'',r.valorDiff!=null?r.valorDiff:'']);
-    row.height=15;
-    let bg=GRAY;
-    if(r.diff===0)bg=GREEN;
-    else if(r.diff!=null&&r.diff>0)bg=YELLOW;
-    else if(r.diff!=null&&r.diff<0)bg=RED;
-    row.eachCell((c,i)=>{
-      c.fill=fill(bg);
-      c.border={bottom:{style:'thin',color:{argb:'FFD0D0D0'}},top:{style:'thin',color:{argb:'FFD0D0D0'}}};
-      if(i===1){c.font={bold:true,size:10};c.alignment=center;}
-      if(i===6&&r.diff!=null&&r.diff!==0){c.font={bold:true};}
-    });
-    [4,5,6,7,8].forEach(i=>{const c=row.getCell(i);c.alignment={horizontal:'right',vertical:'middle'};if(i>=7&&c.value!=='')c.numFmt='$#,##0.00';});
+  const fnt  = (c,bold=false,sz=10) => ({color:{argb:'FF'+c},bold,size:sz,name:'Arial'});
+  const centerA = {horizontal:'center',vertical:'middle'};
+  const leftA   = {horizontal:'left',  vertical:'middle'};
+  const rightA  = {horizontal:'right', vertical:'middle'};
+  const localStr = (getLocal()||'POING24').toUpperCase();
+  const dateStr  = new Date().toLocaleDateString('es-AR');
+
+  // ── RESUMEN sheet ──────────────────────────────────────────────────────────
+  const wsR = wb.addWorksheet('RESUMEN');
+  wsR.columns = [{width:22},{width:16},{width:12},{width:8},{width:8},{width:14},{width:12}];
+  wsR.mergeCells('A1:G1');
+  const rt = wsR.getCell('A1');
+  rt.value = `CONTROL DE STOCK — ${localStr} — ${dateStr}`;
+  rt.font = fnt(COL.WHITE,true,13); rt.fill = fill(COL.DARK); rt.alignment = centerA;
+  wsR.getRow(1).height = 26;
+  wsR.mergeCells('A2:G2');
+  const rs = wsR.getCell('A2');
+  rs.value = `Generado: ${dateStr}`;
+  rs.font = fnt(COL.WHITE,false,10); rs.fill = fill(COL.DARK2); rs.alignment = leftA;
+  wsR.getRow(2).height = 16;
+  wsR.addRow([]); wsR.getRow(3).height = 8;
+  const rh = wsR.addRow(['Sección','Responsable','Fecha','Total','OK','Diferencias','No contado']);
+  rh.eachCell(c => { c.font=fnt(COL.WHITE,true); c.fill=fill(COL.DARK); c.alignment=centerA; });
+  wsR.getRow(4).height = 18;
+  cmp_sections.forEach(sec => {
+    const its = sec.rows.filter(r=>r.tipo==='item');
+    const ok  = its.filter(i => { const d=cmp_daruma[i.sku]||{}; return i.cnt!==null && d.stock!=null && (i.cnt-d.stock)===0; }).length;
+    const dif = its.filter(i => { const d=cmp_daruma[i.sku]||{}; return i.cnt!==null && d.stock!=null && (i.cnt-d.stock)!==0; }).length;
+    const nc  = its.length - ok - dif;
+    const row = wsR.addRow([sec.seccion, sec.responsable, sec.fecha, its.length, ok, dif, nc]);
+    row.height = 15;
+    row.eachCell(c => { c.alignment=leftA; c.border={bottom:{style:'hair',color:{argb:'FFE0E0E0'}}}; });
+    row.getCell(4).alignment = rightA;
+    row.getCell(5).fill=fill(COL.GREEN_BG); row.getCell(5).font=fnt(COL.GREEN_FG,true);  row.getCell(5).alignment=rightA;
+    row.getCell(6).fill=fill(COL.RED_BG);   row.getCell(6).font=fnt(COL.RED_FG,true);    row.getCell(6).alignment=rightA;
+    row.getCell(7).fill=fill(COL.GRAY_BG);  row.getCell(7).font=fnt(COL.GRAY_FG,false);  row.getCell(7).alignment=rightA;
   });
+
+  // ── Section sheets ─────────────────────────────────────────────────────────
+  cmp_sections.forEach(sec => {
+    const sheetName = sec.seccion.replace(/[\/\\?\*\[\]:]/g,'').substring(0,31);
+    const ws = wb.addWorksheet(sheetName);
+    ws.columns = [{width:12},{width:40},{width:10},{width:14},{width:12},{width:12}];
+    // Row 1: Title
+    ws.mergeCells('A1:F1');
+    const t1 = ws.getCell('A1');
+    t1.value = `${sec.seccion} — ${localStr}`;
+    t1.font = fnt(COL.WHITE,true,13); t1.fill = fill(COL.DARK); t1.alignment = centerA;
+    ws.getRow(1).height = 26;
+    // Row 2: Info
+    ws.mergeCells('A2:F2');
+    const t2 = ws.getCell('A2');
+    t2.value = `Responsable: ${sec.responsable}   |   Fecha: ${sec.fecha}`;
+    t2.font = fnt(COL.WHITE,false,10); t2.fill = fill(COL.DARK2); t2.alignment = leftA;
+    ws.getRow(2).height = 16;
+    // Row 3: empty
+    ws.addRow([]); ws.getRow(3).height = 8;
+    // Row 4: Headers
+    const hrow = ws.addRow(['SKU','Producto','Conteo','Stock Daruma','Diferencia','Estado']);
+    hrow.eachCell(c => { c.font=fnt(COL.WHITE,true); c.fill=fill(COL.DARK); c.alignment=centerA; });
+    ws.getRow(4).height = 18;
+    // Rows 5+: data
+    let rowIdx = 5;
+    sec.rows.forEach(r => {
+      if (r.tipo === 'seccion') {
+        ws.mergeCells(`A${rowIdx}:F${rowIdx}`);
+        const sc = ws.getCell(`A${rowIdx}`);
+        sc.value = r.nombre;
+        sc.font = fnt(COL.SECT_FG,true,10); sc.fill = fill(COL.SECT_BG); sc.alignment = centerA;
+        ws.getRow(rowIdx).height = 16;
+        rowIdx++; return;
+      }
+      const d = cmp_daruma[r.sku] || {};
+      const cnt   = r.cnt;
+      const stock = d.stock != null ? d.stock : null;
+      const diff  = cnt !== null && stock !== null ? cnt - stock : null;
+      const diffStr = diff !== null ? (diff > 0 ? '+'+diff : String(diff)) : '';
+      let bg, fg, estado;
+      if (diff === null)  { bg=COL.GRAY_BG;  fg=COL.GRAY_FG;  estado='No contado'; }
+      else if (diff === 0){ bg=COL.GREEN_BG; fg=COL.GREEN_FG; estado='OK'; }
+      else                { bg=COL.RED_BG;   fg=COL.RED_FG;   estado='Diferencia'; }
+      ws.getCell(`A${rowIdx}`).value = String(r.sku);
+      ws.getCell(`B${rowIdx}`).value = r.nombre || d.nombre || '';
+      ws.getCell(`C${rowIdx}`).value = cnt !== null ? cnt : '';
+      ws.getCell(`D${rowIdx}`).value = stock !== null ? stock : '';
+      ws.getCell(`E${rowIdx}`).value = diffStr;
+      ws.getCell(`F${rowIdx}`).value = estado;
+      ['A','B','C','D','E','F'].forEach((col, ci) => {
+        const cell = ws.getCell(`${col}${rowIdx}`);
+        cell.fill = fill(bg);
+        cell.font = (ci===4 && diff!==null && diff!==0) ? {...fnt(fg), bold:true} : fnt(fg);
+        cell.alignment = (ci>=2 && ci<=4) ? rightA : leftA;
+        cell.border = {bottom:{style:'hair',color:{argb:'FFE0E0E0'}}};
+      });
+      ws.getRow(rowIdx).height = 15;
+      rowIdx++;
+    });
+  });
+
   return wb;
 }
 
