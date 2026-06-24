@@ -270,6 +270,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: white; border-radius: 12px; padding: 20px; margin-bottom: 14px;
   box-shadow: 0 1px 4px rgba(0,0,0,.08);
 }
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cmp-table thead th { background: var(--dark); color: white; padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.cmp-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+.cmp-table tbody tr:hover { background: #f8f9fa; }
+.cmp-table td { padding: 7px 10px; vertical-align: middle; }
+.cmp-table .td-num { text-align: right; font-variant-numeric: tabular-nums; }
+.cmp-table .td-sku { font-size: 11px; color: var(--gray); white-space: nowrap; }
+.cmp-table .td-diff { font-weight: 700; }
+.cmp-table .row-ok td:first-child { color: var(--green); }
+.cmp-table .row-faltan td:first-child { color: var(--red); }
+.cmp-table .row-sobre td:first-child { color: #e67e22; }
+.cmp-table .row-nodata td:first-child { color: var(--gray); }
+.cmp-table .row-faltan .td-diff { color: var(--red); }
+.cmp-table .row-sobre .td-diff { color: #e67e22; }
 .cmp-card h2 {
   font-size: .82rem; font-weight: 700; color: var(--dark);
   text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px;
@@ -1727,9 +1741,11 @@ function cmpToggleSaved(itemId, isCloud, type) {
   } else {
     let data;
     if (type === 'remito') {
+      const found = isCloud ? _cloudRemitos.find(c => c._fbId === itemId) : null;
       data = isCloud
-        ? _cloudRemitos.find(c => c._fbId === itemId)?.data
+        ? (found?.data || (found ? {local:found.local,remitos:found.remitos,fecha_control:found.fecha,items:(found.items||[])} : undefined))
         : savedRemitosGet().find(c => String(c.id) === String(itemId))?.data;
+      console.log('[remito toggle] itemId:', itemId, '| found:', !!found, '| data.items:', data?.items?.length);
     } else {
       data = isCloud
         ? _cloudConteos.find(c => c._fbId === itemId)?.data
@@ -1948,8 +1964,9 @@ async function cmpGenerarExcel() {
 }
 
 async function cmpDescargar() {
-  if (!cmp_wb) { showModal('⚠️','Sin resultados','Primero ejecutá la comparación.'); return; }
-  const buf=await cmp_wb.xlsx.writeBuffer();
+  if (!cmp_resultData || cmp_resultData.length === 0) { showModal('⚠️','Sin resultados','Primero ejecutá la comparación.'); return; }
+  const wb = await cmpGenerarExcel();
+  const buf=await wb.xlsx.writeBuffer();
   const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const fname=`comparacion_${(getLocal()||'LOCAL').replace(/\s/g,'_')}_${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}.xlsx`;
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();document.body.removeChild(a);
