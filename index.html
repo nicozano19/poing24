@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEqUlEQVR4nO2XW2wUVRjHf2dmZ3fb3e2929Ib1xastWAhpRgDRAHBSghVSUQhGt5MRI0xMRpDIokaosEoEFFJjMZbAPWFStVGKaENCDWtpdWW2i3dri29X/Y6O3N8aCEau6WACS+dt5PM5Pzm/33nN9+IxBerJbfxUm7n5rMAswAAlpt5SABCCISYWEspkRJu5jjdEIAyualuSMK6QdSUCMCiCGyagqYIjEmY/x3AogjGwwZh3SDVqVHgduB2WjGl5K+RMJ7BEAPjOvE2C3ZNwTBnRnFdgKtxD/h1luc6eHZtDhXLMnBY7f+678pYgM9+8XHotJf2gQjJ8dqMIMR0JpwsMeNhg5c25LG3fDH+CHxxIUDNpR6GA0OoCmQnJbF+cRZbiuMY8MPzXzfw6bleUhzXh5g2ASEEI0Gd/Q/ns3vNfM52tHOy6WO8I7209xZQ6ykBqZCb0sRFn5cLHUm8vHEln+xYQaK9iYOnfddNIiaAqgiGAjo7S93sXjOf6t9bSFfXsed+H0gLOKJ89HMFTx9/hWOP76d0SQMyCKf+WIrmrOPdRws53zVG/WU/DpuKGaMzp/SAAKKmJMGu8vrmfFr7oLLxCMX5Pmo77mb14QPIiGBbURVbi09SmttAdERF2MEfETz1eQumhNceXETUNK+VcsYAiiLwhw3K5iWSlejgSJ2P810pnGhazZeN97FsThtocMWfTPniM7T25VHdXopvJI3RcDZtnhDft/SybkkaC9PjCOrmNWfMqAQCMAyT4iwXUsJv3d3UeMqoOfwAblcfTc89hohIxsIO5ib3sq9mBxmuQb5rK8MfcbFgTiuVzW42FQry0+Np7w8RZ7VgTFGGaZsw3qoiBAQiErsWwZA6Bze/Rbp7mEueHN4/V0G2q48NBWeRUuCyBshJGKLWs5vREEgJcZqCnMZMsb8FQtA1HARgXqpGaDSJ7Ut/4JHl1UQCGk8e3wPAxrtquTP9TxaldOF2DDI300uhu52c5ASEgJ7RCBZFxLTjlACmlNg1hbOeEUCypTiPzNRO3tx0CF2oHKu/j87BLHTDwjeNa3mvbhs2VWdFfgvewTSa+4p4YkUi/eMhWnr8xGlqzBSmLIEpJ+Jv7gnwbaOXrcW5qMavZCb1gIDtJVVsv7eKNk8eBW8fhVACDy2po0htp6HTSdmC9dyRYePVE60M+nVSnVaiMVwQ04SKgHBUkuFSqXuhjAyXlyM1X1HZPESiXcFuVRgPO6hqKyOoW1ieVU9GQjflhcvYsWon5zqHWH+gHoRAIfaXcloVq4pgLGRQkuvg6K6VZCYo7PtxgA/OdHO5LwhGFMXmx2lTmJ+WxjOrF7FrlZMLXcNUfNhAnz+K3SMYzsSaAWY6k8x4IDElICXxVgWnTWVyOfEWYtKeUsbs9lsG+CfIf6K9hX+r2z4VzwLMAvwNhcT5AzNj5bgAAAAASUVORK5CYII=">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
 <title>POING24 — Control de Stock</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -412,24 +413,21 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .error-msg { background: rgba(231,76,60,.1); border-left: 4px solid var(--red); padding: 10px 14px;
              border-radius: 6px; font-size: .83rem; color: #f09080; display: none; margin-bottom: 10px; }
 
-/* ── LOCK SCREEN ──────────────────────────────────────────────────────────── */
-#lockOverlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75);
-  z-index: 300; align-items: center; justify-content: center; padding: 24px;
-  backdrop-filter: blur(8px);
+/* ── LOGIN SCREEN ─────────────────────────────────────────────────────────── */
+#loginOverlay {
+  position: fixed; inset: 0; background: var(--bg);
+  z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px;
 }
-#lockOverlay.open { display: flex; }
 .lock-box {
   background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px;
   width: 100%; max-width: 320px; text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,.6);
 }
-.lock-icon { font-size: 48px; margin-bottom: 12px; }
 .lock-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
 .lock-sub   { font-size: 13px; color: var(--text-sub); margin-bottom: 22px; }
 .lock-input {
   width: 100%; padding: 13px 16px; border: 2px solid var(--border); border-radius: 10px;
-  font-size: 16px; text-align: center; letter-spacing: 3px; margin-bottom: 12px;
+  font-size: 15px; text-align: left; letter-spacing: 0; margin-bottom: 12px;
   outline: none; transition: border-color .2s; background: var(--surface2); color: var(--text);
 }
 .lock-input:focus { border-color: var(--dark); }
@@ -471,6 +469,38 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
                    cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
 .saved-item-del:hover { color: var(--red); }
 .saved-empty { font-size: .8rem; color: var(--text-sub); text-align: center; padding: 12px 0; }
+
+/* ── PEDIDOS AUTOMÁTICOS ─────────────────────────────────────────────────── */
+.pd-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 16px; margin:0 12px 16px; }
+.pd-section-title { font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px; letter-spacing:.3px; }
+.pd-step-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.pd-step-badge { width:26px; height:26px; background:var(--dark); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
+.pd-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.pd-tab { padding:7px 18px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface2); color:var(--text-sub); font-size:13px; font-weight:600; cursor:pointer; transition:.2s; }
+.pd-tab.active { background:var(--dark); border-color:var(--dark); color:#fff; }
+.pd-prov-info { font-size:12px; color:var(--text-sub); padding:6px 10px; background:var(--surface2); border-radius:8px; }
+.pd-select { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:13px; font-family:inherit; }
+.pd-upload-area { border:2px dashed var(--border); border-radius:12px; padding:24px; text-align:center; cursor:pointer; transition:.2s; color:var(--text-sub); }
+.pd-upload-area:hover { border-color:var(--dark); color:var(--dark); }
+.pd-upload-area.has-file { border-color:#2ecc71; color:#2ecc71; }
+.pd-min-table { width:100%; border-collapse:collapse; font-size:12px; }
+.pd-min-table th { background:var(--surface2); color:var(--text-sub); padding:6px 8px; text-align:left; border:1px solid var(--border); font-weight:600; white-space:nowrap; }
+.pd-min-table td { padding:5px 7px; border:1px solid var(--border); color:var(--text); }
+.pd-min-table td input { width:56px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:5px; padding:3px 5px; font-size:12px; font-family:inherit; text-align:center; }
+.pd-local-check { display:flex; align-items:center; gap:6px; background:var(--surface2); border-radius:8px; padding:7px 11px; border:1px solid var(--border); cursor:pointer; font-size:13px; color:var(--text); }
+.pd-local-check input[type=checkbox] { accent-color:var(--dark); width:15px; height:15px; cursor:pointer; }
+.pd-status-ok { color:#2ecc71; font-weight:600; }
+.pd-status-err { color:#e74c3c; font-weight:600; }
+.btn-sm { padding:7px 13px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:12px; font-weight:600; cursor:pointer; transition:.2s; }
+.btn-sm:hover { background:var(--dark); border-color:var(--dark); color:#fff; }
+.btn-sm.btn-danger { border-color:rgba(231,76,60,.4); color:#e74c3c; }
+.btn-sm.btn-danger:hover { background:#e74c3c; border-color:#e74c3c; color:#fff; }
+.pd-collapse-toggle { cursor:pointer; user-select:none; display:flex; align-items:center; gap:10px; width:100%; }
+.pd-collapse-toggle:hover .pd-section-title { color:var(--dark); }
+.pd-chevron { font-size:14px; color:var(--text-sub); transition:transform .25s; margin-left:auto; }
+.pd-chevron.open { transform:rotate(180deg); }
+.pd-collapsible { overflow:hidden; transition:max-height .3s ease, opacity .25s ease; max-height:600px; opacity:1; }
+.pd-collapsible.collapsed { max-height:0; opacity:0; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -483,6 +513,16 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
     <div>
       <div class="dh-title">POING24</div>
       <div class="dh-sub" id="drawer-localSub">Seleccioná un local</div>
+    </div>
+  </div>
+  <div class="drawer-section" id="drawer-user-section">
+    <div style="display:flex;align-items:center;gap:10px;padding:4px 0 8px;">
+      <div style="width:38px;height:38px;background:rgba(79,142,247,.18);border:1.5px solid rgba(79,142,247,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div id="drawer-userName" style="font-size:13px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</div>
+        <div id="drawer-userRole" style="font-size:11px;color:var(--text-sub);margin-top:1px;">—</div>
+      </div>
+      <button onclick="authLogout()" style="background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:#f09080;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">Salir</button>
     </div>
   </div>
   <div class="drawer-section">
@@ -507,21 +547,27 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
     <button class="drawer-nav-item" id="dnav-admin-remitos" onclick="drawerGoTo('admin-remitos')">
       <span class="nav-icon">📋</span> Admin Remitos
     </button>
+    <button class="drawer-nav-item" id="dnav-pedidos" onclick="drawerGoTo('pedidos')">
+      <span class="nav-icon">🛒</span> Pedidos Automáticos
+    </button>
   </div>
   <button class="drawer-close" onclick="drawerClose()">✕ &nbsp;Cerrar menú</button>
 </div>
 
-<!-- ── LOCK SCREEN ────────────────────────────────────────────────────────── -->
-<div id="lockOverlay">
+<!-- ── LOGIN SCREEN ───────────────────────────────────────────────────────── -->
+<div id="loginOverlay">
   <div class="lock-box">
-    <div class="lock-icon">🔒</div>
-    <div class="lock-title" id="lockTitle">Comparador de Stock</div>
-    <div class="lock-sub">Ingresá la contraseña para continuar</div>
-    <input class="lock-input" type="password" id="lockInput" placeholder="••••••••"
-           onkeydown="if(event.key==='Enter') lockVerify()" oninput="lockClearError()">
-    <div class="lock-error" id="lockError">Contraseña incorrecta</div>
-    <button class="btn-unlock" onclick="lockVerify()">Ingresar</button>
-    <button class="btn-lock-cancel" onclick="lockCancel()">Cancelar</button>
+    <img src="data:image/png;base64,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" style="width:120px;height:120px;object-fit:contain;margin-bottom:14px;">
+    <div class="lock-title">POING24</div>
+    <div class="lock-sub">Control de Stock — ingresá para continuar</div>
+    <input class="lock-input" type="email" id="loginEmail" placeholder="Email" style="margin-bottom:10px;"
+           onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()"
+           oninput="document.getElementById('loginError').style.display='none'">
+    <input class="lock-input" type="password" id="loginPassword" placeholder="Contraseña"
+           onkeydown="if(event.key==='Enter')authLogin()"
+           oninput="document.getElementById('loginError').style.display='none'">
+    <div class="lock-error" id="loginError">Email o contraseña incorrectos</div>
+    <button class="btn-unlock" id="loginBtn" onclick="authLogin()">Ingresar</button>
   </div>
 </div>
 
@@ -564,7 +610,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
       <div class="card-arrow">›</div>
     </button>
 
-    <button class="app-card" onclick="goTo('comparador')">
+    <button id="home-card-comparador" class="app-card" onclick="goTo('comparador')">
       <div class="card-icon">📊</div>
       <div class="card-body">
         <div class="card-title">Comparador de Stock</div>
@@ -573,7 +619,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
       </div>
       <div class="card-arrow">›</div>
     </button>
-    <button class="app-card" onclick="goTo('admin-remitos')">
+    <button id="home-card-admin" class="app-card" onclick="goTo('admin-remitos')">
       <div class="card-icon">📋</div>
       <div class="card-body">
         <div class="card-title">Admin Remitos</div>
@@ -582,6 +628,25 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
       </div>
       <div class="card-arrow">›</div>
     </button>
+    <button id="home-card-pedidos" class="app-card" onclick="goTo('pedidos')">
+      <div class="card-icon">🛒</div>
+      <div class="card-body">
+        <div class="card-title">Pedidos Automáticos</div>
+        <div class="card-sub">Generá el Excel de pedido a proveedores desde el stock Daruma</div>
+        <div class="card-badge badge-blue">MASSALIN · SARANDI · NOBLEZA</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </button>
+  </div>
+
+  <!-- chip usuario bottom -->
+  <div id="home-userChip" style="display:none;justify-content:center;padding:16px 0 24px;">
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(79,142,247,.10);border:1px solid rgba(79,142,247,.2);border-radius:20px;padding:6px 14px 6px 10px;">
+      <span style="font-size:13px;">👤</span>
+      <span id="home-userName" style="font-size:12px;font-weight:700;color:var(--text);"></span>
+      <span id="home-userRole" style="font-size:11px;color:var(--text-sub);"></span>
+      <button onclick="authLogout()" style="margin-left:6px;background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:#f09080;border-radius:12px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">Salir</button>
+    </div>
   </div>
 </div>
 
@@ -865,6 +930,86 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
   </div>
 </div>
 
+
+<!-- ── PEDIDOS AUTOMÁTICOS ──────────────────────────────────────────────── -->
+<div id="pedidos" class="screen">
+  <div class="app-header">
+    <div class="app-header-top">
+      <button class="btn-menu" onclick="drawerOpen('pedidos')">☰</button>
+      <h1>🛒 Pedidos Automáticos</h1>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pd-progress" style="width:0%"></div></div>
+  </div>
+
+  <!-- Proveedor -->
+  <div class="pd-card">
+    <div class="pd-section-title">Proveedor</div>
+    <div class="pd-tabs" id="pd-provTabs">
+      <button class="pd-tab active" onclick="pdSelectProv('MASSALIN')">MASSALIN</button>
+      <button class="pd-tab" onclick="pdSelectProv('SARANDI')">SARANDI</button>
+      <button class="pd-tab" onclick="pdSelectProv('NOBLEZA')">NOBLEZA</button>
+    </div>
+    <div class="pd-prov-info" id="pd-provInfo">Lunes / Jueves &nbsp;·&nbsp; 6 locales (sin Jonte)</div>
+  </div>
+
+  <!-- Paso 1: Mínimos -->
+  <div class="pd-card">
+    <div class="pd-collapse-toggle" onclick="pdToggleMinimos()">
+      <div class="pd-step-badge">1</div>
+      <div class="pd-section-title" style="margin-bottom:0">Mínimos por local</div>
+      <span id="pd-minSummary" style="font-size:12px;color:var(--text-sub);margin-left:4px;"></span>
+      <span class="pd-chevron open" id="pd-minChevron">▼</span>
+    </div>
+    <div class="pd-collapsible" id="pd-minCollapse">
+      <div style="padding-top:14px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+        <button class="btn-sm" onclick="document.getElementById('pd-minXls').click()">📥 Importar Excel</button>
+        <input type="file" id="pd-minXls" accept=".xlsx,.xls" style="display:none" multiple onchange="pdImportMinXls(this.files)">
+        <button class="btn-sm" onclick="document.getElementById('pd-minJSONin').click()">📂 Importar JSON</button>
+        <input type="file" id="pd-minJSONin" accept=".json" style="display:none" onchange="pdImportMinJSON(this.files)">
+        <button class="btn-sm" onclick="pdExportMinJSON()">📤 Exportar JSON</button>
+        <button class="btn-sm btn-danger" onclick="pdClearMinimos()">🗑 Limpiar todo</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <label style="font-size:13px;color:var(--text-sub);white-space:nowrap;">Local:</label>
+        <select id="pd-minLocal" class="pd-select" onchange="pdRenderMinTable()"></select>
+        <span id="pd-minCount" style="font-size:12px;color:var(--text-sub);"></span>
+      </div>
+      <div id="pd-minTableWrap" style="overflow-x:auto;max-height:320px;overflow-y:auto;border-radius:8px;border:1px solid var(--border);"></div>
+      <div style="margin-top:8px;display:flex;gap:8px;">
+        <button class="btn-sm" onclick="pdAddProductRow()">+ Producto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paso 2: Stock + locales -->
+  <div class="pd-card">
+    <div class="pd-step-row">
+      <div class="pd-step-badge">2</div>
+      <div class="pd-section-title" style="margin-bottom:0">Stock del proveedor (Daruma)</div>
+    </div>
+    <div class="pd-upload-area" id="pd-uploadArea" onclick="document.getElementById('pd-stockFile').click()" style="margin-top:12px;">
+      <div style="font-size:22px;margin-bottom:6px;">📂</div>
+      <div style="font-size:14px;font-weight:600;">Subir Excel de Stock Valorizado</div>
+      <div style="font-size:12px;margin-top:4px;" id="pd-fileName">Ningún archivo seleccionado</div>
+    </div>
+    <input type="file" id="pd-stockFile" accept=".xlsx,.xls" style="display:none" onchange="pdLoadStock(this.files)">
+    <div style="margin-top:16px;">
+      <div style="font-size:13px;color:var(--text-sub);margin-bottom:8px;font-weight:600;">Locales a incluir en este pedido:</div>
+      <div id="pd-localesCheck" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- Paso 3: Generar -->
+  <div class="pd-card" style="margin-bottom:32px;">
+    <div class="pd-step-row">
+      <div class="pd-step-badge">3</div>
+      <div class="pd-section-title" style="margin-bottom:0">Generar pedido</div>
+    </div>
+    <div id="pd-genStatus" style="margin:12px 0;font-size:13px;min-height:20px;"></div>
+    <button id="pd-genBtn" class="btn-unlock" onclick="pdGenerar()" style="width:100%;max-width:none;border-radius:10px;">🚀 Generar Excel de Pedido</button>
+  </div>
+</div>
+
 <!-- ════════════════════════════════════════════════════════════════════════ -->
 <!--  SCRIPTS                                                                 -->
 <!-- ════════════════════════════════════════════════════════════════════════ -->
@@ -1036,57 +1181,117 @@ function drawerGoTo(id) {
   setTimeout(() => goTo(id), 150);
 }
 
-/* ── LOCK ────────────────────────────────────────────────────────────────── */
-const LOCK_PWD = 'brenda123';
-let _lockUnlocked = false;
-let _lockPendingDest = null;
+/* ── AUTH — Firebase Authentication + Roles ─────────────────────────────── */
+let auth = null;
+let _currentUser   = null;
+let _currentRole   = null;
+let _currentNombre = '';
 
-function lockOpen(dest) {
-  _lockPendingDest = dest;
-  const titles = { 'comparador': 'Comparador de Stock', 'admin-remitos': 'Admin Remitos' };
-  const el = document.getElementById('lockTitle');
-  if (el) el.textContent = titles[dest] || 'Acceso restringido';
-  document.getElementById('lockInput').value = '';
-  document.getElementById('lockError').style.display = 'none';
-  document.getElementById('lockInput').classList.remove('error');
-  document.getElementById('lockOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('lockInput').focus(), 100);
-}
-function lockCancel() {
-  document.getElementById('lockOverlay').classList.remove('open');
-  _lockPendingDest = null;
-}
-function lockClearError() {
-  document.getElementById('lockError').style.display = 'none';
-  document.getElementById('lockInput').classList.remove('error');
-}
-function lockVerify() {
-  const val = document.getElementById('lockInput').value;
-  if (val === LOCK_PWD) {
-    _lockUnlocked = true;
-    document.getElementById('lockOverlay').classList.remove('open');
-    if (_lockPendingDest) { const d = _lockPendingDest; _lockPendingDest = null; _goTo(d); }
-  } else {
-    document.getElementById('lockError').style.display = 'block';
-    const inp = document.getElementById('lockInput');
-    inp.classList.add('error');
-    inp.value = '';
-    setTimeout(() => inp.classList.remove('error'), 400);
+const ROLE_ACCESS = {
+  colaborador: ['home','planilla','remito'],
+  responsable: ['home','planilla','remito','comparador','admin-remitos','pedidos'],
+  admin:       ['home','planilla','remito','comparador','admin-remitos','pedidos'],
+};
+const ROLE_LABELS = { colaborador:'Colaborador', responsable:'Responsable', admin:'Administrador' };
+
+function authInit() {
+  try { auth = firebase.auth(); } catch(e) { console.warn('Auth init error:', e); }
+  if (!auth) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    _currentRole = 'admin'; authUpdateUI(); return;
   }
+  auth.onAuthStateChanged(async user => {
+    if (user) {
+      _currentUser = user;
+      await authLoadRole(user.uid);
+      document.getElementById('loginOverlay').style.display = 'none';
+      authUpdateUI();
+    } else {
+      _currentUser=null; _currentRole=null; _currentNombre='';
+      document.getElementById('loginOverlay').style.display = 'flex';
+      setTimeout(()=>document.getElementById('loginEmail')?.focus(),100);
+    }
+  });
+}
+
+async function authLoadRole(uid) {
+  if (!db) { _currentRole='colaborador'; _currentNombre=_currentUser?.email||''; return; }
+  try {
+    const doc = await db.collection('usuarios').doc(uid).get();
+    if (doc.exists) {
+      const d = doc.data();
+      _currentRole   = d.rol    || 'colaborador';
+      _currentNombre = d.nombre || _currentUser?.email || '';
+    } else {
+      _currentRole='colaborador'; _currentNombre=_currentUser?.email||'';
+    }
+  } catch(e) {
+    _currentRole='colaborador'; _currentNombre=_currentUser?.email||'';
+  }
+}
+
+async function authLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pwd   = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn   = document.getElementById('loginBtn');
+  if (!email || !pwd) { errEl.textContent='Completá email y contraseña.'; errEl.style.display='block'; return; }
+  errEl.style.display='none'; btn.textContent='Ingresando...'; btn.disabled=true;
+  try {
+    await auth.signInWithEmailAndPassword(email, pwd);
+  } catch(e) {
+    const credErr=['auth/wrong-password','auth/user-not-found','auth/invalid-credential','auth/invalid-login-credentials','auth/invalid-email'];
+    errEl.textContent = credErr.includes(e.code) ? 'Email o contraseña incorrectos.' : `Error: ${e.code||e.message}`;
+    errEl.style.display='block';
+    const inp=document.getElementById('loginPassword');
+    inp.classList.add('error'); inp.value='';
+    setTimeout(()=>inp.classList.remove('error'),400);
+  } finally { btn.textContent='Ingresar'; btn.disabled=false; }
+}
+
+async function authLogout() {
+  drawerClose();
+  if (auth) await auth.signOut();
+}
+
+function authUpdateUI() {
+  const nameEl=document.getElementById('drawer-userName');
+  const roleEl=document.getElementById('drawer-userRole');
+  if (nameEl) nameEl.textContent=_currentNombre||'—';
+  if (roleEl) roleEl.textContent=ROLE_LABELS[_currentRole]||_currentRole||'—';
+  const access=ROLE_ACCESS[_currentRole]||ROLE_ACCESS.colaborador;
+  ['comparador','admin-remitos','pedidos'].forEach(id=>{
+    const btn=document.getElementById('dnav-'+id);
+    if (btn) btn.style.display=access.includes(id)?'':'none';
+  });
+  const cardCmp=document.getElementById('home-card-comparador');
+  const cardAdm=document.getElementById('home-card-admin');
+  const cardPed=document.getElementById('home-card-pedidos');
+  if (cardCmp) cardCmp.style.display=access.includes('comparador')?'':'none';
+  if (cardAdm) cardAdm.style.display=access.includes('admin-remitos')?'':'none';
+  if (cardPed) cardPed.style.display=access.includes('pedidos')?'':'none';
+  // Home user chip
+  const chip=document.getElementById('home-userChip');
+  const chipName=document.getElementById('home-userName');
+  const chipRole=document.getElementById('home-userRole');
+  if (chip) chip.style.display=_currentUser?'flex':'none';
+  if (chipName) chipName.textContent=_currentNombre||'';
+  if (chipRole) chipRole.textContent=ROLE_LABELS[_currentRole]||'';
 }
 
 /* ── NAVEGACIÓN ──────────────────────────────────────────────────────────── */
 function goTo(id) {
-  if (id !== 'home' && !getLocal()) {
+  if (id !== 'home' && id !== 'pedidos' && !getLocal()) {
     alert('Primero seleccioná el local desde la pantalla de inicio.');
     document.getElementById('localSelectorWrap').scrollIntoView({behavior:'smooth'});
     return;
   }
-  if ((id === 'comparador' || id === 'admin-remitos') && !_lockUnlocked) {
-    lockOpen(id);
+  const access=ROLE_ACCESS[_currentRole]||ROLE_ACCESS.colaborador;
+  if (!access.includes(id)) {
+    showModal('🚫','Sin acceso','No tenés permiso para acceder a esta sección con tu rol actual.');
     return;
   }
-  history.pushState({screen:id}, '', '#' + id);
+  history.pushState({screen:id},'','#'+id);
   _goTo(id);
 }
 function _goTo(id) {
@@ -2658,7 +2863,7 @@ async function rExportarExcel() {
 /*  FIREBASE                                                                  */
 /* ══════════════════════════════════════════════════════════════════════════ */
 const _fbConfig = {
-  apiKey: "AIzaSyD62ENodGqw7Ceeylm3aL-emot-UhEDqp8",
+  apiKey: "AIzaSyD62ENodGqw7Ceeylm3aT-emot-UhEDqp8",
   authDomain: "poing24-control.firebaseapp.com",
   projectId: "poing24-control",
   storageBucket: "poing24-control.firebasestorage.app",
@@ -2693,38 +2898,796 @@ async function fbLoadRemitos(local) {
 async function fbDeleteConteo(fbId) { if (!db) return; try { await db.collection('conteos').doc(fbId).delete(); } catch(e) {} }
 async function fbDeleteRemito(fbId) { if (!db) return; try { await db.collection('remitos').doc(fbId).delete(); } catch(e) {} }
 
-/* ══════════════════════════════════════════════════════════════════════════ */
-/*  URL HASH ROUTING                                                          */
-/* ══════════════════════════════════════════════════════════════════════════ */
-const VALID_SCREENS = ['home','planilla','remito','comparador','admin-remitos'];
 
-function hashGoTo(id) {
-  if (!VALID_SCREENS.includes(id)) id = 'home';
-  history.pushState({screen:id}, '', '#' + id);
-  _goTo(id);
+/* ── PEDIDOS AUTOMÁTICOS ─────────────────────────────────────────────────── */
+const PD_MIN_LS = 'pd_minimos_v2'; // fallback cache key
+let _pdMinCache = {}; // in-memory cache loaded from Firestore
+const PD_DEFAULT_MINIMOS = {"MASSALIN":{"KIOSKO NICO":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":5,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER PURPLE KS":{"min":0,"frac":5},"CHESTER UVA REMIX":{"min":5,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":10},"MARLBORO FUSION BOX 12":{"min":5,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":5,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO RED TITANUM":{"min":0,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":10,"frac":10},"PHILIP MORRIS BOX 20":{"min":5,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":10,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":5,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"JBJ":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":5,"frac":10},"MARLBORO BOX 20":{"min":5,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"GAONA":{"CHESTER 12":{"min":2,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":3,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":2,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":4,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":5,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"AVELLANEDA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":3,"frac":5},"CHESTER FRESH BOX 10":{"min":2,"frac":5},"CHESTER FRESH BOX 20":{"min":1,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":2,"frac":5},"MARLBORO FUSION BOX 20":{"min":5,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":4,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"BELGRANO":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":40,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"RIVADAVIA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":3,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":4,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10},"PHILIP RANDON SPIN 12":{"min":0,"frac":10}}},"SARANDI":{"KIOSKO NICO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":80,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":50,"frac":10},"MELBOURNE ROJO":{"min":0,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":10,"frac":10},"MILENIO MENTOLADO UVA":{"min":10,"frac":10},"MILL":{"min":10,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":40,"frac":10},"RED POINT ECO":{"min":10,"frac":10},"RED POINT KS":{"min":40,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"JBJ":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":10,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":4,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":4,"frac":10}},"GAONA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":30,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":5,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":5,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"AVELLANEDA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":20,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"BELGRANO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":40,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":4,"frac":10},"MILENIO MENTOLADO UVA":{"min":4,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":5,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"RIVADAVIA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"JONTE":{"BOLD":{"min":0,"frac":1},"KIEL BOX":{"min":0,"frac":1},"KIEL COMUN":{"min":0,"frac":1},"MASTER":{"min":0,"frac":1},"MELBOURNE ROJO":{"min":0,"frac":1},"MELBOURNE SUAVE":{"min":0,"frac":1},"MILENIO":{"min":0,"frac":1},"MILENIO MENTOLADO SANDIA":{"min":0,"frac":1},"MILENIO MENTOLADO UVA":{"min":0,"frac":1},"MILL":{"min":0,"frac":1},"RED POINT 10":{"min":0,"frac":1},"RED POINT BOX":{"min":0,"frac":1},"RED POINT ECO":{"min":0,"frac":1},"RED POINT KS":{"min":0,"frac":1},"RED POINT MENTOL KS":{"min":0,"frac":1},"RED POINT ON":{"min":0,"frac":1},"RED POINT ON SIX":{"min":0,"frac":1}}},"NOBLEZA":{"KIOSKO NICO":{"CAMEL BLUE BOX":{"min":0,"frac":5},"CAMEL BOX 10":{"min":5,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":5},"CAMEL LEGEND KS":{"min":0,"frac":5},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":10,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":10,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":10},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":35,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":5,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":5},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JBJ":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":3,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":20,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":2,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"GAONA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":1,"frac":5},"CAMEL COMUN":{"min":1,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":1,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":5,"frac":10},"LUCKY STRIKE BOX 12":{"min":5,"frac":5},"LUCKY STRIKE BOX 20":{"min":3,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":5,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":3,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":2,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":3,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":5,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":1,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":1,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"AVELLANEDA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":3,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":10},"LUCKY STRIKE BOX 12":{"min":2,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":1,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":3,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"BELGRANO":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":15,"frac":5},"LUCKY STRIKE COMUN KS":{"min":15,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":15,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":4,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":5,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":3,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":2,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"RIVADAVIA":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":2,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":10,"frac":5},"LUCKY STRIKE BOX 20":{"min":6,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":30,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":7,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":2,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JONTE":{"CAMEL BLUE BOX":{"min":0,"frac":1},"CAMEL BOX 10":{"min":0,"frac":1},"CAMEL BOX 20":{"min":0,"frac":1},"CAMEL COMUN":{"min":0,"frac":1},"CAMEL LEGEND BOX NUEVO":{"min":0,"frac":1},"CAMEL LEGEND KS":{"min":0,"frac":1},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":1},"LUCKY STRIKE BOX 12":{"min":0,"frac":1},"LUCKY STRIKE BOX 20":{"min":0,"frac":1},"LUCKY STRIKE COMUN KS":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX 12":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX XL":{"min":0,"frac":1},"LUCKY STRIKE COOL COMUN":{"min":0,"frac":1},"LUCKY STRIKE DARK (PARISIENE)":{"min":0,"frac":1},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":0,"frac":1},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV BOX":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN KS":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":0,"frac":1},"LUCKY STRIKE RED MIX BOX":{"min":0,"frac":1},"LUCKY STRIKE SILVER":{"min":0,"frac":1},"LUCKY STRIKE WILD MIX UVA XL":{"min":0,"frac":1},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}}}};
+
+const PD_PROVEEDORES = {
+  MASSALIN: {
+    color:'2874A6', dias:'Lunes / Jueves', incluye_jonte:false,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  SARANDI: {
+    color:'B7950B', dias:'Martes / Viernes', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  NOBLEZA: {
+    color:'1E8449', dias:'Martes (cada 15 días)', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  }
+};
+
+const PD_LOCAL_COLORS = {
+  'KIOSKO NICO':{hdr:'2874A6',row:'D6E4F0'},'JBJ':{hdr:'1E8449',row:'D5F5E3'},
+  'GAONA':{hdr:'B7950B',row:'FEF9E7'},'AVELLANEDA':{hdr:'C0392B',row:'FCE4D6'},
+  'BELGRANO':{hdr:'7D3C98',row:'E8DAEF'},'RIVADAVIA':{hdr:'2E4053',row:'EBF5FB'},
+  'JONTE':{hdr:'117A65',row:'D1F2EB'}
+};
+
+let _pdProv = 'MASSALIN';
+let _pdStockData = {}; // {LOCAL_KEY: {PRODUCT_UPPER: {qty, costo}}}
+let _pdStockLoaded = false;
+
+// ── Minimums storage ─────────────────────────────────────────────────────
+// ── Minimums: Firestore-backed, in-memory cache ─────────────────────────
+async function pdLoadFromFirestore() {
+  if (!db) {
+    try { _pdMinCache = JSON.parse(localStorage.getItem(PD_MIN_LS)||'{}'); } catch(e) { _pdMinCache={}; }
+    if (!Object.keys(_pdMinCache).length) _pdMinCache = JSON.parse(JSON.stringify(PD_DEFAULT_MINIMOS));
+    return;
+  }
+  try {
+    const doc = await db.collection('config').doc('minimos_pedidos').get();
+    if (doc.exists && Object.keys(doc.data()||{}).length) {
+      _pdMinCache = doc.data();
+      localStorage.setItem(PD_MIN_LS, JSON.stringify(_pdMinCache));
+    } else {
+      // Nothing in Firestore yet — seed with defaults and save
+      _pdMinCache = JSON.parse(JSON.stringify(PD_DEFAULT_MINIMOS));
+      pdSaveToFirestore(_pdMinCache); // write defaults to Firestore once
+    }
+  } catch(e) {
+    console.warn('pdLoadFromFirestore error:', e);
+    try { _pdMinCache = JSON.parse(localStorage.getItem(PD_MIN_LS)||'{}'); } catch(e2) { _pdMinCache={}; }
+    if (!Object.keys(_pdMinCache).length) _pdMinCache = JSON.parse(JSON.stringify(PD_DEFAULT_MINIMOS));
+  }
 }
 
+async function pdSaveToFirestore(data) {
+  localStorage.setItem(PD_MIN_LS, JSON.stringify(data)); // always save locally too
+  if (!db) return;
+  try {
+    await db.collection('config').doc('minimos_pedidos').set(data);
+  } catch(e) { console.warn('pdSaveToFirestore error:', e); }
+}
+
+function pdGetAllMinimos() { return _pdMinCache; }
+function pdSaveAllMinimos(data) { _pdMinCache = data; pdSaveToFirestore(data); }
+function pdGetMinimos(prov) { return (_pdMinCache[prov]) || {}; }
+function pdSetMinimos(prov, data) {
+  _pdMinCache[prov] = data;
+  pdSaveToFirestore(_pdMinCache);
+}
+
+// ── Provider selection ───────────────────────────────────────────────────
+function pdSelectProv(prov) {
+  _pdProv = prov;
+  document.querySelectorAll('.pd-tab').forEach(b => b.classList.toggle('active', b.textContent===prov));
+  const cfg = PD_PROVEEDORES[prov];
+  const jInfo = cfg.incluye_jonte ? 'incluye Jonte (carga manual)' : 'sin Jonte';
+  document.getElementById('pd-provInfo').textContent = `${cfg.dias} · ${cfg.locales.length} locales (${jInfo})`;
+  pdRenderLocalesCheck();
+  pdRenderMinLocalSelect();
+  pdRenderMinTable();
+  pdUpdateMinSummary();
+  _pdStockLoaded = false;
+  document.getElementById('pd-fileName').textContent = 'Ningún archivo seleccionado';
+  document.getElementById('pd-uploadArea').classList.remove('has-file');
+}
+
+// ── Local checkboxes ─────────────────────────────────────────────────────
+function pdRenderLocalesCheck() {
+  const cfg = PD_PROVEEDORES[_pdProv];
+  const wrap = document.getElementById('pd-localesCheck');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  cfg.locales.forEach(loc => {
+    const lbl = document.createElement('label');
+    lbl.className = 'pd-local-check';
+    const clr = PD_LOCAL_COLORS[loc]||{hdr:'666'};
+    lbl.innerHTML = `<input type="checkbox" id="pdchk-${loc.replace(/\s/g,'_')}" checked>
+      <span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#${clr.hdr};flex-shrink:0;"></span>
+      ${loc}`;
+    wrap.appendChild(lbl);
+  });
+}
+
+function pdGetLocalesIncluidos() {
+  return PD_PROVEEDORES[_pdProv].locales.filter(loc => {
+    const chk = document.getElementById('pdchk-'+loc.replace(/\s/g,'_'));
+    return chk && chk.checked;
+  });
+}
+
+// ── Minimums table UI ────────────────────────────────────────────────────
+function pdRenderMinLocalSelect() {
+  const sel = document.getElementById('pd-minLocal');
+  if (!sel) return;
+  const cfg = PD_PROVEEDORES[_pdProv];
+  sel.innerHTML = cfg.locales.map(l=>`<option value="${l}">${l}</option>`).join('');
+}
+
+function pdRenderMinTable() {
+  const wrap = document.getElementById('pd-minTableWrap');
+  const localSel = document.getElementById('pd-minLocal');
+  if (!wrap || !localSel) return;
+  const local = localSel.value;
+  const mins = pdGetMinimos(_pdProv);
+  const localMins = mins[local] || {};
+  const productos = Object.keys(localMins).sort();
+  const countEl = document.getElementById('pd-minCount');
+  if (countEl) countEl.textContent = `${productos.length} productos`;
+
+  if (productos.length === 0) {
+    wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub);font-size:13px;">Sin mínimos cargados para este local/proveedor.<br>Importá desde Excel o agregá manualmente.</div>';
+    return;
+  }
+
+  let html = '<table class="pd-min-table"><thead><tr><th>Producto</th><th>Mín. Conf.</th><th>Fracc.</th><th></th></tr></thead><tbody>';
+  productos.forEach(prod => {
+    const {min:mn, frac:fr} = localMins[prod]||{min:0,frac:1};
+    const prodId = encodeURIComponent(prod);
+    html += `<tr>
+      <td style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${prod}">${prod}</td>
+      <td><input type="number" min="0" value="${mn}" onchange="pdUpdateMin(${JSON.stringify(local)},${JSON.stringify(prod)},+this.value,null)"></td>
+      <td><input type="number" min="1" value="${fr}" onchange="pdUpdateMin(${JSON.stringify(local)},${JSON.stringify(prod)},null,+this.value)"></td>
+      <td><button class="btn-sm btn-danger" style="padding:2px 7px;font-size:11px;" onclick="pdRemoveProduct(${JSON.stringify(local)},${JSON.stringify(prod)})">✕</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function pdUpdateMin(local, prod, min, frac) {
+  const mins = pdGetMinimos(_pdProv);
+  if (!mins[local]) mins[local] = {};
+  if (!mins[local][prod]) mins[local][prod] = {min:0,frac:1};
+  if (min !== null) mins[local][prod].min = min;
+  if (frac !== null) mins[local][prod].frac = frac;
+  pdSetMinimos(_pdProv, mins);
+}
+
+function pdRemoveProduct(local, prod) {
+  const mins = pdGetMinimos(_pdProv);
+  if (mins[local]) { delete mins[local][prod]; pdSetMinimos(_pdProv, mins); }
+  pdRenderMinTable();
+}
+
+function pdAddProductRow() {
+  const localSel = document.getElementById('pd-minLocal');
+  if (!localSel) return;
+  const local = localSel.value;
+  const prod = prompt('Nombre del producto (en mayúsculas):');
+  if (!prod || !prod.trim()) return;
+  const prodU = prod.trim().toUpperCase();
+  const mins = pdGetMinimos(_pdProv);
+  if (!mins[local]) mins[local] = {};
+  if (!mins[local][prodU]) mins[local][prodU] = {min:0,frac:10};
+  pdSetMinimos(_pdProv, mins);
+  pdRenderMinTable();
+}
+
+function pdClearMinimos() {
+  if (!confirm(`¿Limpiar todos los mínimos de ${_pdProv}?`)) return;
+  const all = pdGetAllMinimos();
+  delete all[_pdProv];
+  pdSaveAllMinimos(all);
+  pdRenderMinTable();
+}
+
+// ── Import Excel de mínimos ──────────────────────────────────────────────
+async function pdImportMinXls(files) {
+  if (!files || files.length === 0) return;
+  const cfg = PD_PROVEEDORES[_pdProv];
+  let imported = 0;
+  for (const file of files) {
+    try {
+      const ab = await file.arrayBuffer();
+      const wb = XLSX.read(ab, {type:'array'});
+      // Detect local from filename: minimos_cigarrillos_{local}.xlsx
+      const fname = file.name.replace(/\.xlsx?$/i,'').toUpperCase();
+      let detectedLocal = null;
+      for (const loc of cfg.locales) {
+        if (fname.includes(loc.replace(/\s/g,'_')) || fname.includes(loc.replace(/\s/g,''))) {
+          detectedLocal = loc; break;
+        }
+      }
+      // If not auto-detected, ask user
+      if (!detectedLocal) {
+        const opts = cfg.locales.join('\n');
+        const sel = prompt(`¿A qué local corresponde "${file.name}"?\n${cfg.locales.map((l,i)=>`${i+1}. ${l}`).join('\n')}\n\nEscribí el número:`);
+        const idx = parseInt(sel)-1;
+        if (idx >= 0 && idx < cfg.locales.length) detectedLocal = cfg.locales[idx];
+        else { continue; }
+      }
+      // Read sheet named _pdProv (MASSALIN/SARANDI/NOBLEZA)
+      const sheetName = wb.SheetNames.find(s => s.toUpperCase().includes(_pdProv)) || wb.SheetNames[0];
+      const ws = wb.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1});
+      // Find header row: look for 'Fraccionamiento' or 'Mínimo Confirmado'
+      let hdrIdx = -1;
+      for (let i = 0; i < Math.min(rows.length, 5); i++) {
+        const r = rows[i];
+        if (r && r.some(c => typeof c === 'string' && c.includes('racionamiento'))) { hdrIdx = i; break; }
+      }
+      if (hdrIdx === -1) { hdrIdx = 1; } // fallback to row 2
+      const hdrs = (rows[hdrIdx]||[]).map(h => (h||'').toString().trim().toLowerCase());
+      const colProd = hdrs.findIndex(h => h.includes('product'));
+      const colFrac = hdrs.findIndex(h => h.includes('racionamiento'));
+      const colMin  = hdrs.findIndex(h => h.includes('confirmado'));
+      if (colProd === -1) continue;
+      const mins = pdGetMinimos(_pdProv);
+      if (!mins[detectedLocal]) mins[detectedLocal] = {};
+      for (let i = hdrIdx+1; i < rows.length; i++) {
+        const r = rows[i];
+        if (!r || !r[colProd]) continue;
+        const prod = r[colProd].toString().trim().toUpperCase();
+        if (!prod) continue;
+        const min  = colMin  >= 0 ? (parseFloat(r[colMin])||0) : 0;
+        const frac = colFrac >= 0 ? (parseFloat(r[colFrac])||1) : 1;
+        mins[detectedLocal][prod] = {min, frac:frac||1};
+        imported++;
+      }
+      pdSetMinimos(_pdProv, mins);
+    } catch(e) { console.warn('Import min error:', e); }
+  }
+  pdRenderMinTable();
+  const countEl = document.getElementById('pd-minCount');
+  if (countEl) countEl.textContent = `${imported} productos importados`;
+  document.getElementById('pd-minJSONin').value = '';
+  document.getElementById('pd-minXls').value = '';
+}
+
+// ── Import/Export JSON mínimos ───────────────────────────────────────────
+async function pdImportMinJSON(files) {
+  if (!files || files.length === 0) return;
+  try {
+    const text = await files[0].text();
+    const data = JSON.parse(text);
+    const all = pdGetAllMinimos();
+    // Merge
+    for (const prov of Object.keys(data)) {
+      if (!all[prov]) all[prov] = {};
+      for (const loc of Object.keys(data[prov])) {
+        all[prov][loc] = {...(all[prov][loc]||{}), ...data[prov][loc]};
+      }
+    }
+    pdSaveAllMinimos(all);
+    pdRenderMinTable();
+  } catch(e) { alert('Error al leer JSON: ' + e.message); }
+  document.getElementById('pd-minJSONin').value = '';
+}
+
+function pdExportMinJSON() {
+  const all = pdGetAllMinimos();
+  const blob = new Blob([JSON.stringify(all, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `minimos_pedidos_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ── Stock file reading ───────────────────────────────────────────────────
+async function pdLoadStock(files) {
+  if (!files || files.length === 0) return;
+  const file = files[0];
+  const cfg = PD_PROVEEDORES[_pdProv];
+  try {
+    const ab = await file.arrayBuffer();
+    const wb = XLSX.read(ab, {type:'array'});
+    _pdStockData = {};
+    // Match sheets to locals by prefix
+    for (const local of cfg.locales) {
+      const patron = cfg.patron[local];
+      const sheetName = wb.SheetNames.find(s => s.startsWith(patron) || s.toLowerCase().startsWith(patron.toLowerCase()));
+      if (!sheetName) continue;
+      const ws = wb.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1});
+      // Find header row
+      let hdrIdx = 0;
+      for (let i = 0; i < Math.min(rows.length, 5); i++) {
+        if (rows[i] && rows[i].some(c => typeof c==='string' && c.toLowerCase().includes('product'))) { hdrIdx=i; break; }
+      }
+      const hdrs = (rows[hdrIdx]||[]).map(h=>(h||'').toString().trim().toLowerCase());
+      const colProd  = hdrs.findIndex(h=>h.includes('product'));
+      const colQty   = hdrs.findIndex(h=>h==='cantidad'||h.includes('cantidad'));
+      const colCosto = hdrs.findIndex(h=>h.includes('costo por')||h.includes('costo uni'));
+      if (colProd === -1) continue;
+      const localData = {};
+      for (let i = hdrIdx+1; i < rows.length; i++) {
+        const r = rows[i];
+        if (!r || !r[colProd]) continue;
+        const prod = r[colProd].toString().trim().toUpperCase();
+        if (!prod) continue;
+        const qty   = colQty   >= 0 ? (parseFloat(r[colQty])||0)   : 0;
+        const costo = colCosto >= 0 ? (parseFloat(r[colCosto])||0) : 0;
+        localData[prod] = {qty, costo};
+      }
+      _pdStockData[local] = localData;
+    }
+    _pdStockLoaded = true;
+    const matched = Object.keys(_pdStockData).length;
+    const total = cfg.locales.length;
+    document.getElementById('pd-fileName').textContent = `✓ ${file.name} — ${matched}/${total} locales encontrados`;
+    document.getElementById('pd-uploadArea').classList.add('has-file');
+    document.getElementById('pd-genStatus').innerHTML = matched < total
+      ? `<span class="pd-status-err">⚠ Solo ${matched} de ${total} locales encontrados en el archivo. Los faltantes quedarán con stock 0.</span>`
+      : `<span class="pd-status-ok">✓ Stock cargado para ${matched} locales.</span>`;
+  } catch(e) {
+    document.getElementById('pd-fileName').textContent = 'Error al leer el archivo';
+    document.getElementById('pd-genStatus').innerHTML = `<span class="pd-status-err">Error: ${e.message}</span>`;
+  }
+  files[0] = null;
+  document.getElementById('pd-stockFile').value = '';
+}
+
+// ── Calculation ──────────────────────────────────────────────────────────
+function pdCalcLocal(local, prov) {
+  const stockMap = _pdStockData[local] || {};
+  const mins = (pdGetMinimos(prov)[local]) || {};
+  const productos = Object.keys(mins).sort();
+  return productos.map(prod => {
+    const prodU = prod.toUpperCase();
+    const stockInfo = stockMap[prodU] || {qty:0, costo:0};
+    const {min:mc, frac:fr} = mins[prod]||{min:0,frac:1};
+    let qty = 0;
+    if (mc > 0 && stockInfo.qty < mc) {
+      qty = Math.ceil((mc - stockInfo.qty) / Math.max(fr,1)) * Math.max(fr,1);
+    }
+    return {producto:prod, stockActual:stockInfo.qty, minimoConf:mc, frac:fr, cantidadAPedir:qty, costoUnit:stockInfo.costo};
+  });
+}
+
+// ── Excel generation (ExcelJS) ───────────────────────────────────────────
+function pdHex(h) { return {argb:'FF'+h.replace('#','')}; }
+
+function pdSetCell(ws, row, col, value, opts={}) {
+  const cell = ws.getCell(row, col);
+  cell.value = value;
+  if (opts.fill) cell.fill = {type:'pattern',pattern:'solid',fgColor:pdHex(opts.fill)};
+  if (opts.font) cell.font = {...{name:'Arial',size:10},...opts.font};
+  if (opts.align) cell.alignment = opts.align;
+  if (opts.border) {
+    const s = {style:'thin',color:{argb:'FFCCCCCC'}};
+    cell.border = {top:s,left:s,bottom:s,right:s};
+  }
+  if (opts.numFmt) cell.numFmt = opts.numFmt;
+  return cell;
+}
+
+async function pdGenerar() {
+  const btn = document.getElementById('pd-genBtn');
+  const statusEl = document.getElementById('pd-genStatus');
+  const prov = _pdProv;
+  const cfg = PD_PROVEEDORES[prov];
+
+  const localesIncl = pdGetLocalesIncluidos();
+  if (localesIncl.length === 0) { statusEl.innerHTML='<span class="pd-status-err">Seleccioná al menos un local.</span>'; return; }
+
+  const mins = pdGetMinimos(prov);
+  const hasMins = localesIncl.some(l => Object.keys(mins[l]||{}).length > 0);
+  if (!hasMins) { statusEl.innerHTML='<span class="pd-status-err">No hay mínimos configurados. Importalos en el Paso 1.</span>'; return; }
+
+  btn.disabled = true; btn.textContent = '⏳ Generando...';
+  statusEl.innerHTML = '';
+
+  try {
+    const fecha = new Date().toLocaleDateString('es-AR');
+    const wb = new ExcelJS.Workbook();
+    wb.creator = 'POING24';
+
+    // ── Per-local sheet data ─────────────────────────────────────────────
+    const sheetData = {};
+    for (const loc of localesIncl) {
+      sheetData[loc] = pdCalcLocal(loc, prov);
+    }
+
+    // ── JONTE (if applicable) ────────────────────────────────────────────
+    const localesConJonte = cfg.incluye_jonte ? [...localesIncl, 'JONTE'] : [...localesIncl];
+    if (cfg.incluye_jonte) {
+      const refRows = sheetData[localesIncl[0]] || [];
+      sheetData['JONTE'] = refRows.map(r => ({
+        producto:r.producto, stockActual:0, minimoConf:0, frac:0,
+        cantidadAPedir:0, costoUnit:r.costoUnit
+      }));
+    }
+
+    // ── PEDIDO GENERAL sheet ─────────────────────────────────────────────
+    const pgWs = wb.addWorksheet('PEDIDO GENERAL');
+    pgWs.views = [{state:'frozen',ySplit:3}];
+    const provColor = cfg.color;
+    // Title row 1
+    pgWs.mergeCells(1, 1, 1, localesConJonte.length + 3);
+    const pgTitle = pgWs.getCell(1,1);
+    pgTitle.value = `PEDIDO — ${prov}  |  ${fecha}`;
+    pgTitle.fill = {type:'pattern',pattern:'solid',fgColor:pdHex(provColor)};
+    pgTitle.font = {name:'Arial',size:13,bold:true,color:{argb:'FFFFFFFF'}};
+    pgTitle.alignment = {horizontal:'center',vertical:'middle'};
+    pgWs.getRow(1).height = 24;
+
+    // Row 2: subtitle
+    pgWs.mergeCells(2, 1, 2, localesConJonte.length + 3);
+    const pgSub = pgWs.getCell(2,1);
+    pgSub.value = `Generado: ${fecha} — ${localesConJonte.length} locales`;
+    pgSub.font = {name:'Arial',size:10,italic:true,color:{argb:'FF888888'}};
+    pgSub.alignment = {horizontal:'center'};
+
+    // Row 3: headers — Col A=Producto, B=TOTAL, C..N=locales, N+1=Costo Unit, N+2=Costo Total
+    const pgHdrs = ['Producto','TOTAL',...localesConJonte,'Costo Unitario','Costo Total'];
+    pgHdrs.forEach((h,i) => {
+      const c = pgWs.getCell(3, i+1);
+      c.value = h;
+      c.fill = {type:'pattern',pattern:'solid',fgColor:pdHex(provColor)};
+      c.font = {name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};
+      c.alignment = {horizontal:'center',vertical:'middle'};
+      const bs = {style:'thin',color:{argb:'FFCCCCCC'}};
+      c.border = {top:bs,left:bs,bottom:bs,right:bs};
+    });
+    pgWs.getRow(3).height = 20;
+
+    // Get reference product list from first included local
+    const refLocal = localesIncl[0];
+    const refRows = sheetData[refLocal] || [];
+    const lastLocalCol = 2 + localesConJonte.length; // 1-indexed
+    const costoUnitCol = lastLocalCol + 1;
+    const costoTotalCol = lastLocalCol + 2;
+
+    refRows.forEach((r, ri) => {
+      const rowNum = ri + 4;
+      const prodCell = pgWs.getCell(rowNum, 1);
+      prodCell.value = r.producto;
+      prodCell.font = {name:'Arial',size:10};
+      const bs = {style:'thin',color:{argb:'FFCCCCCC'}};
+      prodCell.border = {top:bs,left:bs,bottom:bs,right:bs};
+
+      // Local cols (C onward = col 3+)
+      localesConJonte.forEach((loc, li) => {
+        const colIdx = li + 3;
+        const sheetRef = loc.replace(/'/g,"''");
+        pgWs.getCell(rowNum, colIdx).value = {formula:`IFERROR(VLOOKUP(A${rowNum},'${sheetRef}'!$A:$E,5,0),0)`};
+        pgWs.getCell(rowNum, colIdx).font = {name:'Arial',size:10};
+        pgWs.getCell(rowNum, colIdx).border = {top:bs,left:bs,bottom:bs,right:bs};
+        pgWs.getCell(rowNum, colIdx).alignment = {horizontal:'center'};
+      });
+
+      // TOTAL col (B)
+      const firstLocalColLetter = pdColLetter(3);
+      const lastLocalColLetter = pdColLetter(lastLocalCol);
+      pgWs.getCell(rowNum, 2).value = {formula:`SUM(${firstLocalColLetter}${rowNum}:${lastLocalColLetter}${rowNum})`};
+      pgWs.getCell(rowNum, 2).font = {name:'Arial',size:10,bold:true};
+      pgWs.getCell(rowNum, 2).fill = {type:'pattern',pattern:'solid',fgColor:pdHex('FFF2CC')};
+      pgWs.getCell(rowNum, 2).border = {top:bs,left:bs,bottom:bs,right:bs};
+      pgWs.getCell(rowNum, 2).alignment = {horizontal:'center'};
+
+      // Costo Unitario (from refLocal's cost via VLOOKUP)
+      const refSheetRef = refLocal.replace(/'/g,"''");
+      pgWs.getCell(rowNum, costoUnitCol).value = {formula:`IFERROR(VLOOKUP(A${rowNum},'${refSheetRef}'!$A:$F,6,0),0)`};
+      pgWs.getCell(rowNum, costoUnitCol).font = {name:'Arial',size:10};
+      pgWs.getCell(rowNum, costoUnitCol).fill = {type:'pattern',pattern:'solid',fgColor:pdHex('FDEBD0')};
+      pgWs.getCell(rowNum, costoUnitCol).border = {top:bs,left:bs,bottom:bs,right:bs};
+      pgWs.getCell(rowNum, costoUnitCol).numFmt = '"$"#,##0.00';
+      // Costo Total
+      pgWs.getCell(rowNum, costoTotalCol).value = {formula:`B${rowNum}*${pdColLetter(costoUnitCol)}${rowNum}`};
+      pgWs.getCell(rowNum, costoTotalCol).font = {name:'Arial',size:10};
+      pgWs.getCell(rowNum, costoTotalCol).fill = {type:'pattern',pattern:'solid',fgColor:pdHex('FDEBD0')};
+      pgWs.getCell(rowNum, costoTotalCol).border = {top:bs,left:bs,bottom:bs,right:bs};
+      pgWs.getCell(rowNum, costoTotalCol).numFmt = '"$"#,##0.00';
+    });
+
+    // TOTALES row
+    const pgTotalRow = refRows.length + 4;
+    pgWs.getCell(pgTotalRow, 1).value = 'TOTALES';
+    pgWs.getCell(pgTotalRow, 1).font = {name:'Arial',size:10,bold:true};
+    pgWs.getCell(pgTotalRow, 2).value = {formula:`SUM(B4:B${pgTotalRow-1})`};
+    pgWs.getCell(pgTotalRow, 2).font = {name:'Arial',size:10,bold:true};
+    pgWs.getCell(pgTotalRow, costoTotalCol).value = {formula:`SUM(${pdColLetter(costoTotalCol)}4:${pdColLetter(costoTotalCol)}${pgTotalRow-1})`};
+    pgWs.getCell(pgTotalRow, costoTotalCol).font = {name:'Arial',size:10,bold:true};
+    pgWs.getCell(pgTotalRow, costoTotalCol).numFmt = '"$"#,##0.00';
+    [1,2,costoUnitCol,costoTotalCol].concat(localesConJonte.map((_,i)=>i+3)).forEach(c => {
+      pgWs.getCell(pgTotalRow,c).fill={type:'pattern',pattern:'solid',fgColor:pdHex(provColor)};pgWs.getCell(pgTotalRow,c).font={name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};
+    });
+
+    // Column widths
+    pgWs.getColumn(1).width = 32;
+    pgWs.getColumn(2).width = 10;
+    localesConJonte.forEach((_,i)=>{ pgWs.getColumn(i+3).width=12; });
+    pgWs.getColumn(costoUnitCol).width = 14;
+    pgWs.getColumn(costoTotalCol).width = 14;
+
+    // ── Per-local sheets ──────────────────────────────────────────────────
+    for (const loc of localesConJonte) {
+      const rows = sheetData[loc] || [];
+      const lc = PD_LOCAL_COLORS[loc] || {hdr:'444444',row:'EEEEEE'};
+      const isJonte = loc === 'JONTE';
+      const ws = wb.addWorksheet(loc);
+      ws.views = [{state:'frozen',ySplit:3}];
+
+      // Row 1: title (merged A:G)
+      ws.mergeCells(1,1,1,7);
+      const titleCell = ws.getCell(1,1);
+      titleCell.value = isJonte
+        ? `${prov} — ${loc}  |  ${fecha}  ✏ CARGA MANUAL`
+        : `${prov} — ${loc}  |  ${fecha}`;
+      titleCell.fill = {type:'pattern',pattern:'solid',fgColor:pdHex(lc.hdr)};
+      titleCell.font = {name:'Arial',size:12,bold:true,color:{argb:'FFFFFFFF'}};
+      titleCell.alignment = {horizontal:'center',vertical:'middle'};
+      ws.getRow(1).height = 22;
+
+      // Row 2: subtitle
+      ws.mergeCells(2,1,2,7);
+      const subCell = ws.getCell(2,1);
+      subCell.value = isJonte
+        ? '⬅ CARGA MANUAL — Completar la columna Cantidad a Pedir manualmente'
+        : `Productos: ${rows.length}  —  Stock al ${fecha}`;
+      subCell.font = {name:'Arial',size:10,italic:true,color:{argb:'FF888888'}};
+      subCell.alignment = {horizontal:'center'};
+
+      // Row 3: headers
+      const hdrLabels = ['Producto','Stock Actual','Mínimo Conf.','Fracc.','Cantidad a Pedir','Costo Unitario','Costo Total'];
+      hdrLabels.forEach((h,i)=>{
+        const c = ws.getCell(3,i+1);
+        c.value = h;
+        c.fill = {type:'pattern',pattern:'solid',fgColor:pdHex(lc.hdr)};
+        c.font = {name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};
+        c.alignment = {horizontal:'center',vertical:'middle'};
+        const bs={style:'thin',color:{argb:'FFCCCCCC'}};
+        c.border={top:bs,left:bs,bottom:bs,right:bs};
+      });
+      ws.getRow(3).height = 18;
+
+      // Data rows
+      rows.forEach((r,ri)=>{
+        const rn = ri+4;
+        const pedido0 = r.cantidadAPedir === 0;
+        const bs = {style:'thin',color:{argb:'FFCCCCCC'}};
+        const rowFill = pedido0 ? 'F2F3F4' : lc.row;
+
+        // A: Producto
+        const ca = ws.getCell(rn,1);
+        ca.value = r.producto; ca.font={name:'Arial',size:10};
+        ca.fill={type:'pattern',pattern:'solid',fgColor:pdHex(rowFill)};
+        ca.border={top:bs,left:bs,bottom:bs,right:bs};
+        if (pedido0) ca.font={name:'Arial',size:10,color:{argb:'FFAAAAAA'}};
+
+        // B: Stock Actual
+        const cb=ws.getCell(rn,2); cb.value=r.stockActual; cb.font={name:'Arial',size:10};
+        cb.fill={type:'pattern',pattern:'solid',fgColor:pdHex(rowFill)};
+        cb.border={top:bs,left:bs,bottom:bs,right:bs}; cb.alignment={horizontal:'center'};
+        if (pedido0) cb.font={name:'Arial',size:10,color:{argb:'FFAAAAAA'}};
+
+        // C: Mínimo Confirmado
+        const cc=ws.getCell(rn,3); cc.value=r.minimoConf; cc.font={name:'Arial',size:10};
+        cc.fill={type:'pattern',pattern:'solid',fgColor:pdHex(rowFill)};
+        cc.border={top:bs,left:bs,bottom:bs,right:bs}; cc.alignment={horizontal:'center'};
+
+        // D: Fraccionamiento
+        const cd=ws.getCell(rn,4); cd.value=r.frac; cd.font={name:'Arial',size:10};
+        cd.fill={type:'pattern',pattern:'solid',fgColor:pdHex(rowFill)};
+        cd.border={top:bs,left:bs,bottom:bs,right:bs}; cd.alignment={horizontal:'center'};
+
+        // E: Cantidad a Pedir (value, not formula; yellow if >0; yellow always for JONTE)
+        const ce=ws.getCell(rn,5); ce.value=r.cantidadAPedir;
+        ce.font={name:'Arial',size:10,bold:!pedido0,color:{argb:pedido0?'FFAAAAAA':'FF7D6608'}};
+        ce.fill={type:'pattern',pattern:'solid',fgColor:pdHex(isJonte?'FFF2CC':(pedido0?'F2F3F4':'FFF2CC'))};
+        ce.border={top:bs,left:bs,bottom:bs,right:bs}; ce.alignment={horizontal:'center'};
+
+        // F: Costo Unitario
+        const cf=ws.getCell(rn,6); cf.value=r.costoUnit;
+        cf.font={name:'Arial',size:10,color:{argb:'FF784212'}};
+        cf.fill={type:'pattern',pattern:'solid',fgColor:pdHex('FDEBD0')};
+        cf.border={top:bs,left:bs,bottom:bs,right:bs};
+        cf.numFmt='"$"#,##0.00';
+
+        // G: Costo Total (formula)
+        const cg=ws.getCell(rn,7); cg.value={formula:`E${rn}*F${rn}`};
+        cg.font={name:'Arial',size:10,color:{argb:'FF784212'}};
+        cg.fill={type:'pattern',pattern:'solid',fgColor:pdHex('FDEBD0')};
+        cg.border={top:bs,left:bs,bottom:bs,right:bs};
+        cg.numFmt='"$"#,##0.00';
+      });
+
+      // TOTALES row
+      const lastDataRow = rows.length + 3;
+      const totRow = lastDataRow + 1;
+      const bs={style:'thin',color:{argb:'FFCCCCCC'}};
+      ws.getCell(totRow,1).value='TOTALES'; ws.getCell(totRow,1).font={name:'Arial',size:10,bold:true};
+      ws.getCell(totRow,5).value={formula:`SUM(E4:E${lastDataRow})`};
+      ws.getCell(totRow,5).font={name:'Arial',size:10,bold:true};
+      ws.getCell(totRow,7).value={formula:`SUM(G4:G${lastDataRow})`};
+      ws.getCell(totRow,7).font={name:'Arial',size:10,bold:true};
+      ws.getCell(totRow,7).numFmt='"$"#,##0.00';
+      for(let c=1;c<=7;c++){
+        ws.getCell(totRow,c).fill={type:'pattern',pattern:'solid',fgColor:pdHex(lc.hdr)};ws.getCell(totRow,c).font={name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};
+        ws.getCell(totRow,c).border={top:bs,left:bs,bottom:bs,right:bs};
+      }
+
+      // Column widths
+      ws.getColumn(1).width=34; ws.getColumn(2).width=12; ws.getColumn(3).width=13;
+      ws.getColumn(4).width=9;  ws.getColumn(5).width=14; ws.getColumn(6).width=13; ws.getColumn(7).width=14;
+    }
+
+    // ── REMITO sheets ─────────────────────────────────────────────────────
+    for (const loc of localesConJonte) {
+      const rows = sheetData[loc] || [];
+      const lc = PD_LOCAL_COLORS[loc] || {hdr:'444444',row:'EEEEEE'};
+      const isJonte = loc === 'JONTE';
+      const ws = wb.addWorksheet(`REMITO ${loc}`);
+      const locRef = loc.replace(/'/g,"''");
+
+      // Row 1: title
+      ws.mergeCells(1,1,1,4);
+      const r1=ws.getCell(1,1);
+      r1.value=`PEDIDO — ${prov}`; r1.font={name:'Arial',size:16,bold:true};
+      r1.alignment={horizontal:'center',vertical:'middle'}; ws.getRow(1).height=30;
+
+      // Row 2: local name
+      ws.mergeCells(2,1,2,4);
+      const r2=ws.getCell(2,1);
+      r2.value=isJonte?`${loc}  ✏ CARGA MANUAL`:loc;
+      r2.font={name:'Arial',size:13,bold:true,color:{argb:'FF'+lc.hdr}};
+      r2.alignment={horizontal:'center'};
+
+      // Row 3: date + total
+      ws.mergeCells(3,1,3,4);
+      const r3=ws.getCell(3,1);
+      const firstProdRow = 6;
+      const lastProdRow = rows.length + 5;
+      r3.value={formula:`CONCATENATE("Fecha: ${fecha}    TOTAL: ",SUM(A${firstProdRow}:A${lastProdRow})," unidades")`};
+      r3.font={name:'Arial',size:11}; r3.alignment={horizontal:'center'};
+
+      // Row 5: headers
+      [['CANTIDAD','A'],['PRODUCTO','B'],['','C'],['✓','D']].forEach(([h,col],i)=>{
+        const c=ws.getCell(5,i+1);
+        c.value=h; c.font={name:'Arial',size:10,bold:true};
+        c.fill={type:'pattern',pattern:'solid',fgColor:pdHex(lc.hdr)};
+        c.font={name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};
+        c.alignment={horizontal:'center'};
+        const bs={style:'thin',color:{argb:'FFCCCCCC'}};
+        c.border={top:bs,left:bs,bottom:bs,right:bs};
+      });
+      ws.getRow(5).height=18;
+
+      // Data: ALL products
+      rows.forEach((r,ri)=>{
+        const rn=ri+firstProdRow;
+        const bs={style:'thin',color:{argb:'FFCCCCCC'}};
+        // A: CANTIDAD via VLOOKUP from local sheet
+        const ca=ws.getCell(rn,1);
+        ca.value={formula:`IFERROR(VLOOKUP(B${rn},'${locRef}'!$A:$E,5,0),0)`};
+        ca.font={name:'Arial',size:11,bold:true}; ca.alignment={horizontal:'center'};
+        ca.border={top:bs,left:bs,bottom:bs,right:bs};
+        // B: PRODUCTO
+        const cb=ws.getCell(rn,2); cb.value=r.producto;
+        cb.font={name:'Arial',size:10}; cb.border={top:bs,left:bs,bottom:bs,right:bs};
+        // C: spacer
+        ws.getCell(rn,3).border={top:bs,left:bs,bottom:bs,right:bs};
+        // D: checkbox
+        const cd=ws.getCell(rn,4); cd.value='';
+        cd.border={top:bs,left:bs,bottom:bs,right:bs}; cd.alignment={horizontal:'center'};
+        // Alternating fill
+        if (ri%2===0) {
+          [1,2,3,4].forEach(c=>{
+            const cell=ws.getCell(rn,c);
+            if(!cell.fill||cell.fill.fgColor?.argb==='FF000000') {}
+            cell.fill={type:'pattern',pattern:'solid',fgColor:pdHex(lc.row)};
+          });
+          ws.getCell(rn,1).fill={type:'pattern',pattern:'solid',fgColor:pdHex(lc.row)};
+        }
+      });
+
+      // Total row
+      const totRow = rows.length + firstProdRow;
+      ws.mergeCells(totRow,1,totRow,4);
+      const totCell=ws.getCell(totRow,1);
+      totCell.value={formula:`CONCATENATE("TOTAL: ",SUM(A${firstProdRow}:A${totRow-1})," unidades")`};
+      totCell.font={name:'Arial',size:11,bold:true};
+      totCell.fill={type:'pattern',pattern:'solid',fgColor:pdHex(lc.hdr)};totCell.font={name:'Arial',size:11,bold:true,color:{argb:'FFFFFFFF'}};
+      totCell.alignment={horizontal:'center'};
+
+      // Signature lines
+      const sigRow = totRow + 2;
+      ws.getCell(sigRow,1).value='Firma Encargado: _____________________';
+      ws.getCell(sigRow,1).font={name:'Arial',size:10};
+      ws.getCell(sigRow,3).value='Firma Repartidor: _____________________';
+      ws.getCell(sigRow,3).font={name:'Arial',size:10};
+
+      // Page setup
+      ws.pageSetup = {paperSize:9,orientation:'portrait',fitToWidth:1,fitToHeight:0,margins:{left:0.5,right:0.5,top:0.75,bottom:0.75,header:0.3,footer:0.3}};
+      ws.headerFooter = {oddFooter:`${prov} — ${loc} — ${fecha}`};
+
+      // Column widths
+      ws.getColumn(1).width=12; ws.getColumn(2).width=38; ws.getColumn(3).width=8; ws.getColumn(4).width=6;
+    }
+
+    // ── Download ──────────────────────────────────────────────────────────
+    const buf = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url; a.download=`pedido_${prov}_todos_los_locales.xlsx`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const totalUnid = localesConJonte.reduce((sum,loc)=>{
+      return sum+(sheetData[loc]||[]).reduce((s,r)=>s+r.cantidadAPedir,0);
+    },0);
+    statusEl.innerHTML=`<span class="pd-status-ok">✓ Pedido generado — ${totalUnid} unidades en ${localesConJonte.length} locales.</span>`;
+  } catch(e) {
+    console.error('pdGenerar error:', e);
+    statusEl.innerHTML=`<span class="pd-status-err">Error al generar: ${e.message}</span>`;
+  } finally { btn.disabled=false; btn.textContent='🚀 Generar Excel de Pedido'; }
+}
+
+function pdColLetter(n) {
+  let s='';
+  while(n>0){s=String.fromCharCode(64+((n-1)%26+1))+s;n=Math.floor((n-1)/26);}
+  return s;
+}
+
+function pdToggleMinimos() {
+  const col = document.getElementById('pd-minCollapse');
+  const chv = document.getElementById('pd-minChevron');
+  if (!col) return;
+  const isOpen = !col.classList.contains('collapsed');
+  col.classList.toggle('collapsed', isOpen);
+  if (chv) chv.classList.toggle('open', !isOpen);
+}
+
+function pdUpdateMinSummary() {
+  const el = document.getElementById('pd-minSummary');
+  if (!el) return;
+  const cfg = PD_PROVEEDORES[_pdProv];
+  const mins = pdGetMinimos(_pdProv);
+  const totalProds = cfg.locales.reduce((sum, l) => sum + Object.keys(mins[l]||{}).length, 0);
+  el.textContent = totalProds ? `· ${totalProds} productos` : '';
+}
+
+async function pdInit() {
+  // Show loading state while fetching minimums
+  const wrap = document.getElementById('pd-minTableWrap');
+  if (wrap) wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub);font-size:13px;">⏳ Cargando mínimos...</div>';
+  await pdLoadFromFirestore();
+  pdSelectProv('MASSALIN');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  URL HASH ROUTING & INIT                                                    */
+/* ══════════════════════════════════════════════════════════════════════════ */
 window.addEventListener('popstate', e => {
-  const id = (e.state?.screen) || location.hash.replace('#','') || 'home';
-  if (VALID_SCREENS.includes(id)) _goTo(id);
+  if (e.state?.screen) _goTo(e.state.screen);
   else _goTo('home');
 });
-
-/* ── INIT ────────────────────────────────────────────────────────────────── */
 localBuildGrid();
 r_restoreState();
 r_renderHistorial();
-// navegar al hash inicial si existe
-const _startHash = location.hash.replace('#','');
-if (VALID_SCREENS.includes(_startHash) && _startHash !== 'home') {
-  _goTo(_startHash);
-  history.replaceState({screen:_startHash}, '', '#' + _startHash);
-} else {
-  history.replaceState({screen:'home'}, '', '#home');
-}
-// cargar nube al iniciar si hay local seleccionado
+pdInit();
+const _initHash = location.hash;
 const _initLocal = getLocal();
-if (_initLocal) { fbLoadConteos(_initLocal); fbLoadRemitos(_initLocal); }
+if (_initHash && _initHash !== '#home') {
+  const _scr = _initHash.replace('#','');
+  history.replaceState({screen:_scr},'','#'+_scr);
+  _goTo(_scr);
+}
+if (_initLocal) {
+  fbLoadConteos(_initLocal);
+  fbLoadRemitos(_initLocal);
+}
+authInit();
 </script>
 </body>
 </html>
