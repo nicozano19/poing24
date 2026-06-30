@@ -17,21 +17,26 @@
 /* ── RESET & BASE ─────────────────────────────────────────────────────────── */
 :root {
   --dark:    #4f8ef7;
-  --dark-hdr:#0b1220;
+  --dark-hdr:#09101c;
   --green:   #2ecc71;
   --red:     #e74c3c;
   --gray:    #7a8499;
-  --bg:      #0f1117;
-  --surface: #161b27;
-  --surface2:#1e2535;
-  --border:  #2a3347;
-  --text:    #e8eaf0;
-  --text-sub:#7a8499;
+  --bg:      #0c1018;
+  --surface: #16202f;
+  --surface2:#1e2a3c;
+  --border:  #2d3d55;
+  --text:    #eaecf2;
+  --text-sub:#7d8799;
   color-scheme: dark;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-       background: var(--bg); color: var(--text); min-height: 100vh; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* ── SCREENS ──────────────────────────────────────────────────────────────── */
 .screen {
@@ -49,50 +54,65 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 /* ── DRAWER ──────────────────────────────────────────────────────────────── */
 #drawerOverlay {
   display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
-  z-index: 200; backdrop-filter: blur(3px);
+  z-index: 200; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
 }
 #drawerOverlay.open { display: block; }
 #drawer {
-  position: fixed; top: 0; left: 0; bottom: 0; width: 270px; max-width: 80vw;
-  background: #0b1018; z-index: 201; transform: translateX(-100%);
-  transition: transform .25s cubic-bezier(.4,0,.2,1);
+  position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 82vw;
+  background: #0a0f1a; z-index: 201; transform: translateX(-100%);
+  transition: transform .2s cubic-bezier(.25,0,.2,1);
+  will-change: transform;
   display: flex; flex-direction: column;
-  box-shadow: 4px 0 32px rgba(0,0,0,.6); border-right: 1px solid var(--border);
+  box-shadow: 8px 0 40px rgba(0,0,0,.7); border-right: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 #drawer.open { transform: translateX(0); }
 .drawer-header {
-  background: linear-gradient(135deg, #0b1220 0%, #111827 100%);
-  border-bottom: 1px solid var(--border); color: white; padding: 20px 16px 16px;
+  background: linear-gradient(160deg, #0a1428 0%, #0f1c35 100%);
+  border-bottom: 1px solid var(--border); color: white;
+  padding: 24px 18px 18px;
+  padding-top: calc(24px + env(safe-area-inset-top));
 }
-.drawer-header .dh-title { font-size: 16px; font-weight: 800; }
-.drawer-header .dh-sub   { font-size: 11px; opacity: .55; margin-top: 3px; }
+.drawer-header .dh-title { font-size: 17px; font-weight: 900; letter-spacing: .01em; }
+.drawer-header .dh-sub   { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 4px; }
 .drawer-section { padding: 14px 16px 8px; }
 .drawer-section-label {
   font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .06em; color: var(--text-sub); margin-bottom: 8px;
+  letter-spacing: .08em; color: var(--text-sub); margin-bottom: 10px;
 }
 .drawer-local-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .drawer-local-btn {
-  border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 4px;
-  font-size: 11px; font-weight: 700; color: var(--text-sub); background: var(--surface2);
-  cursor: pointer; text-align: center; transition: all .12s;
+  border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 4px;
+  font-size: 11px; font-weight: 700; color: var(--text-sub); background: var(--surface);
+  cursor: pointer; text-align: center; transition: all .12s; min-height: 40px;
+  display: flex; align-items: center; justify-content: center;
 }
-.drawer-local-btn.selected { background: var(--dark); border-color: var(--dark); color: white; }
-.drawer-divider { height: 1px; background: var(--border); margin: 4px 0; }
+.drawer-local-btn.selected {
+  background: linear-gradient(135deg, #1e3a6e 0%, #16202f 100%);
+  border-color: #4f8ef7; color: white;
+  box-shadow: 0 0 0 2px rgba(79,142,247,.2);
+}
+.drawer-divider { height: 1px; background: var(--border); margin: 6px 16px; }
 .drawer-nav-item {
-  display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
   font-size: 14px; font-weight: 600; color: var(--text-sub); cursor: pointer;
-  border-radius: 8px; margin: 2px 8px; border: none; background: none;
-  width: calc(100% - 16px); text-align: left; transition: all .15s;
+  border-radius: 10px; margin: 2px 8px; border: none; background: none;
+  width: calc(100% - 16px); text-align: left; transition: background .15s, color .15s;
+  min-height: 52px;
 }
-.drawer-nav-item:hover { background: var(--surface2); color: var(--text); }
-.drawer-nav-item.active-nav { background: rgba(79,142,247,.15); color: var(--dark); }
-.drawer-nav-item .nav-icon { font-size: 20px; flex-shrink: 0; }
+.drawer-nav-item:active { background: var(--surface2); color: var(--text); }
+.drawer-nav-item.active-nav {
+  background: rgba(79,142,247,.14); color: var(--dark);
+  box-shadow: inset 0 0 0 1px rgba(79,142,247,.25);
+}
+.drawer-nav-item .nav-icon { font-size: 22px; flex-shrink: 0; }
 .drawer-close {
-  margin: auto 16px 20px; padding: 11px; border-radius: 10px; border: 1px solid var(--border);
-  background: var(--surface2); color: var(--text-sub); font-size: 13px; font-weight: 700;
+  margin: auto 16px 20px; padding: 14px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-sub); font-size: 13px; font-weight: 700;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 52px; transition: background .15s;
 }
+.drawer-close:active { background: var(--surface2); }
 
 /* ── SHARED HEADER ────────────────────────────────────────────────────────── */
 .app-header {
@@ -105,17 +125,43 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .app-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .btn-menu {
   background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.3);
-  color: rgba(255,255,255,.9); border-radius: 6px; padding: 5px 9px; font-size: 16px;
+  color: rgba(255,255,255,.9); border-radius: 8px;
+  min-width: 44px; min-height: 44px;
+  padding: 0 10px; font-size: 18px;
   cursor: pointer; flex-shrink: 0; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
 }
+.btn-menu:hover { background: rgba(79,142,247,.22); border-color: rgba(79,142,247,.5); }
+.btn-menu:active { transform: scale(.93); }
 .btn-back {
   background: rgba(79,142,247,.12); border: 1px solid rgba(79,142,247,.3);
-  color: rgba(255,255,255,.9); border-radius: 6px; padding: 4px 10px; font-size: 12px;
+  color: rgba(255,255,255,.9); border-radius: 8px;
+  min-width: 44px; min-height: 44px;
+  padding: 0 12px; font-size: 13px; font-weight: 600;
   cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
 }
+.btn-back:hover { background: rgba(79,142,247,.22); border-color: rgba(79,142,247,.5); }
+.btn-back:active { transform: scale(.93); }
 .app-header h1 { font-size: 15px; font-weight: 700; flex: 1; }
-.progress-bar  { height: 3px; background: rgba(255,255,255,.1); }
-.progress-fill { height: 100%; background: var(--dark); transition: width .3s; box-shadow: 0 0 8px var(--dark); }
+.progress-bar  { height: 4px; background: rgba(255,255,255,.07); overflow: hidden; }
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, #3a7bd5, #5a9bff);
+  transition: width .4s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 0 10px rgba(79,142,247,.7), 0 0 20px rgba(79,142,247,.3);
+  border-radius: 0 2px 2px 0;
+  position: relative;
+}
+.progress-fill::after {
+  content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 40px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25));
+  animation: progress-sheen 1.8s ease-in-out infinite;
+}
+@keyframes progress-sheen {
+  0%,100% { opacity: 0; } 50% { opacity: 1; }
+}
 
 /* ── HOME SCREEN ──────────────────────────────────────────────────────────── */
 #home {
@@ -123,30 +169,60 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
   align-items: center; padding: 0 0 40px;
 }
 .home-hero {
-  background: linear-gradient(160deg, #0b1220 0%, #111827 60%, #0f1117 100%);
+  background: linear-gradient(160deg, #0a1428 0%, #0f1c35 45%, #0c1018 100%);
   border-bottom: 1px solid var(--border); color: white; width: 100%;
-  padding: 36px 24px 28px; text-align: center;
+  padding: 48px 24px 36px; text-align: center;
 }
-.home-hero .logo { margin-bottom: 14px; }
-.home-hero .logo svg { width: 90px; height: 90px; }
-.home-hero h1   { font-size: 24px; font-weight: 900; margin-bottom: 4px; letter-spacing: .04em; }
-.home-hero p    { font-size: 13px; opacity: .5; }
+.home-hero .logo { margin-bottom: 18px; }
+.home-hero .logo svg { width: 80px; height: 80px; filter: drop-shadow(0 0 18px rgba(79,142,247,.5)); }
+.home-hero h1 {
+  font-size: 26px; font-weight: 900; margin-bottom: 6px;
+  letter-spacing: .02em; color: #ffffff;
+  text-shadow: 0 0 30px rgba(79,142,247,.4);
+}
+.home-hero p { font-size: 13px; color: rgba(255,255,255,.45); }
 
 .home-cards { width: 100%; max-width: 480px; padding: 24px 16px; display: flex; flex-direction: column; gap: 14px; }
 .app-card {
   background: var(--surface); border-radius: 16px; padding: 20px;
   display: flex; align-items: center; gap: 16px;
-  border: 1px solid var(--border); cursor: pointer;
+  border: 1px solid var(--border); border-left: 4px solid var(--border);
+  cursor: pointer;
   transition: transform .15s, border-color .15s, box-shadow .15s;
   text-align: left; width: 100%;
 }
-.app-card:hover { border-color: rgba(79,142,247,.4); box-shadow: 0 0 20px rgba(79,142,247,.08); }
 .app-card:active { transform: scale(.97); }
 .app-card .card-icon { font-size: 36px; flex-shrink: 0; }
 .app-card .card-body { flex: 1; }
 .app-card .card-title { font-size: 16px; font-weight: 800; color: var(--text); }
 .app-card .card-sub   { font-size: 12px; color: var(--gray); margin-top: 3px; }
-.app-card .card-arrow { font-size: 18px; color: var(--border); flex-shrink: 0; }
+.app-card .card-arrow { font-size: 20px; font-weight: 300; color: var(--border); flex-shrink: 0; transition: color .15s, transform .15s; }
+.app-card:hover .card-arrow { transform: translateX(3px); }
+
+/* colores por módulo */
+#home-card-planilla { border-left-color: #4f8ef7; }
+#home-card-planilla:hover { border-color: rgba(79,142,247,.4); border-left-color: #4f8ef7; box-shadow: 0 4px 24px rgba(79,142,247,.12); }
+#home-card-planilla:hover .card-arrow { color: #4f8ef7; }
+
+#home-card-remito { border-left-color: #2ecc71; }
+#home-card-remito:hover { border-color: rgba(46,204,113,.35); border-left-color: #2ecc71; box-shadow: 0 4px 24px rgba(46,204,113,.1); }
+#home-card-remito:hover .card-arrow { color: #2ecc71; }
+
+#home-card-comparador { border-left-color: #f39c12; }
+#home-card-comparador:hover { border-color: rgba(243,156,18,.35); border-left-color: #f39c12; box-shadow: 0 4px 24px rgba(243,156,18,.1); }
+#home-card-comparador:hover .card-arrow { color: #f39c12; }
+
+#home-card-admin { border-left-color: #9b59b6; }
+#home-card-admin:hover { border-color: rgba(155,89,182,.35); border-left-color: #9b59b6; box-shadow: 0 4px 24px rgba(155,89,182,.1); }
+#home-card-admin:hover .card-arrow { color: #9b59b6; }
+
+#home-card-pedidos { border-left-color: #1abc9c; }
+#home-card-pedidos:hover { border-color: rgba(26,188,156,.35); border-left-color: #1abc9c; box-shadow: 0 4px 24px rgba(26,188,156,.1); }
+#home-card-pedidos:hover .card-arrow { color: #1abc9c; }
+
+#home-card-billetes { border-left-color: #f1c40f; }
+#home-card-billetes:hover { border-color: rgba(241,196,15,.35); border-left-color: #f1c40f; box-shadow: 0 4px 24px rgba(241,196,15,.12); }
+#home-card-billetes:hover .card-arrow { color: #f1c40f; }
 .card-badge {
   font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
   margin-top: 5px; display: inline-block;
@@ -159,7 +235,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .bottom-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: rgba(11,16,24,.95); backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border); padding: 10px 16px;
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
   display: flex; align-items: center; gap: 12px; z-index: 50;
   box-shadow: 0 -4px 24px rgba(0,0,0,.4);
 }
@@ -167,34 +246,42 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .stats-line { font-size: 12px; color: var(--text-sub); }
 .stats-line strong { color: var(--dark); }
 .btn-send {
-  background: var(--dark); color: white; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #5a9bff 0%, #3a7bd5 100%);
+  color: white; border: none; border-radius: 10px;
   padding: 12px 20px; font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0;
-  box-shadow: 0 0 16px rgba(79,142,247,.35);
+  box-shadow: 0 4px 16px rgba(79,142,247,.45), inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .12s, box-shadow .12s;
 }
-.btn-send:active { opacity: .85; }
+.btn-send:hover { box-shadow: 0 6px 20px rgba(79,142,247,.55), inset 0 1px 0 rgba(255,255,255,.15); }
+.btn-send:active { transform: scale(.96); box-shadow: 0 2px 8px rgba(79,142,247,.3); }
 .btn-send:disabled { background: var(--surface2); color: var(--gray); box-shadow: none; cursor: not-allowed; }
 
 /* ── PRODUCT ROW ──────────────────────────────────────────────────────────── */
 .product-row {
-  display: flex; align-items: center; background: var(--surface); border-radius: 10px;
-  padding: 9px 12px; margin-bottom: 5px; border: 1px solid var(--border);
+  display: flex; align-items: center; background: var(--surface); border-radius: 12px;
+  padding: 11px 12px; margin-bottom: 6px; border: 1px solid var(--border);
   gap: 10px; border-left: 4px solid var(--border);
+  transition: background .2s, border-color .2s;
 }
-.product-row.has-value, .product-row.filled { border-left-color: var(--green); }
+.product-row.has-value, .product-row.filled {
+  border-left-color: var(--green);
+  background: linear-gradient(90deg, rgba(46,204,113,.06) 0%, var(--surface) 40%);
+}
 .product-row.no-sku { border-left-color: #9b59b6; }
 .product-info { flex: 1; min-width: 0; }
-.product-name { font-size: 13px; font-weight: 600; line-height: 1.25; color: var(--text); }
-.product-sku  { font-size: 10px; color: var(--text-sub); margin-top: 1px; }
+.product-name { font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--text); }
+.product-sku  { font-size: 10px; color: var(--text-sub); margin-top: 2px; }
 .product-sku.no-sku { color: #9b59b6; }
 
 .count-input {
-  width: 64px; flex-shrink: 0; text-align: center; border: 2px solid var(--border);
-  border-radius: 8px; padding: 6px 4px; font-size: 19px; font-weight: 700;
+  width: 68px; flex-shrink: 0; text-align: center; border: 2px solid var(--border);
+  border-radius: 10px; padding: 8px 4px; font-size: 20px; font-weight: 800;
   color: var(--text); background: var(--surface2); -moz-appearance: textfield;
+  transition: border-color .15s, background .15s, color .15s;
 }
 .count-input::-webkit-inner-spin-button, .count-input::-webkit-outer-spin-button { -webkit-appearance: none; }
-.count-input:focus  { outline: none; border-color: var(--dark); background: var(--surface); }
-.count-input.filled { border-color: var(--green); background: rgba(46,204,113,.08); color: var(--green); }
+.count-input:focus  { outline: none; border-color: var(--dark); background: var(--surface); box-shadow: 0 0 0 3px rgba(79,142,247,.15); }
+.count-input.filled { border-color: var(--green); background: rgba(46,204,113,.1); color: var(--green); box-shadow: 0 0 0 3px rgba(46,204,113,.1); }
 
 /* ── SECTION HEADER ───────────────────────────────────────────────────────── */
 .section-header {
@@ -206,17 +293,26 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .section-header-remito span { opacity: .65; font-weight: 400; }
 
 /* ── CONTENT AREA ─────────────────────────────────────────────────────────── */
-.content { padding: 12px; padding-bottom: 100px; }
+.content { padding: 12px; padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
 
 /* ── TABS (planilla) ──────────────────────────────────────────────────────── */
-.tabs { display: flex; overflow-x: auto; gap: 2px; scrollbar-width: none; }
+.tabs {
+  display: flex; overflow-x: auto; gap: 4px; scrollbar-width: none;
+  padding: 8px 12px 0; background: var(--dark-hdr);
+}
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
-  flex-shrink: 0; padding: 8px 14px; font-size: 12px; font-weight: 600;
-  color: rgba(255,255,255,.4); border-radius: 8px 8px 0 0; cursor: pointer;
+  flex-shrink: 0; padding: 7px 14px; font-size: 12px; font-weight: 600;
+  color: rgba(255,255,255,.4); border-radius: 8px; cursor: pointer;
   border: none; background: transparent;
+  transition: color .15s, background .15s;
+  margin-bottom: 8px;
 }
-.tab.active { background: var(--bg); color: var(--dark); }
+.tab:hover { color: rgba(255,255,255,.7); background: rgba(255,255,255,.06); }
+.tab.active {
+  background: rgba(79,142,247,.18); color: var(--dark);
+  box-shadow: inset 0 0 0 1px rgba(79,142,247,.35);
+}
 
 /* meta fields in header */
 .header-meta { display: flex; gap: 8px; }
@@ -272,11 +368,15 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .load-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
 .load-sub   { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; line-height: 1.55; }
 .btn-load {
-  background: var(--dark); color: white; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, #5a9bff 0%, #3a7bd5 100%);
+  color: white; border: none; border-radius: 12px;
   padding: 15px 32px; font-size: 15px; font-weight: 700; cursor: pointer;
   margin-bottom: 12px; width: 100%; max-width: 300px;
-  box-shadow: 0 0 20px rgba(79,142,247,.3);
+  box-shadow: 0 4px 20px rgba(79,142,247,.45), inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .12s, box-shadow .12s;
 }
+.btn-load:hover { box-shadow: 0 6px 24px rgba(79,142,247,.55), inset 0 1px 0 rgba(255,255,255,.15); }
+.btn-load:active { transform: scale(.96); }
 .btn-demo {
   background: transparent; color: var(--dark); border: 2px solid rgba(79,142,247,.4);
   border-radius: 12px; padding: 13px 32px; font-size: 14px; font-weight: 600;
@@ -337,23 +437,37 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 }
 #cmpBtn {
   width: 100%; padding: 15px; font-size: 1rem; font-weight: 700;
-  background: var(--dark); color: white; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, #5a9bff 0%, #3a7bd5 100%);
+  color: white; border: none; border-radius: 12px;
   cursor: pointer; margin-bottom: 14px; display: flex; align-items: center;
-  justify-content: center; gap: 8px; box-shadow: 0 0 20px rgba(79,142,247,.3);
+  justify-content: center; gap: 8px;
+  box-shadow: 0 4px 20px rgba(79,142,247,.45), inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .12s, box-shadow .12s;
 }
+#cmpBtn:hover:not(:disabled) { box-shadow: 0 6px 24px rgba(79,142,247,.55), inset 0 1px 0 rgba(255,255,255,.15); }
+#cmpBtn:active:not(:disabled) { transform: scale(.97); }
 #cmpBtn:disabled { background: var(--surface2); color: var(--gray); box-shadow: none; cursor: not-allowed; }
 .spinner { display: none; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,.3);
            border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .resumen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 @media(min-width:500px) { .resumen-grid { grid-template-columns: repeat(4,1fr); } }
-.stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
-.stat-box .snum { font-size: 1.8rem; font-weight: 800; }
-.stat-box .slbl { font-size: .7rem; color: var(--text-sub); text-transform: uppercase;
-                  letter-spacing: .04em; margin-top: 2px; }
+.stat-box {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 12px; text-align: center;
+  transition: transform .15s, box-shadow .15s;
+}
+.stat-box:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.stat-box .snum { font-size: 2.1rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.stat-box .slbl { font-size: .68rem; color: var(--text-sub); text-transform: uppercase;
+                  letter-spacing: .06em; margin-top: 5px; }
+.stat-box.s-tot { background: linear-gradient(135deg, #1a2340 0%, var(--surface2) 100%); border-color: rgba(79,142,247,.25); }
 .stat-box.s-tot .snum { color: var(--dark); }
+.stat-box.s-ok  { background: linear-gradient(135deg, #0d2b1a 0%, var(--surface2) 100%); border-color: rgba(46,204,113,.2); }
 .stat-box.s-ok  .snum { color: var(--green); }
+.stat-box.s-dif { background: linear-gradient(135deg, #2b0f0d 0%, var(--surface2) 100%); border-color: rgba(231,76,60,.2); }
 .stat-box.s-dif .snum { color: var(--red); }
+.stat-box.s-sku { background: linear-gradient(135deg, #1f1030 0%, var(--surface2) 100%); border-color: rgba(155,89,182,.2); }
 .stat-box.s-sku .snum { color: #c39ae8; }
 .seccion-bar {
   display: flex; align-items: center; justify-content: space-between;
@@ -383,16 +497,23 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 #reconteoBox { display: none; }
 /* ── LOCAL SELECTOR ───────────────────────────────────────────────────────── */
 .local-selector { width: 100%; max-width: 480px; padding: 0 16px 4px; }
-.local-selector-label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase;
-                         letter-spacing: .05em; margin-bottom: 8px; text-align: center; }
+.local-selector-label { font-size: 10px; font-weight: 700; color: var(--text-sub); text-transform: uppercase;
+                         letter-spacing: .08em; margin-bottom: 10px; text-align: center; }
 .local-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .local-btn {
-  background: var(--surface); border: 2px solid var(--border); border-radius: 10px;
-  padding: 10px 6px; font-size: 11px; font-weight: 700; color: var(--text-sub);
-  cursor: pointer; text-align: center; transition: all .15s; line-height: 1.2;
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 14px 6px; font-size: 11px; font-weight: 700; color: var(--text-sub);
+  cursor: pointer; text-align: center; line-height: 1.3;
+  min-height: 52px; display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, color .15s, background .15s, transform .1s, box-shadow .15s;
 }
-.local-btn:active { transform: scale(.95); }
-.local-btn.selected { background: var(--dark); border-color: var(--dark); color: white; box-shadow: 0 0 12px rgba(79,142,247,.3); }
+.local-btn:active { transform: scale(.94); }
+.local-btn.selected {
+  background: linear-gradient(135deg, #1e3a6e 0%, #16202f 100%);
+  border-color: #4f8ef7;
+  color: white;
+  box-shadow: 0 0 0 3px rgba(79,142,247,.2), 0 4px 16px rgba(79,142,247,.2);
+}
 .local-badge {
   display: inline-block; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
   border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700; margin-top: 8px;
@@ -415,33 +536,59 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 
 /* ── LOGIN SCREEN ─────────────────────────────────────────────────────────── */
 #loginOverlay {
-  position: fixed; inset: 0; background: var(--bg);
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, #0f1c35 0%, #0c1018 60%);
   z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px;
 }
+#loginOverlay::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,142,247,.1) 0%, transparent 65%);
+  pointer-events: none;
+}
 .lock-box {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px;
-  width: 100%; max-width: 320px; text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+  padding: 40px 28px 32px;
+  width: 100%; max-width: 340px; text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(79,142,247,.08);
+  position: relative;
 }
-.lock-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
-.lock-sub   { font-size: 13px; color: var(--text-sub); margin-bottom: 22px; }
+.lock-box::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79,142,247,.4), transparent);
+}
+.lock-title {
+  font-size: 20px; font-weight: 900; margin-bottom: 6px;
+  color: #ffffff; text-shadow: 0 0 24px rgba(79,142,247,.35);
+}
+.lock-sub   { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; line-height: 1.5; }
 .lock-input {
-  width: 100%; padding: 13px 16px; border: 2px solid var(--border); border-radius: 10px;
-  font-size: 15px; text-align: left; letter-spacing: 0; margin-bottom: 12px;
-  outline: none; transition: border-color .2s; background: var(--surface2); color: var(--text);
+  width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px;
+  font-size: 15px; text-align: left; margin-bottom: 12px;
+  outline: none; transition: border-color .2s, box-shadow .2s;
+  background: var(--surface2); color: var(--text);
+  font-family: inherit;
 }
-.lock-input:focus { border-color: var(--dark); }
-.lock-input.error { border-color: var(--red); animation: shake .3s; }
+.lock-input:focus {
+  border-color: var(--dark);
+  box-shadow: 0 0 0 3px rgba(79,142,247,.15);
+}
+.lock-input.error { border-color: var(--red); animation: shake .3s; box-shadow: 0 0 0 3px rgba(231,76,60,.15); }
 @keyframes shake {
   0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-8px); } 75%{ transform:translateX(8px); }
 }
 .lock-error { font-size: 12px; color: var(--red); margin-bottom: 12px; display: none; }
 .btn-unlock {
-  width: 100%; padding: 13px; background: var(--dark); color: white; border: none;
-  border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px;
-  box-shadow: 0 0 16px rgba(79,142,247,.3);
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, #5a9bff 0%, #3a7bd5 100%);
+  color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-bottom: 10px;
+  box-shadow: 0 4px 16px rgba(79,142,247,.45), inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .12s, box-shadow .12s;
 }
-.btn-unlock:active { opacity: .85; }
+.btn-unlock:hover { box-shadow: 0 6px 20px rgba(79,142,247,.55), inset 0 1px 0 rgba(255,255,255,.15); }
+.btn-unlock:active { transform: scale(.96); }
 .btn-lock-cancel {
   width: 100%; padding: 10px; background: transparent; color: var(--text-sub);
   border: none; font-size: 13px; cursor: pointer;
@@ -471,29 +618,124 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
 .saved-empty { font-size: .8rem; color: var(--text-sub); text-align: center; padding: 12px 0; }
 
 /* ── PEDIDOS AUTOMÁTICOS ─────────────────────────────────────────────────── */
-.pd-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 16px; margin:0 12px 16px; }
+.pd-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  padding:20px 18px; margin:0 12px 16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.2);
+}
 .pd-section-title { font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px; letter-spacing:.3px; }
 .pd-step-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-.pd-step-badge { width:26px; height:26px; background:var(--dark); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
+.pd-step-badge {
+  width:28px; height:28px;
+  background:linear-gradient(135deg,#5a9bff,#3a7bd5);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:#fff; flex-shrink:0;
+  box-shadow:0 0 10px rgba(79,142,247,.4);
+}
 .pd-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
 .pd-tab { padding:7px 18px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface2); color:var(--text-sub); font-size:13px; font-weight:600; cursor:pointer; transition:.2s; }
 .pd-tab.active { background:var(--dark); border-color:var(--dark); color:#fff; }
 .pd-prov-info { font-size:12px; color:var(--text-sub); padding:6px 10px; background:var(--surface2); border-radius:8px; }
-.pd-select { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:13px; font-family:inherit; }
+.pd-select {
+  background:var(--surface2); color:var(--text);
+  border:1.5px solid var(--border); border-radius:10px;
+  padding:9px 12px; font-size:13px; font-weight:600;
+  font-family:inherit; cursor:pointer;
+  transition:border-color .15s;
+}
+.pd-select:focus { outline:none; border-color:var(--dark); box-shadow:0 0 0 3px rgba(79,142,247,.15); }
 .pd-upload-area { border:2px dashed var(--border); border-radius:12px; padding:24px; text-align:center; cursor:pointer; transition:.2s; color:var(--text-sub); }
 .pd-upload-area:hover { border-color:var(--dark); color:var(--dark); }
 .pd-upload-area.has-file { border-color:#2ecc71; color:#2ecc71; }
-.pd-min-table { width:100%; border-collapse:collapse; font-size:12px; }
-.pd-min-table th { background:var(--surface2); color:var(--text-sub); padding:6px 8px; text-align:left; border:1px solid var(--border); font-weight:600; white-space:nowrap; }
-.pd-min-table td { padding:5px 7px; border:1px solid var(--border); color:var(--text); }
-.pd-min-table td input { width:56px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:5px; padding:3px 5px; font-size:12px; font-family:inherit; text-align:center; }
+.pd-min-table { width:100%; border-collapse:collapse; font-size:13px; }
+.pd-min-table th {
+  background:var(--surface2); color:var(--text-sub); padding:10px 12px;
+  text-align:left; border-bottom:2px solid var(--border);
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+  white-space:nowrap; position:sticky; top:0; z-index:1;
+}
+.pd-min-table th:last-child { width:36px; }
+.pd-min-table td { padding:8px 12px; border-bottom:1px solid var(--border); color:var(--text); vertical-align:middle; }
+.pd-min-table tbody tr:hover td { background:rgba(255,255,255,.03); }
+.pd-min-table tbody tr:last-child td { border-bottom:none; }
+.pd-min-table td:first-child { font-size:13px; font-weight:500; }
+.pd-min-table td input {
+  width:64px; background:var(--surface2); color:var(--text);
+  border:1.5px solid var(--border); border-radius:8px;
+  padding:6px 8px; font-size:14px; font-weight:700;
+  font-family:inherit; text-align:center;
+  transition:border-color .15s, box-shadow .15s;
+}
+.pd-min-table td input:focus {
+  outline:none; border-color:var(--dark);
+  box-shadow:0 0 0 3px rgba(79,142,247,.15);
+}
 .pd-local-check { display:flex; align-items:center; gap:6px; background:var(--surface2); border-radius:8px; padding:7px 11px; border:1px solid var(--border); cursor:pointer; font-size:13px; color:var(--text); }
 .pd-local-check input[type=checkbox] { accent-color:var(--dark); width:15px; height:15px; cursor:pointer; }
 .pd-status-ok { color:#2ecc71; font-weight:600; }
 .pd-status-err { color:#e74c3c; font-weight:600; }
-.btn-sm { padding:7px 13px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:12px; font-weight:600; cursor:pointer; transition:.2s; }
+
+/* ── CONTROL DE BILLETES ─────────────────────────────────────────────── */
+.bill-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px; }
+.bill-row {
+  display:flex; align-items:center; gap:12px; padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.bill-row:last-child { border-bottom:none; }
+.bill-denom {
+  display:flex; align-items:center; gap:10px; flex:0 0 110px; min-width:0;
+}
+.bill-denom-swatch {
+  width:38px; height:26px; border-radius:5px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:800; color:#0c1018;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.3);
+}
+.bill-denom-label { font-size:15px; font-weight:700; color:var(--text); white-space:nowrap; }
+.bill-qty-wrap { display:flex; align-items:center; gap:6px; }
+.bill-qty-btn {
+  width:36px; height:36px; border-radius:9px; border:1.5px solid var(--border);
+  background:var(--surface2); color:var(--text); font-size:18px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  transition:.12s; flex-shrink:0; -webkit-tap-highlight-color:transparent;
+}
+.bill-qty-btn:active { transform:scale(.92); background:var(--border); }
+.bill-row input.bill-qty-input {
+  width:72px; height:40px; background:var(--surface2); color:var(--text);
+  border:1.5px solid var(--border); border-radius:9px;
+  font-size:16px; font-weight:700; text-align:center; font-family:inherit;
+  transition:border-color .15s, box-shadow .15s;
+}
+.bill-row input.bill-qty-input:focus { outline:none; border-color:var(--dark); box-shadow:0 0 0 3px rgba(79,142,247,.15); }
+.bill-subtotal {
+  flex:1; text-align:right; font-size:15px; font-weight:800; color:var(--text-sub);
+  font-variant-numeric:tabular-nums;
+}
+.bill-row.has-qty .bill-subtotal { color:#2ecc71; }
+.bill-total-box {
+  background: linear-gradient(135deg, #1a2340 0%, var(--surface2) 100%);
+  border:1px solid rgba(79,142,247,.3); border-radius:14px;
+  padding:20px; text-align:center; margin-bottom:14px;
+}
+.bill-total-label { font-size:11px; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+.bill-total-value { font-size:34px; font-weight:900; color:#fff; text-shadow:0 0 24px rgba(79,142,247,.4); font-variant-numeric:tabular-nums; }
+.bill-total-sub { font-size:12px; color:var(--text-sub); margin-top:4px; }
+.bill-actions { display:flex; gap:10px; }
+.bill-actions button {
+  flex:1; padding:13px; border-radius:10px; border:none; font-size:13px; font-weight:700;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.bill-btn-clear { background:rgba(231,76,60,.14); border:1px solid rgba(231,76,60,.3) !important; color:#f09080; }
+.bill-btn-copy { background: linear-gradient(135deg, #5a9bff 0%, #3a7bd5 100%); color:#fff; box-shadow:0 4px 16px rgba(79,142,247,.35); }
+.btn-sm {
+  padding:8px 14px; border-radius:8px; border:1px solid var(--border);
+  background:var(--surface2); color:var(--text); font-size:12px; font-weight:600;
+  cursor:pointer; transition:background .15s, border-color .15s, color .15s;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
 .btn-sm:hover { background:var(--dark); border-color:var(--dark); color:#fff; }
-.btn-sm.btn-danger { border-color:rgba(231,76,60,.4); color:#e74c3c; }
+.btn-sm:active { transform:scale(.96); }
+.btn-sm.btn-danger { border-color:rgba(231,76,60,.3); color:#e74c3c; background:rgba(231,76,60,.08); }
 .btn-sm.btn-danger:hover { background:#e74c3c; border-color:#e74c3c; color:#fff; }
 .pd-collapse-toggle { cursor:pointer; user-select:none; display:flex; align-items:center; gap:10px; width:100%; }
 .pd-collapse-toggle:hover .pd-section-title { color:var(--dark); }
@@ -550,6 +792,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
     <button class="drawer-nav-item" id="dnav-pedidos" onclick="drawerGoTo('pedidos')">
       <span class="nav-icon">🛒</span> Pedidos Automáticos
     </button>
+    <button class="drawer-nav-item" id="dnav-billetes" onclick="drawerGoTo('billetes')">
+      <span class="nav-icon">💵</span> Control de Billetes
+    </button>
   </div>
   <button class="drawer-close" onclick="drawerClose()">✕ &nbsp;Cerrar menú</button>
 </div>
@@ -590,7 +835,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
     <div class="local-grid" id="localGrid"></div>
   </div>
   <div class="home-cards">
-    <button class="app-card" onclick="goTo('planilla')">
+    <button id="home-card-planilla" class="app-card" onclick="goTo('planilla')">
       <div class="card-icon">📋</div>
       <div class="card-body">
         <div class="card-title">Conteo Diario</div>
@@ -600,7 +845,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
       <div class="card-arrow">›</div>
     </button>
 
-    <button class="app-card" onclick="goTo('remito')">
+    <button id="home-card-remito" class="app-card" onclick="goTo('remito')">
       <div class="card-icon">📦</div>
       <div class="card-body">
         <div class="card-title">Control de Remito</div>
@@ -634,6 +879,16 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
         <div class="card-title">Pedidos Automáticos</div>
         <div class="card-sub">Generá el Excel de pedido a proveedores desde el stock Daruma</div>
         <div class="card-badge badge-blue">MASSALIN · SARANDI · NOBLEZA</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </button>
+
+    <button id="home-card-billetes" class="app-card" onclick="goTo('billetes')">
+      <div class="card-icon">💵</div>
+      <div class="card-body">
+        <div class="card-title">Control de Billetes</div>
+        <div class="card-sub">Contá la caja por denominación y obtené el total</div>
+        <div class="card-badge badge-blue">ARQUEO DE CAJA</div>
       </div>
       <div class="card-arrow">›</div>
     </button>
@@ -948,6 +1203,12 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
       <button class="pd-tab active" onclick="pdSelectProv('MASSALIN')">MASSALIN</button>
       <button class="pd-tab" onclick="pdSelectProv('SARANDI')">SARANDI</button>
       <button class="pd-tab" onclick="pdSelectProv('NOBLEZA')">NOBLEZA</button>
+      <button class="pd-tab" onclick="pdSelectProv('FACUNDO')">FACUNDO</button>
+      <button class="pd-tab" onclick="pdSelectProv('PULPO')">PULPO</button>
+      <button class="pd-tab" onclick="pdSelectProv('NEHUEN')">NEHUEN</button>
+      <button class="pd-tab" onclick="pdSelectProv('CELESTINO')">CELESTINO</button>
+      <button class="pd-tab" onclick="pdSelectProv('LINIERS')">LINIERS</button>
+      <button class="pd-tab" onclick="pdSelectProv('VIEJO')">VIEJO</button>
     </div>
     <div class="pd-prov-info" id="pd-provInfo">Lunes / Jueves &nbsp;·&nbsp; 6 locales (sin Jonte)</div>
   </div>
@@ -1007,6 +1268,35 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans
     </div>
     <div id="pd-genStatus" style="margin:12px 0;font-size:13px;min-height:20px;"></div>
     <button id="pd-genBtn" class="btn-unlock" onclick="pdGenerar()" style="width:100%;max-width:none;border-radius:10px;">🚀 Generar Excel de Pedido</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!--  APP 6: CONTROL DE BILLETES                                              -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div id="billetes" class="screen">
+  <div class="app-header">
+    <div class="app-header-top">
+      <button class="btn-menu" onclick="drawerOpen('billetes')">☰</button>
+      <h1>💵 Control de Billetes</h1>
+      <span class="info-chip app-local-label" style="font-size:10px;"></span>
+    </div>
+  </div>
+  <div class="cmp-main">
+    <div class="bill-total-box">
+      <div class="bill-total-label">Total contado</div>
+      <div class="bill-total-value" id="bill-totalValue">$0</div>
+      <div class="bill-total-sub" id="bill-totalSub">0 billetes</div>
+    </div>
+
+    <div class="bill-card">
+      <div id="bill-rows"></div>
+    </div>
+
+    <div class="bill-actions">
+      <button class="bill-btn-clear" onclick="billClear()">🗑️ Limpiar</button>
+      <button class="bill-btn-copy" onclick="billCopiar()">📋 Copiar resumen</button>
+    </div>
   </div>
 </div>
 
@@ -1188,9 +1478,9 @@ let _currentRole   = null;
 let _currentNombre = '';
 
 const ROLE_ACCESS = {
-  colaborador: ['home','planilla','remito'],
-  responsable: ['home','planilla','remito','comparador','admin-remitos','pedidos'],
-  admin:       ['home','planilla','remito','comparador','admin-remitos','pedidos'],
+  colaborador: ['home','planilla','remito','billetes'],
+  responsable: ['home','planilla','remito','comparador','admin-remitos','pedidos','billetes'],
+  admin:       ['home','planilla','remito','comparador','admin-remitos','pedidos','billetes'],
 };
 const ROLE_LABELS = { colaborador:'Colaborador', responsable:'Responsable', admin:'Administrador' };
 
@@ -1260,7 +1550,7 @@ function authUpdateUI() {
   if (nameEl) nameEl.textContent=_currentNombre||'—';
   if (roleEl) roleEl.textContent=ROLE_LABELS[_currentRole]||_currentRole||'—';
   const access=ROLE_ACCESS[_currentRole]||ROLE_ACCESS.colaborador;
-  ['comparador','admin-remitos','pedidos'].forEach(id=>{
+  ['comparador','admin-remitos','pedidos','billetes'].forEach(id=>{
     const btn=document.getElementById('dnav-'+id);
     if (btn) btn.style.display=access.includes(id)?'':'none';
   });
@@ -1281,7 +1571,7 @@ function authUpdateUI() {
 
 /* ── NAVEGACIÓN ──────────────────────────────────────────────────────────── */
 function goTo(id) {
-  if (id !== 'home' && id !== 'pedidos' && !getLocal()) {
+  if (id !== 'home' && id !== 'pedidos' && id !== 'billetes' && !getLocal()) {
     alert('Primero seleccioná el local desde la pantalla de inicio.');
     document.getElementById('localSelectorWrap').scrollIntoView({behavior:'smooth'});
     return;
@@ -1302,6 +1592,7 @@ function _goTo(id) {
   if (id === 'comparador') { cmpRenderSaved(); cmpLoadCloud(); }
   if (id === 'remito') { r_renderHistorial(); rLoadCloud(); }
   if (id === 'admin-remitos') { adminRCargar(); }
+  if (id === 'billetes' && !_billBuilt) billBuildUI();
   document.querySelectorAll('.app-local-label').forEach(el => el.textContent = getLocal());
 }
 
@@ -2371,8 +2662,10 @@ function cmpRenderResult() {
   const total = cmp_resultData.length;
   const ok    = cmp_resultData.filter(r=>r.diff===0).length;
   const diffs = cmp_resultData.filter(r=>r.diff!=null&&r.diff!==0).length;
+  const diffsPos = cmp_resultData.filter(r=>r.diff!=null&&r.diff>0).length;
+  const diffsNeg = cmp_resultData.filter(r=>r.diff!=null&&r.diff<0).length;
   const nodata= cmp_resultData.filter(r=>r.diff==null).length;
-  document.getElementById('cmpStats').innerHTML = `<span style="color:var(--green)">✅ ${ok} OK</span> · <span style="color:var(--red)">⚠️ ${diffs} diferencias</span> · <span style="color:var(--gray)">❓ ${nodata} sin datos</span> · Total: ${total}`;
+  document.getElementById('cmpStats').innerHTML = `<span style="color:var(--green)">✅ ${ok} OK</span> · <span style="color:var(--red)">⚠️ ${diffs} diferencias</span> <span style="color:var(--text-sub);font-size:.9em;">(<span style="color:#2ecc71">▲${diffsPos} sobrante</span> / <span style="color:#e74c3c">▼${diffsNeg} faltante</span>)</span> · <span style="color:var(--gray)">❓ ${nodata} sin datos</span> · Total: ${total}`;
   // Mensaje WhatsApp de diferencias
   const waBox = document.getElementById('waMsgBox');
   const reconteo = cmp_resultData.filter(r=>r.diff!=null&&r.diff!==0);
@@ -2901,8 +3194,10 @@ async function fbDeleteRemito(fbId) { if (!db) return; try { await db.collection
 
 /* ── PEDIDOS AUTOMÁTICOS ─────────────────────────────────────────────────── */
 const PD_MIN_LS = 'pd_minimos_v2'; // fallback cache key
+const PD_FORCE_RESYNC_LS = 'pd_force_resync_pulpo_facundo_v1';
+const PD_FORCE_RESYNC_PROVS = ['PULPO','FACUNDO']; // re-sembrar una sola vez con los mínimos/fraccion nuevos
 let _pdMinCache = {}; // in-memory cache loaded from Firestore
-const PD_DEFAULT_MINIMOS = {"MASSALIN":{"KIOSKO NICO":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":5,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER PURPLE KS":{"min":0,"frac":5},"CHESTER UVA REMIX":{"min":5,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":10},"MARLBORO FUSION BOX 12":{"min":5,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":5,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO RED TITANUM":{"min":0,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":10,"frac":10},"PHILIP MORRIS BOX 20":{"min":5,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":10,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":5,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"JBJ":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":5,"frac":10},"MARLBORO BOX 20":{"min":5,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"GAONA":{"CHESTER 12":{"min":2,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":3,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":2,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":4,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":5,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"AVELLANEDA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":3,"frac":5},"CHESTER FRESH BOX 10":{"min":2,"frac":5},"CHESTER FRESH BOX 20":{"min":1,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":2,"frac":5},"MARLBORO FUSION BOX 20":{"min":5,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":4,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"BELGRANO":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":40,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"RIVADAVIA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":3,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":4,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10},"PHILIP RANDON SPIN 12":{"min":0,"frac":10}}},"SARANDI":{"KIOSKO NICO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":80,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":50,"frac":10},"MELBOURNE ROJO":{"min":0,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":10,"frac":10},"MILENIO MENTOLADO UVA":{"min":10,"frac":10},"MILL":{"min":10,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":40,"frac":10},"RED POINT ECO":{"min":10,"frac":10},"RED POINT KS":{"min":40,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"JBJ":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":10,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":4,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":4,"frac":10}},"GAONA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":30,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":5,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":5,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"AVELLANEDA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":20,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"BELGRANO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":40,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":4,"frac":10},"MILENIO MENTOLADO UVA":{"min":4,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":5,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"RIVADAVIA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"JONTE":{"BOLD":{"min":0,"frac":1},"KIEL BOX":{"min":0,"frac":1},"KIEL COMUN":{"min":0,"frac":1},"MASTER":{"min":0,"frac":1},"MELBOURNE ROJO":{"min":0,"frac":1},"MELBOURNE SUAVE":{"min":0,"frac":1},"MILENIO":{"min":0,"frac":1},"MILENIO MENTOLADO SANDIA":{"min":0,"frac":1},"MILENIO MENTOLADO UVA":{"min":0,"frac":1},"MILL":{"min":0,"frac":1},"RED POINT 10":{"min":0,"frac":1},"RED POINT BOX":{"min":0,"frac":1},"RED POINT ECO":{"min":0,"frac":1},"RED POINT KS":{"min":0,"frac":1},"RED POINT MENTOL KS":{"min":0,"frac":1},"RED POINT ON":{"min":0,"frac":1},"RED POINT ON SIX":{"min":0,"frac":1}}},"NOBLEZA":{"KIOSKO NICO":{"CAMEL BLUE BOX":{"min":0,"frac":5},"CAMEL BOX 10":{"min":5,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":5},"CAMEL LEGEND KS":{"min":0,"frac":5},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":10,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":10,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":10},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":35,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":5,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":5},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JBJ":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":3,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":20,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":2,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"GAONA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":1,"frac":5},"CAMEL COMUN":{"min":1,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":1,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":5,"frac":10},"LUCKY STRIKE BOX 12":{"min":5,"frac":5},"LUCKY STRIKE BOX 20":{"min":3,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":5,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":3,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":2,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":3,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":5,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":1,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":1,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"AVELLANEDA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":3,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":10},"LUCKY STRIKE BOX 12":{"min":2,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":1,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":3,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"BELGRANO":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":15,"frac":5},"LUCKY STRIKE COMUN KS":{"min":15,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":15,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":4,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":5,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":3,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":2,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"RIVADAVIA":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":2,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":10,"frac":5},"LUCKY STRIKE BOX 20":{"min":6,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":30,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":7,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":2,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JONTE":{"CAMEL BLUE BOX":{"min":0,"frac":1},"CAMEL BOX 10":{"min":0,"frac":1},"CAMEL BOX 20":{"min":0,"frac":1},"CAMEL COMUN":{"min":0,"frac":1},"CAMEL LEGEND BOX NUEVO":{"min":0,"frac":1},"CAMEL LEGEND KS":{"min":0,"frac":1},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":1},"LUCKY STRIKE BOX 12":{"min":0,"frac":1},"LUCKY STRIKE BOX 20":{"min":0,"frac":1},"LUCKY STRIKE COMUN KS":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX 12":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX XL":{"min":0,"frac":1},"LUCKY STRIKE COOL COMUN":{"min":0,"frac":1},"LUCKY STRIKE DARK (PARISIENE)":{"min":0,"frac":1},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":0,"frac":1},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV BOX":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN KS":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":0,"frac":1},"LUCKY STRIKE RED MIX BOX":{"min":0,"frac":1},"LUCKY STRIKE SILVER":{"min":0,"frac":1},"LUCKY STRIKE WILD MIX UVA XL":{"min":0,"frac":1},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}}}};
+const PD_DEFAULT_MINIMOS = {"MASSALIN":{"KIOSKO NICO":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":5,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER PURPLE KS":{"min":0,"frac":5},"CHESTER UVA REMIX":{"min":5,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":10},"MARLBORO FUSION BOX 12":{"min":5,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":5,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO RED TITANUM":{"min":0,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":10,"frac":10},"PHILIP MORRIS BOX 20":{"min":5,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":10,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":5,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"JBJ":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":5,"frac":10},"MARLBORO BOX 20":{"min":5,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"GAONA":{"CHESTER 12":{"min":2,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":3,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":2,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":4,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":5,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"AVELLANEDA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":3,"frac":5},"CHESTER FRESH BOX 10":{"min":2,"frac":5},"CHESTER FRESH BOX 20":{"min":1,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":2,"frac":5},"MARLBORO FUSION BOX 20":{"min":5,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":4,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"BELGRANO":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":40,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"RIVADAVIA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":3,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":4,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10},"PHILIP RANDON SPIN 12":{"min":0,"frac":10}}},"SARANDI":{"KIOSKO NICO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":80,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":50,"frac":10},"MELBOURNE ROJO":{"min":0,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":10,"frac":10},"MILENIO MENTOLADO UVA":{"min":10,"frac":10},"MILL":{"min":10,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":40,"frac":10},"RED POINT ECO":{"min":10,"frac":10},"RED POINT KS":{"min":40,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"JBJ":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":10,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":4,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":4,"frac":10}},"GAONA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":30,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":5,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":5,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"AVELLANEDA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":20,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"BELGRANO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":40,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":4,"frac":10},"MILENIO MENTOLADO UVA":{"min":4,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":5,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"RIVADAVIA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"JONTE":{"BOLD":{"min":0,"frac":1},"KIEL BOX":{"min":0,"frac":1},"KIEL COMUN":{"min":0,"frac":1},"MASTER":{"min":0,"frac":1},"MELBOURNE ROJO":{"min":0,"frac":1},"MELBOURNE SUAVE":{"min":0,"frac":1},"MILENIO":{"min":0,"frac":1},"MILENIO MENTOLADO SANDIA":{"min":0,"frac":1},"MILENIO MENTOLADO UVA":{"min":0,"frac":1},"MILL":{"min":0,"frac":1},"RED POINT 10":{"min":0,"frac":1},"RED POINT BOX":{"min":0,"frac":1},"RED POINT ECO":{"min":0,"frac":1},"RED POINT KS":{"min":0,"frac":1},"RED POINT MENTOL KS":{"min":0,"frac":1},"RED POINT ON":{"min":0,"frac":1},"RED POINT ON SIX":{"min":0,"frac":1}}},"NOBLEZA":{"KIOSKO NICO":{"CAMEL BLUE BOX":{"min":0,"frac":5},"CAMEL BOX 10":{"min":5,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":5},"CAMEL LEGEND KS":{"min":0,"frac":5},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":10,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":10,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":10},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":35,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":5,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":5},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JBJ":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":3,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":20,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":2,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"GAONA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":1,"frac":5},"CAMEL COMUN":{"min":1,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":1,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":5,"frac":10},"LUCKY STRIKE BOX 12":{"min":5,"frac":5},"LUCKY STRIKE BOX 20":{"min":3,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":5,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":3,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":2,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":3,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":5,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":1,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":1,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"AVELLANEDA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":3,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":10},"LUCKY STRIKE BOX 12":{"min":2,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":1,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":3,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"BELGRANO":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":15,"frac":5},"LUCKY STRIKE COMUN KS":{"min":15,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":15,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":4,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":5,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":3,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":2,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"RIVADAVIA":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":2,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":10,"frac":5},"LUCKY STRIKE BOX 20":{"min":6,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":30,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":7,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":2,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JONTE":{"CAMEL BLUE BOX":{"min":0,"frac":1},"CAMEL BOX 10":{"min":0,"frac":1},"CAMEL BOX 20":{"min":0,"frac":1},"CAMEL COMUN":{"min":0,"frac":1},"CAMEL LEGEND BOX NUEVO":{"min":0,"frac":1},"CAMEL LEGEND KS":{"min":0,"frac":1},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":1},"LUCKY STRIKE BOX 12":{"min":0,"frac":1},"LUCKY STRIKE BOX 20":{"min":0,"frac":1},"LUCKY STRIKE COMUN KS":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX 12":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX XL":{"min":0,"frac":1},"LUCKY STRIKE COOL COMUN":{"min":0,"frac":1},"LUCKY STRIKE DARK (PARISIENE)":{"min":0,"frac":1},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":0,"frac":1},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV BOX":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN KS":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":0,"frac":1},"LUCKY STRIKE RED MIX BOX":{"min":0,"frac":1},"LUCKY STRIKE SILVER":{"min":0,"frac":1},"LUCKY STRIKE WILD MIX UVA XL":{"min":0,"frac":1},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}}},"PULPO":{"KIOSKO NICO":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"JBJ":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"GAONA":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"AVELLANEDA":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"BELGRANO":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"RIVADAVIA":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}}},"FACUNDO":{"KIOSKO NICO":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"JBJ":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"GAONA":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"AVELLANEDA":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"BELGRANO":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"RIVADAVIA":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}}}};
 
 const PD_PROVEEDORES = {
   MASSALIN: {
@@ -2917,6 +3212,36 @@ const PD_PROVEEDORES = {
   },
   NOBLEZA: {
     color:'1E8449', dias:'Martes (cada 15 días)', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  FACUNDO: {
+    color:'CA6F1E', dias:'1 vez por semana (4/mes)', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  PULPO: {
+    color:'7D3C98', dias:'Cada 15-25 días (≈1/mes)', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  NEHUEN: {
+    color:'1A5276', dias:'Cada 15 días (2/mes)', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  CELESTINO: {
+    color:'117A65', dias:'1 vez por mes', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  LINIERS: {
+    color:'922B21', dias:'1 vez por semana (4/mes)', incluye_jonte:true,
+    locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
+    patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
+  },
+  VIEJO: {
+    color:'784212', dias:'1 vez por semana (4/mes)', incluye_jonte:true,
     locales:['KIOSKO NICO','JBJ','GAONA','AVELLANEDA','BELGRANO','RIVADAVIA'],
     patron:{'KIOSKO NICO':'Kiosko Nico','JBJ':'Juan B Justo','GAONA':'Gaona','AVELLANEDA':'Av. Avellaneda','BELGRANO':'Belgrano','RIVADAVIA':'Rivadavia 9099'}
   }
@@ -2945,7 +3270,26 @@ async function pdLoadFromFirestore() {
     const doc = await db.collection('config').doc('minimos_pedidos').get();
     if (doc.exists && Object.keys(doc.data()||{}).length) {
       _pdMinCache = doc.data();
+      // Sembrar proveedores nuevos que aún no existan en Firestore (sin pisar los ya cargados/editados)
+      let missingAdded = false;
+      for (const prov of Object.keys(PD_DEFAULT_MINIMOS)) {
+        if (!_pdMinCache[prov]) {
+          _pdMinCache[prov] = JSON.parse(JSON.stringify(PD_DEFAULT_MINIMOS[prov]));
+          missingAdded = true;
+        }
+      }
+      // Re-sincronizar una sola vez PULPO/FACUNDO con los mínimos/fracción definitivos
+      if (!localStorage.getItem(PD_FORCE_RESYNC_LS)) {
+        PD_FORCE_RESYNC_PROVS.forEach(prov => {
+          if (PD_DEFAULT_MINIMOS[prov]) {
+            _pdMinCache[prov] = JSON.parse(JSON.stringify(PD_DEFAULT_MINIMOS[prov]));
+            missingAdded = true;
+          }
+        });
+        localStorage.setItem(PD_FORCE_RESYNC_LS, '1');
+      }
       localStorage.setItem(PD_MIN_LS, JSON.stringify(_pdMinCache));
+      if (missingAdded) pdSaveToFirestore(_pdMinCache);
     } else {
       // Nothing in Firestore yet — seed with defaults and save
       _pdMinCache = JSON.parse(JSON.stringify(PD_DEFAULT_MINIMOS));
@@ -3688,6 +4032,85 @@ if (_initLocal) {
   fbLoadRemitos(_initLocal);
 }
 authInit();
+
+/* ── CONTROL DE BILLETES ─────────────────────────────────────────────────── */
+const BILL_LS = 'bill_control_v1';
+const BILL_DENOMS = [
+  {v:100,   c:'#9b59b6'}, {v:200,   c:'#e74c3c'}, {v:500,   c:'#3498db'},
+  {v:1000,  c:'#e67e22'}, {v:2000,  c:'#1abc9c'}, {v:10000, c:'#f1c40f'},
+  {v:20000, c:'#2ecc71'}
+];
+let _billBuilt = false;
+let _billQtys = {};
+
+function billFmt(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
+
+function billBuildUI() {
+  _billBuilt = true;
+  try { _billQtys = JSON.parse(localStorage.getItem(BILL_LS) || '{}'); } catch(e) { _billQtys = {}; }
+  const wrap = document.getElementById('bill-rows');
+  wrap.innerHTML = BILL_DENOMS.map(d => `
+    <div class="bill-row" id="bill-row-${d.v}">
+      <div class="bill-denom">
+        <div class="bill-denom-swatch" style="background:${d.c}">$${d.v >= 1000 ? (d.v/1000)+'K' : d.v}</div>
+        <div class="bill-denom-label">${billFmt(d.v)}</div>
+      </div>
+      <div class="bill-qty-wrap">
+        <input class="bill-qty-input" type="number" min="0" inputmode="numeric" id="bill-qty-${d.v}"
+               value="${_billQtys[d.v]||0}" onchange="billSetQty(${d.v},+this.value)">
+      </div>
+      <div class="bill-subtotal" id="bill-sub-${d.v}">${billFmt(0)}</div>
+    </div>
+  `).join('');
+  billRecalc();
+}
+
+function billStep(denom, delta) {
+  const cur = +(_billQtys[denom]||0);
+  billSetQty(denom, Math.max(0, cur + delta));
+}
+
+function billSetQty(denom, qty) {
+  qty = Math.max(0, Math.floor(qty) || 0);
+  _billQtys[denom] = qty;
+  document.getElementById('bill-qty-'+denom).value = qty;
+  localStorage.setItem(BILL_LS, JSON.stringify(_billQtys));
+  billRecalc();
+}
+
+function billRecalc() {
+  let total = 0, totalBills = 0;
+  BILL_DENOMS.forEach(d => {
+    const qty = +(_billQtys[d.v]||0);
+    const sub = qty * d.v;
+    total += sub; totalBills += qty;
+    const subEl = document.getElementById('bill-sub-'+d.v);
+    const rowEl = document.getElementById('bill-row-'+d.v);
+    if (subEl) subEl.textContent = billFmt(sub);
+    if (rowEl) rowEl.classList.toggle('has-qty', qty > 0);
+  });
+  document.getElementById('bill-totalValue').textContent = billFmt(total);
+  document.getElementById('bill-totalSub').textContent = `${totalBills} billete${totalBills===1?'':'s'}`;
+}
+
+function billClear() {
+  if (!confirm('¿Reiniciar el conteo de billetes?')) return;
+  _billQtys = {};
+  localStorage.removeItem(BILL_LS);
+  BILL_DENOMS.forEach(d => { const el = document.getElementById('bill-qty-'+d.v); if (el) el.value = 0; });
+  billRecalc();
+}
+
+function billCopiar() {
+  const lines = BILL_DENOMS
+    .filter(d => +(_billQtys[d.v]||0) > 0)
+    .map(d => `${billFmt(d.v)} x ${_billQtys[d.v]} = ${billFmt(d.v*_billQtys[d.v])}`);
+  const total = BILL_DENOMS.reduce((a,d) => a + d.v * (+(_billQtys[d.v]||0)), 0);
+  const txt = `💵 CONTROL DE BILLETES — ${getLocal()||'LOCAL'}\n` + (lines.length ? lines.join('\n') : 'Sin billetes contados') + `\n\nTOTAL: ${billFmt(total)}`;
+  navigator.clipboard?.writeText(txt).then(() => {
+    showModal && showModal('✅','Copiado','El resumen se copió al portapapeles.');
+  }).catch(() => { alert(txt); });
+}
 </script>
 </body>
 </html>
