@@ -3197,10 +3197,6297 @@ async function fbDeleteRemito(fbId) { if (!db) return; try { await db.collection
 
 /* ── PEDIDOS AUTOMÁTICOS ─────────────────────────────────────────────────── */
 const PD_MIN_LS = 'pd_minimos_v2'; // fallback cache key
-const PD_FORCE_RESYNC_LS = 'pd_force_resync_pulpo_facundo_v2';
-const PD_FORCE_RESYNC_PROVS = ['PULPO','FACUNDO']; // re-sembrar una sola vez con los mínimos/fraccion nuevos
+const PD_FORCE_RESYNC_LS = 'pd_force_resync_v3';
+const PD_FORCE_RESYNC_PROVS = ['PULPO','FACUNDO','CELESTINO']; // re-sembrar una sola vez con los mínimos/fraccion nuevos
 let _pdMinCache = {}; // in-memory cache loaded from Firestore
-const PD_DEFAULT_MINIMOS = {"MASSALIN":{"KIOSKO NICO":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":5,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER PURPLE KS":{"min":0,"frac":5},"CHESTER UVA REMIX":{"min":5,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":10},"MARLBORO FUSION BOX 12":{"min":5,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":5,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO RED TITANUM":{"min":0,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":10,"frac":10},"PHILIP MORRIS BOX 20":{"min":5,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":10,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":5,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"JBJ":{"CHESTER 12":{"min":5,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":5,"frac":10},"MARLBORO BOX 20":{"min":5,"frac":10},"MARLBORO COMUN 20 KS":{"min":5,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":15,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":15,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"GAONA":{"CHESTER 12":{"min":2,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":3,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":2,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":4,"frac":5},"MARLBORO FUSION BOX 20":{"min":2,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":5,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"AVELLANEDA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":4,"frac":10},"CHESTER COMUN FRESH":{"min":3,"frac":5},"CHESTER FRESH BOX 10":{"min":2,"frac":5},"CHESTER FRESH BOX 20":{"min":1,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":20,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":2,"frac":5},"MARLBORO FUSION BOX 20":{"min":5,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":1,"frac":5},"MARLBORO SUMMER FUSION":{"min":1,"frac":5},"PHILIP MORRIS BOX 12":{"min":4,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":4,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":10,"frac":10}},"BELGRANO":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":5,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":3,"frac":5},"CHESTER UVA REMIX":{"min":2,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":2,"frac":5},"MARLBORO BOX 12":{"min":4,"frac":10},"MARLBORO BOX 20":{"min":4,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":40,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":10,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":15,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":2,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":2,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":2,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":3,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10}},"RIVADAVIA":{"CHESTER 12":{"min":3,"frac":5},"CHESTER COMUN":{"min":5,"frac":10},"CHESTER COMUN FRESH":{"min":2,"frac":5},"CHESTER FRESH BOX 10":{"min":4,"frac":5},"CHESTER FRESH BOX 20":{"min":2,"frac":5},"CHESTER UVA REMIX":{"min":1,"frac":5},"MARLBORO BLUE TITANIUM - PARLIAMENT BOX":{"min":1,"frac":5},"MARLBORO BOX 12":{"min":3,"frac":10},"MARLBORO BOX 20":{"min":3,"frac":10},"MARLBORO COMUN 20 KS":{"min":4,"frac":10},"MARLBORO CRAFTED":{"min":50,"frac":10},"MARLBORO CRAFTED BLUE":{"min":10,"frac":5},"MARLBORO CRAFTED BOX (ROJO)":{"min":10,"frac":5},"MARLBORO CRAFTED CORAL (CHESTER)":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL BOX":{"min":5,"frac":5},"MARLBORO CRAFTED MENTOL KS":{"min":0,"frac":5},"MARLBORO FUSION BOX 12":{"min":3,"frac":5},"MARLBORO FUSION BOX 20":{"min":3,"frac":5},"MARLBORO GOLD":{"min":5,"frac":5},"MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA":{"min":3,"frac":5},"MARLBORO ICE BLAST":{"min":2,"frac":5},"MARLBORO SUMMER FUSION":{"min":3,"frac":5},"PHILIP MORRIS BOX 12":{"min":5,"frac":10},"PHILIP MORRIS BOX 20":{"min":3,"frac":10},"PHILIP MORRIS CAPS BOX 12":{"min":4,"frac":5},"PHILIP MORRIS CAPS BOX 20":{"min":3,"frac":5},"PHILIP MORRIS COMUN KS":{"min":5,"frac":10},"PHILIP MORRIS SOF 20 SELECT":{"min":20,"frac":10},"PHILIP RANDON SPIN 12":{"min":0,"frac":10}}},"SARANDI":{"KIOSKO NICO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":80,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":50,"frac":10},"MELBOURNE ROJO":{"min":0,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":10,"frac":10},"MILENIO MENTOLADO UVA":{"min":10,"frac":10},"MILL":{"min":10,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":40,"frac":10},"RED POINT ECO":{"min":10,"frac":10},"RED POINT KS":{"min":40,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"JBJ":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":10,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":20,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":4,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":20,"frac":10},"RED POINT ON SIX":{"min":4,"frac":10}},"GAONA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":30,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":5,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":5,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"AVELLANEDA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":20,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":20,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":20,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":20,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"BELGRANO":{"BOLD":{"min":40,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":40,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":4,"frac":10},"MILENIO MENTOLADO UVA":{"min":4,"frac":10},"MILL":{"min":4,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":5,"frac":10},"RED POINT ON SIX":{"min":10,"frac":10}},"RIVADAVIA":{"BOLD":{"min":30,"frac":10},"KIEL BOX":{"min":60,"frac":10},"KIEL COMUN":{"min":0,"frac":10},"MASTER":{"min":30,"frac":10},"MELBOURNE SUAVE":{"min":0,"frac":10},"MILENIO MENTOLADO SANDIA":{"min":3,"frac":10},"MILENIO MENTOLADO UVA":{"min":3,"frac":10},"MILL":{"min":3,"frac":10},"RED POINT 10":{"min":10,"frac":10},"RED POINT BOX":{"min":30,"frac":10},"RED POINT ECO":{"min":3,"frac":10},"RED POINT KS":{"min":30,"frac":10},"RED POINT MENTOL KS":{"min":0,"frac":10},"RED POINT ON":{"min":10,"frac":10},"RED POINT ON SIX":{"min":3,"frac":10}},"JONTE":{"BOLD":{"min":0,"frac":1},"KIEL BOX":{"min":0,"frac":1},"KIEL COMUN":{"min":0,"frac":1},"MASTER":{"min":0,"frac":1},"MELBOURNE ROJO":{"min":0,"frac":1},"MELBOURNE SUAVE":{"min":0,"frac":1},"MILENIO":{"min":0,"frac":1},"MILENIO MENTOLADO SANDIA":{"min":0,"frac":1},"MILENIO MENTOLADO UVA":{"min":0,"frac":1},"MILL":{"min":0,"frac":1},"RED POINT 10":{"min":0,"frac":1},"RED POINT BOX":{"min":0,"frac":1},"RED POINT ECO":{"min":0,"frac":1},"RED POINT KS":{"min":0,"frac":1},"RED POINT MENTOL KS":{"min":0,"frac":1},"RED POINT ON":{"min":0,"frac":1},"RED POINT ON SIX":{"min":0,"frac":1}}},"NOBLEZA":{"KIOSKO NICO":{"CAMEL BLUE BOX":{"min":0,"frac":5},"CAMEL BOX 10":{"min":5,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":5},"CAMEL LEGEND KS":{"min":0,"frac":5},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":10,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":10,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":10},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":35,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":5,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":5},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JBJ":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":3,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":20,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":30,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":2,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"GAONA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":1,"frac":5},"CAMEL COMUN":{"min":1,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":1,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":5,"frac":10},"LUCKY STRIKE BOX 12":{"min":5,"frac":5},"LUCKY STRIKE BOX 20":{"min":3,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":5,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":3,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":2,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":4,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":3,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":5,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":1,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":1,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"AVELLANEDA":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":3,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":10},"LUCKY STRIKE BOX 12":{"min":2,"frac":5},"LUCKY STRIKE BOX 20":{"min":5,"frac":5},"LUCKY STRIKE COMUN KS":{"min":5,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":1,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":1,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":5,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":3,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":3,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"BELGRANO":{"CAMEL BOX 10":{"min":3,"frac":5},"CAMEL BOX 20":{"min":5,"frac":5},"CAMEL COMUN":{"min":5,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":10,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":20,"frac":10},"LUCKY STRIKE BOX 12":{"min":15,"frac":5},"LUCKY STRIKE BOX 20":{"min":15,"frac":5},"LUCKY STRIKE COMUN KS":{"min":15,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":35,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":15,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":10,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":4,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":5,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":3,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":1,"frac":5},"LUCKY STRIKE SILVER":{"min":3,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":2,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"RIVADAVIA":{"CAMEL BOX 10":{"min":2,"frac":5},"CAMEL BOX 20":{"min":3,"frac":5},"CAMEL COMUN":{"min":2,"frac":5},"CAMEL LEGEND BOX NUEVO":{"min":5,"frac":10},"CAMEL LEGEND KS":{"min":0,"frac":10},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":10,"frac":10},"LUCKY STRIKE BOX 12":{"min":10,"frac":5},"LUCKY STRIKE BOX 20":{"min":6,"frac":5},"LUCKY STRIKE COMUN KS":{"min":10,"frac":5},"LUCKY STRIKE COOL BOX 12":{"min":30,"frac":5},"LUCKY STRIKE COOL BOX XL":{"min":10,"frac":5},"LUCKY STRIKE COOL COMUN":{"min":7,"frac":5},"LUCKY STRIKE DARK (PARISIENE)":{"min":5,"frac":5},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":2,"frac":5},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":5},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV 10":{"min":10,"frac":5},"LUCKY STRIKE ORIGEN CONV BOX":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN KS":{"min":15,"frac":5},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":10,"frac":5},"LUCKY STRIKE RED MIX BOX":{"min":5,"frac":5},"LUCKY STRIKE SILVER":{"min":2,"frac":5},"LUCKY STRIKE WILD MIX UVA XL":{"min":5,"frac":5},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}},"JONTE":{"CAMEL BLUE BOX":{"min":0,"frac":1},"CAMEL BOX 10":{"min":0,"frac":1},"CAMEL BOX 20":{"min":0,"frac":1},"CAMEL COMUN":{"min":0,"frac":1},"CAMEL LEGEND BOX NUEVO":{"min":0,"frac":1},"CAMEL LEGEND KS":{"min":0,"frac":1},"ENCENDEDOR CANDELA":{"min":0,"frac":1},"LUCKIES LOW":{"min":0,"frac":1},"LUCKY STRIKE BOX 12":{"min":0,"frac":1},"LUCKY STRIKE BOX 20":{"min":0,"frac":1},"LUCKY STRIKE COMUN KS":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX 12":{"min":0,"frac":1},"LUCKY STRIKE COOL BOX XL":{"min":0,"frac":1},"LUCKY STRIKE COOL COMUN":{"min":0,"frac":1},"LUCKY STRIKE DARK (PARISIENE)":{"min":0,"frac":1},"LUCKY STRIKE DOBLE PLUS LARGO":{"min":0,"frac":1},"LUCKY STRIKE ECLIPSE XL":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN (ROJO) 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV 10":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV BOX":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN CONV COMUN":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN KS":{"min":0,"frac":1},"LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)":{"min":0,"frac":1},"LUCKY STRIKE RED MIX BOX":{"min":0,"frac":1},"LUCKY STRIKE SILVER":{"min":0,"frac":1},"LUCKY STRIKE WILD MIX UVA XL":{"min":0,"frac":1},"MAXI BIC":{"min":0,"frac":1},"MAXI BIC MUNDIAL":{"min":0,"frac":1},"MINI BIC":{"min":0,"frac":1},"ROTHMAN 4370 BOX":{"min":0,"frac":1},"TABACO LUCKY STRIKE GALPAO":{"min":0,"frac":1},"TABACO LUCKY STRIKE LUCKIES GOLDEN":{"min":0,"frac":1},"TABACO LUCKY STRIKE ORIGINAL":{"min":0,"frac":1},"TARJETA SUBE":{"min":0,"frac":1}}},"PULPO":{"KIOSKO NICO":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"JBJ":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"GAONA":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"AVELLANEDA":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"BELGRANO":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"RIVADAVIA":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}},"JONTE":{"ACHALAY MENTOLADO":{"min":1,"frac":5},"ACHALAY VAINILLA":{"min":2,"frac":5},"Achalay Virginia Original":{"min":2,"frac":5},"CERRITO BROW":{"min":1,"frac":5},"CERRITO ORIGINAL":{"min":7,"frac":5},"CERRITO SILVER":{"min":3,"frac":5},"CERRITO VIRGINIA":{"min":2,"frac":5},"CERRITO YELLOW":{"min":7,"frac":5},"FILTROS GIZEH 150U 5MM EXTRA SLIM":{"min":7,"frac":20},"FILTROS GIZEH 6MM SLIM":{"min":16,"frac":20},"FILTROS GIZEH MENTHOL 6MM":{"min":4,"frac":10},"FILTROS GIZEH XL ORGANICO SLIM 6MM":{"min":1,"frac":10},"FILTROS LIBELLA 200U NEGRO":{"min":9,"frac":16},"FILTROS LIBELLA EXTRA SLIM GRIS":{"min":6,"frac":21},"FILTROS OCB EXTRA SLIM GRIS":{"min":3,"frac":5},"FLANDRIA ORIGINAL NEGRO":{"min":1,"frac":5},"FLANDRIA SAUVAGE TOBACO":{"min":1,"frac":5},"FLANDRIA SILVER EXTRA BLOND":{"min":2,"frac":5},"FLANDRIA VIRGINIA GOLDEN BLEND":{"min":3,"frac":5},"FLANDRIA YELLOW":{"min":9,"frac":5},"LAS HOJAS TABACO":{"min":16,"frac":10},"LAS HOJAS VAINILLA":{"min":2,"frac":5},"LIBELLA EXTRA THIN":{"min":14,"frac":25},"LIBELLA ORGANICO PURE":{"min":15,"frac":25},"PAPEL CELULOSA BLOCK":{"min":1,"frac":1},"PAPELILLO OCB GRIS":{"min":10,"frac":25},"PAPELILLO OCB NEGRO":{"min":56,"frac":25},"REDFIELD NATURAL":{"min":1,"frac":5},"REDFIELD VAINILLA":{"min":3,"frac":5},"SAYRI CLARO":{"min":5,"frac":5},"SAYRI ORIGNAL":{"min":4,"frac":5},"STAMPS Cedas":{"min":7,"frac":25},"Stamps Celulosa":{"min":18,"frac":25},"TABACO CUATRO LEGUAS(RUBIO)":{"min":1,"frac":5},"TIPS TONKING FILTROS CARTON":{"min":15,"frac":24},"TONKING CELULOSA":{"min":3,"frac":15},"TONKING CELULOSA XL":{"min":4,"frac":15},"VAN HAASEN NATIVO":{"min":4,"frac":5},"VAN HAASEN VAINILLA":{"min":7,"frac":5},"VAN HASSEN ORIGINAL BLEND":{"min":2,"frac":5}}},"FACUNDO":{"KIOSKO NICO":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"JBJ":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"GAONA":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"AVELLANEDA":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"BELGRANO":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"RIVADAVIA":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}},"JONTE":{"ANDES ORIGEN 473 CC. CERVEZA":{"min":9,"frac":6},"ANDES ORIGEN IPA 473 CC. CERVEZA":{"min":7,"frac":6},"ANDES ROJA CERVEZA":{"min":5,"frac":6},"BRAHMA LATA CERVEZA":{"min":16,"frac":24},"BRAHMA LATON 710 CERVEZA":{"min":6,"frac":16},"CEPITA BOTELLON DURAZNO":{"min":7,"frac":8},"CEPITA BOTELLON NARANJA":{"min":4,"frac":8},"CEPITA MANZANA 1L CARTON":{"min":1,"frac":8},"CEPITA NARANJA 1L CARTON":{"min":2,"frac":8},"CHANDON DELICE 750ML":{"min":1,"frac":1},"CHANDON EXTRA BRUT 750 ML":{"min":1,"frac":1},"CHANDON ROSE 750ml":{"min":1,"frac":1},"COCA COLA 1.5/1.75 L.":{"min":16,"frac":8},"COCA COLA 2.25/2.35/2.5":{"min":16,"frac":8},"COCA COLA 354 CC. LATA":{"min":13,"frac":6},"COCA COLA 500 CC. BOTELLA":{"min":68,"frac":6},"COCA COLA SIN AZUCAR 500 CC.":{"min":17,"frac":6},"COCA COLA SIN AZUCARES 1.75 CC.":{"min":6,"frac":8},"CORDERO CONPIEL DE LOBO":{"min":2,"frac":6},"CORONA 330 CC. CERVEZA RUBIA":{"min":3,"frac":24},"CORONA 710 CC. CERVEZA RUBIA":{"min":5,"frac":24},"COSECHA TARDIA BLANCO":{"min":2,"frac":6},"FANTA NARANJA 1.5/1.75 L.":{"min":2,"frac":8},"FANTA NARANJA 2,25 L":{"min":1,"frac":8},"FANTA NARANJA 354 CC.":{"min":1,"frac":6},"FANTA NARANJA 500 ML":{"min":7,"frac":6},"FEDERICO DE ALVEAR EXTRA DULCE 750CC":{"min":2,"frac":6},"FERNET BRANCA 450 CC.":{"min":1,"frac":1},"FERNET BRANCA 750 CC.":{"min":1,"frac":1},"GANCIA 950ML":{"min":1,"frac":1},"Heineken 473cc lata":{"min":15,"frac":24},"Heineken Laton":{"min":19,"frac":24},"ISENBECK":{"min":51,"frac":24},"MONSTER 473 MANGO LOCO":{"min":10,"frac":6},"Monster 473 Blanco":{"min":4,"frac":6},"Monster 473 Negro comun":{"min":11,"frac":6},"Monster 473 Pipeline Punch":{"min":4,"frac":6},"POWERADE BLAST 500 CC.":{"min":9,"frac":6},"POWERADE FRUTAS TOPICALES 500 CC.":{"min":7,"frac":6},"POWERADE MANZANA 500 CC.":{"min":6,"frac":6},"Quilmes clásica 473cc":{"min":5,"frac":24},"Red Bull Original":{"min":7,"frac":24},"SCHNEIDER 710 CC CERVEZA":{"min":42,"frac":24},"SPEED 250 CC.":{"min":19,"frac":24},"SPEED 473 ML":{"min":14,"frac":12},"SPRITE 2,25L":{"min":4,"frac":8},"SPRITE LIMA LIMON 1.75 L.":{"min":6,"frac":8},"SPRITE LIMA LIMON 354 CC.":{"min":2,"frac":6},"SPRITE LIMA LIMON 500 CC.":{"min":15,"frac":6},"SPRITE SIN AZUCAR 600 CC.":{"min":5,"frac":6},"SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT":{"min":1,"frac":8},"SPRITE SIN AZUCARES LIMA LIMON 2.25 L.":{"min":2,"frac":8},"STELLA 710 LATON":{"min":1,"frac":16},"VILLAVICENCIO 1.5 L. SIN GAS":{"min":1,"frac":6},"VILLAVICENCIO 2 L. SIN GAS":{"min":12,"frac":6},"VILLAVICENCIO 500":{"min":20,"frac":12},"VILLAVICENCIO 500 CC. CON GAS":{"min":4,"frac":12},"VINO ALMA MORA":{"min":2,"frac":6},"VINO NICASIA":{"min":1,"frac":6},"VINO OTRO LOCO MAS MALBEC":{"min":2,"frac":6},"VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.":{"min":4,"frac":6},"VODKA SKYY COSMIC":{"min":1,"frac":1},"VODKA SKYY ORIGINAL":{"min":1,"frac":1},"VODKA SKYY RASPBERRY 750ML":{"min":1,"frac":1},"VODKA SMIRNOFF 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF GREEN APPLE 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF RASPBERRY 700 CC.":{"min":1,"frac":1},"VODKA SMIRNOFF WATERMELON":{"min":1,"frac":1}}}};
+const PD_DEFAULT_MINIMOS = {
+  "MASSALIN": {
+    "KIOSKO NICO": {
+      "CHESTER 12": {
+        "min": 5,
+        "frac": 5
+      },
+      "CHESTER COMUN": {
+        "min": 4,
+        "frac": 10
+      },
+      "CHESTER COMUN FRESH": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 10": {
+        "min": 5,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 20": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER PURPLE KS": {
+        "min": 0,
+        "frac": 5
+      },
+      "CHESTER UVA REMIX": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO BLUE TITANIUM - PARLIAMENT BOX": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO BOX 12": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO BOX 20": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO COMUN 20 KS": {
+        "min": 5,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED": {
+        "min": 50,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED BLUE": {
+        "min": 15,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED BOX (ROJO)": {
+        "min": 15,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED CORAL (CHESTER)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL BOX": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "MARLBORO FUSION BOX 12": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 20": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO GOLD": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO ICE BLAST": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO RED TITANUM": {
+        "min": 0,
+        "frac": 5
+      },
+      "MARLBORO SUMMER FUSION": {
+        "min": 2,
+        "frac": 5
+      },
+      "PHILIP MORRIS BOX 12": {
+        "min": 10,
+        "frac": 10
+      },
+      "PHILIP MORRIS BOX 20": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS CAPS BOX 12": {
+        "min": 10,
+        "frac": 5
+      },
+      "PHILIP MORRIS CAPS BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "PHILIP MORRIS COMUN KS": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS SOF 20 SELECT": {
+        "min": 10,
+        "frac": 10
+      }
+    },
+    "JBJ": {
+      "CHESTER 12": {
+        "min": 5,
+        "frac": 5
+      },
+      "CHESTER COMUN": {
+        "min": 5,
+        "frac": 10
+      },
+      "CHESTER COMUN FRESH": {
+        "min": 5,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 10": {
+        "min": 4,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER UVA REMIX": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO BLUE TITANIUM - PARLIAMENT BOX": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO BOX 12": {
+        "min": 5,
+        "frac": 10
+      },
+      "MARLBORO BOX 20": {
+        "min": 5,
+        "frac": 10
+      },
+      "MARLBORO COMUN 20 KS": {
+        "min": 5,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED": {
+        "min": 50,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED BLUE": {
+        "min": 15,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED BOX (ROJO)": {
+        "min": 15,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED CORAL (CHESTER)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL BOX": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL KS": {
+        "min": 15,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO GOLD": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO ICE BLAST": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO SUMMER FUSION": {
+        "min": 2,
+        "frac": 5
+      },
+      "PHILIP MORRIS BOX 12": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "PHILIP MORRIS CAPS BOX 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS CAPS BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS COMUN KS": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS SOF 20 SELECT": {
+        "min": 20,
+        "frac": 10
+      }
+    },
+    "GAONA": {
+      "CHESTER 12": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER COMUN": {
+        "min": 4,
+        "frac": 10
+      },
+      "CHESTER COMUN FRESH": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 10": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 20": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER UVA REMIX": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO BLUE TITANIUM - PARLIAMENT BOX": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO BOX 12": {
+        "min": 2,
+        "frac": 10
+      },
+      "MARLBORO BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "MARLBORO COMUN 20 KS": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED": {
+        "min": 20,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED BLUE": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED BOX (ROJO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED CORAL (CHESTER)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL BOX": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL KS": {
+        "min": 0,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 12": {
+        "min": 4,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 20": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO GOLD": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO ICE BLAST": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO SUMMER FUSION": {
+        "min": 1,
+        "frac": 5
+      },
+      "PHILIP MORRIS BOX 12": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "PHILIP MORRIS CAPS BOX 12": {
+        "min": 5,
+        "frac": 5
+      },
+      "PHILIP MORRIS CAPS BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS COMUN KS": {
+        "min": 4,
+        "frac": 10
+      },
+      "PHILIP MORRIS SOF 20 SELECT": {
+        "min": 10,
+        "frac": 10
+      }
+    },
+    "AVELLANEDA": {
+      "CHESTER 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER COMUN": {
+        "min": 4,
+        "frac": 10
+      },
+      "CHESTER COMUN FRESH": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 10": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 20": {
+        "min": 1,
+        "frac": 5
+      },
+      "CHESTER UVA REMIX": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO BLUE TITANIUM - PARLIAMENT BOX": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO BOX 12": {
+        "min": 3,
+        "frac": 10
+      },
+      "MARLBORO BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "MARLBORO COMUN 20 KS": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED": {
+        "min": 20,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED BLUE": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED BOX (ROJO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED CORAL (CHESTER)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL BOX": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL KS": {
+        "min": 0,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 12": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO GOLD": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO ICE BLAST": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO SUMMER FUSION": {
+        "min": 1,
+        "frac": 5
+      },
+      "PHILIP MORRIS BOX 12": {
+        "min": 4,
+        "frac": 10
+      },
+      "PHILIP MORRIS BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "PHILIP MORRIS CAPS BOX 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS CAPS BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS COMUN KS": {
+        "min": 4,
+        "frac": 10
+      },
+      "PHILIP MORRIS SOF 20 SELECT": {
+        "min": 10,
+        "frac": 10
+      }
+    },
+    "BELGRANO": {
+      "CHESTER 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER COMUN": {
+        "min": 5,
+        "frac": 10
+      },
+      "CHESTER COMUN FRESH": {
+        "min": 5,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 10": {
+        "min": 4,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER UVA REMIX": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO BLUE TITANIUM - PARLIAMENT BOX": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO BOX 12": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO BOX 20": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO COMUN 20 KS": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED": {
+        "min": 40,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED BLUE": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED BOX (ROJO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED CORAL (CHESTER)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL BOX": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL KS": {
+        "min": 15,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO GOLD": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO ICE BLAST": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO SUMMER FUSION": {
+        "min": 2,
+        "frac": 5
+      },
+      "PHILIP MORRIS BOX 12": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "PHILIP MORRIS CAPS BOX 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS CAPS BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS COMUN KS": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS SOF 20 SELECT": {
+        "min": 20,
+        "frac": 10
+      }
+    },
+    "RIVADAVIA": {
+      "CHESTER 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "CHESTER COMUN": {
+        "min": 5,
+        "frac": 10
+      },
+      "CHESTER COMUN FRESH": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 10": {
+        "min": 4,
+        "frac": 5
+      },
+      "CHESTER FRESH BOX 20": {
+        "min": 2,
+        "frac": 5
+      },
+      "CHESTER UVA REMIX": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO BLUE TITANIUM - PARLIAMENT BOX": {
+        "min": 1,
+        "frac": 5
+      },
+      "MARLBORO BOX 12": {
+        "min": 3,
+        "frac": 10
+      },
+      "MARLBORO BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "MARLBORO COMUN 20 KS": {
+        "min": 4,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED": {
+        "min": 50,
+        "frac": 10
+      },
+      "MARLBORO CRAFTED BLUE": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED BOX (ROJO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED CORAL (CHESTER)": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL BOX": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO CRAFTED MENTOL KS": {
+        "min": 0,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 12": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO FUSION BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO GOLD": {
+        "min": 5,
+        "frac": 5
+      },
+      "MARLBORO GOLD TITANIUM - PARLIAMENT VIRGINIA": {
+        "min": 3,
+        "frac": 5
+      },
+      "MARLBORO ICE BLAST": {
+        "min": 2,
+        "frac": 5
+      },
+      "MARLBORO SUMMER FUSION": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS BOX 12": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS BOX 20": {
+        "min": 3,
+        "frac": 10
+      },
+      "PHILIP MORRIS CAPS BOX 12": {
+        "min": 4,
+        "frac": 5
+      },
+      "PHILIP MORRIS CAPS BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "PHILIP MORRIS COMUN KS": {
+        "min": 5,
+        "frac": 10
+      },
+      "PHILIP MORRIS SOF 20 SELECT": {
+        "min": 20,
+        "frac": 10
+      },
+      "PHILIP RANDON SPIN 12": {
+        "min": 0,
+        "frac": 10
+      }
+    }
+  },
+  "SARANDI": {
+    "KIOSKO NICO": {
+      "BOLD": {
+        "min": 40,
+        "frac": 10
+      },
+      "KIEL BOX": {
+        "min": 80,
+        "frac": 10
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 10
+      },
+      "MASTER": {
+        "min": 50,
+        "frac": 10
+      },
+      "MELBOURNE ROJO": {
+        "min": 0,
+        "frac": 10
+      },
+      "MELBOURNE SUAVE": {
+        "min": 0,
+        "frac": 10
+      },
+      "MILENIO": {
+        "min": 0,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 10,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 10,
+        "frac": 10
+      },
+      "MILL": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT 10": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT BOX": {
+        "min": 40,
+        "frac": 10
+      },
+      "RED POINT ECO": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT KS": {
+        "min": 40,
+        "frac": 10
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "RED POINT ON": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT ON SIX": {
+        "min": 10,
+        "frac": 10
+      }
+    },
+    "JBJ": {
+      "BOLD": {
+        "min": 30,
+        "frac": 10
+      },
+      "KIEL BOX": {
+        "min": 60,
+        "frac": 10
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 10
+      },
+      "MASTER": {
+        "min": 30,
+        "frac": 10
+      },
+      "MELBOURNE SUAVE": {
+        "min": 10,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILL": {
+        "min": 4,
+        "frac": 10
+      },
+      "RED POINT 10": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT BOX": {
+        "min": 30,
+        "frac": 10
+      },
+      "RED POINT ECO": {
+        "min": 4,
+        "frac": 10
+      },
+      "RED POINT KS": {
+        "min": 30,
+        "frac": 10
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "RED POINT ON": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT ON SIX": {
+        "min": 4,
+        "frac": 10
+      }
+    },
+    "GAONA": {
+      "BOLD": {
+        "min": 30,
+        "frac": 10
+      },
+      "KIEL BOX": {
+        "min": 30,
+        "frac": 10
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 10
+      },
+      "MASTER": {
+        "min": 20,
+        "frac": 10
+      },
+      "MELBOURNE SUAVE": {
+        "min": 0,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 5,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILL": {
+        "min": 5,
+        "frac": 10
+      },
+      "RED POINT 10": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT BOX": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT ECO": {
+        "min": 3,
+        "frac": 10
+      },
+      "RED POINT KS": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "RED POINT ON": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT ON SIX": {
+        "min": 3,
+        "frac": 10
+      }
+    },
+    "AVELLANEDA": {
+      "BOLD": {
+        "min": 30,
+        "frac": 10
+      },
+      "KIEL BOX": {
+        "min": 20,
+        "frac": 10
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 10
+      },
+      "MASTER": {
+        "min": 20,
+        "frac": 10
+      },
+      "MELBOURNE SUAVE": {
+        "min": 0,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILL": {
+        "min": 3,
+        "frac": 10
+      },
+      "RED POINT 10": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT BOX": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT ECO": {
+        "min": 3,
+        "frac": 10
+      },
+      "RED POINT KS": {
+        "min": 20,
+        "frac": 10
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "RED POINT ON": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT ON SIX": {
+        "min": 3,
+        "frac": 10
+      }
+    },
+    "BELGRANO": {
+      "BOLD": {
+        "min": 40,
+        "frac": 10
+      },
+      "KIEL BOX": {
+        "min": 60,
+        "frac": 10
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 10
+      },
+      "MASTER": {
+        "min": 40,
+        "frac": 10
+      },
+      "MELBOURNE SUAVE": {
+        "min": 0,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 4,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 4,
+        "frac": 10
+      },
+      "MILL": {
+        "min": 4,
+        "frac": 10
+      },
+      "RED POINT 10": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT BOX": {
+        "min": 30,
+        "frac": 10
+      },
+      "RED POINT ECO": {
+        "min": 3,
+        "frac": 10
+      },
+      "RED POINT KS": {
+        "min": 30,
+        "frac": 10
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "RED POINT ON": {
+        "min": 5,
+        "frac": 10
+      },
+      "RED POINT ON SIX": {
+        "min": 10,
+        "frac": 10
+      }
+    },
+    "RIVADAVIA": {
+      "BOLD": {
+        "min": 30,
+        "frac": 10
+      },
+      "KIEL BOX": {
+        "min": 60,
+        "frac": 10
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 10
+      },
+      "MASTER": {
+        "min": 30,
+        "frac": 10
+      },
+      "MELBOURNE SUAVE": {
+        "min": 0,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 3,
+        "frac": 10
+      },
+      "MILL": {
+        "min": 3,
+        "frac": 10
+      },
+      "RED POINT 10": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT BOX": {
+        "min": 30,
+        "frac": 10
+      },
+      "RED POINT ECO": {
+        "min": 3,
+        "frac": 10
+      },
+      "RED POINT KS": {
+        "min": 30,
+        "frac": 10
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "RED POINT ON": {
+        "min": 10,
+        "frac": 10
+      },
+      "RED POINT ON SIX": {
+        "min": 3,
+        "frac": 10
+      }
+    },
+    "JONTE": {
+      "BOLD": {
+        "min": 0,
+        "frac": 1
+      },
+      "KIEL BOX": {
+        "min": 0,
+        "frac": 1
+      },
+      "KIEL COMUN": {
+        "min": 0,
+        "frac": 1
+      },
+      "MASTER": {
+        "min": 0,
+        "frac": 1
+      },
+      "MELBOURNE ROJO": {
+        "min": 0,
+        "frac": 1
+      },
+      "MELBOURNE SUAVE": {
+        "min": 0,
+        "frac": 1
+      },
+      "MILENIO": {
+        "min": 0,
+        "frac": 1
+      },
+      "MILENIO MENTOLADO SANDIA": {
+        "min": 0,
+        "frac": 1
+      },
+      "MILENIO MENTOLADO UVA": {
+        "min": 0,
+        "frac": 1
+      },
+      "MILL": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT 10": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT BOX": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT ECO": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT KS": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT MENTOL KS": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT ON": {
+        "min": 0,
+        "frac": 1
+      },
+      "RED POINT ON SIX": {
+        "min": 0,
+        "frac": 1
+      }
+    }
+  },
+  "NOBLEZA": {
+    "KIOSKO NICO": {
+      "CAMEL BLUE BOX": {
+        "min": 0,
+        "frac": 5
+      },
+      "CAMEL BOX 10": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL COMUN": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 5
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 10,
+        "frac": 10
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 35,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 10
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 30,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 35,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 5,
+        "frac": 5
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "ROTHMAN 4370 BOX": {
+        "min": 0,
+        "frac": 5
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    },
+    "JBJ": {
+      "CAMEL BOX 10": {
+        "min": 2,
+        "frac": 5
+      },
+      "CAMEL BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL COMUN": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 10,
+        "frac": 10
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 20,
+        "frac": 10
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 35,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 2,
+        "frac": 5
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 20,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 30,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 2,
+        "frac": 5
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 3,
+        "frac": 5
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    },
+    "GAONA": {
+      "CAMEL BOX 10": {
+        "min": 3,
+        "frac": 5
+      },
+      "CAMEL BOX 20": {
+        "min": 1,
+        "frac": 5
+      },
+      "CAMEL COMUN": {
+        "min": 1,
+        "frac": 5
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 1,
+        "frac": 10
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 5,
+        "frac": 10
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 2,
+        "frac": 5
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 1,
+        "frac": 5
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 4,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 4,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 1,
+        "frac": 5
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 1,
+        "frac": 5
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 1,
+        "frac": 5
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    },
+    "AVELLANEDA": {
+      "CAMEL BOX 10": {
+        "min": 3,
+        "frac": 5
+      },
+      "CAMEL BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "CAMEL COMUN": {
+        "min": 3,
+        "frac": 5
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 5,
+        "frac": 10
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 0,
+        "frac": 10
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 2,
+        "frac": 5
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 1,
+        "frac": 5
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 1,
+        "frac": 5
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 3,
+        "frac": 5
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    },
+    "BELGRANO": {
+      "CAMEL BOX 10": {
+        "min": 3,
+        "frac": 5
+      },
+      "CAMEL BOX 20": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL COMUN": {
+        "min": 5,
+        "frac": 5
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 10,
+        "frac": 10
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 20,
+        "frac": 10
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 35,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 4,
+        "frac": 5
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 1,
+        "frac": 5
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 2,
+        "frac": 5
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    },
+    "RIVADAVIA": {
+      "CAMEL BOX 10": {
+        "min": 2,
+        "frac": 5
+      },
+      "CAMEL BOX 20": {
+        "min": 3,
+        "frac": 5
+      },
+      "CAMEL COMUN": {
+        "min": 2,
+        "frac": 5
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 5,
+        "frac": 10
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 10
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 10,
+        "frac": 10
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 6,
+        "frac": 5
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 30,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 7,
+        "frac": 5
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 2,
+        "frac": 5
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 15,
+        "frac": 5
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 10,
+        "frac": 5
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 5,
+        "frac": 5
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 2,
+        "frac": 5
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 5,
+        "frac": 5
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    },
+    "JONTE": {
+      "CAMEL BLUE BOX": {
+        "min": 0,
+        "frac": 1
+      },
+      "CAMEL BOX 10": {
+        "min": 0,
+        "frac": 1
+      },
+      "CAMEL BOX 20": {
+        "min": 0,
+        "frac": 1
+      },
+      "CAMEL COMUN": {
+        "min": 0,
+        "frac": 1
+      },
+      "CAMEL LEGEND BOX NUEVO": {
+        "min": 0,
+        "frac": 1
+      },
+      "CAMEL LEGEND KS": {
+        "min": 0,
+        "frac": 1
+      },
+      "ENCENDEDOR CANDELA": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKIES LOW": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE BOX 12": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE BOX 20": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE COMUN KS": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE COOL BOX 12": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE COOL BOX XL": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE COOL COMUN": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE DARK (PARISIENE)": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE DOBLE PLUS LARGO": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ECLIPSE XL": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ORIGEN (ROJO) 10": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ORIGEN CONV 10": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ORIGEN CONV BOX": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ORIGEN CONV COMUN": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ORIGEN KS": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE ORIGEN ROJO BOX (NUEVO)": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE RED MIX BOX": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE SILVER": {
+        "min": 0,
+        "frac": 1
+      },
+      "LUCKY STRIKE WILD MIX UVA XL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "MINI BIC": {
+        "min": 0,
+        "frac": 1
+      },
+      "ROTHMAN 4370 BOX": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE GALPAO": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE LUCKIES GOLDEN": {
+        "min": 0,
+        "frac": 1
+      },
+      "TABACO LUCKY STRIKE ORIGINAL": {
+        "min": 0,
+        "frac": 1
+      },
+      "TARJETA SUBE": {
+        "min": 0,
+        "frac": 1
+      }
+    }
+  },
+  "PULPO": {
+    "KIOSKO NICO": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    },
+    "JBJ": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    },
+    "GAONA": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    },
+    "AVELLANEDA": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    },
+    "BELGRANO": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    },
+    "RIVADAVIA": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    },
+    "JONTE": {
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO YELLOW": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 9,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 16,
+        "frac": 10
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 7,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 18,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 7,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      }
+    }
+  },
+  "FACUNDO": {
+    "KIOSKO NICO": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "JBJ": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "GAONA": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "AVELLANEDA": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "BELGRANO": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "RIVADAVIA": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "JONTE": {
+      "ANDES ORIGEN 473 CC. CERVEZA": {
+        "min": 9,
+        "frac": 6
+      },
+      "ANDES ORIGEN IPA 473 CC. CERVEZA": {
+        "min": 7,
+        "frac": 6
+      },
+      "ANDES ROJA CERVEZA": {
+        "min": 5,
+        "frac": 6
+      },
+      "BRAHMA LATA CERVEZA": {
+        "min": 16,
+        "frac": 24
+      },
+      "BRAHMA LATON 710 CERVEZA": {
+        "min": 6,
+        "frac": 16
+      },
+      "CEPITA BOTELLON DURAZNO": {
+        "min": 7,
+        "frac": 8
+      },
+      "CEPITA BOTELLON NARANJA": {
+        "min": 4,
+        "frac": 8
+      },
+      "CEPITA MANZANA 1L CARTON": {
+        "min": 1,
+        "frac": 8
+      },
+      "CEPITA NARANJA 1L CARTON": {
+        "min": 2,
+        "frac": 8
+      },
+      "CHANDON DELICE 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON EXTRA BRUT 750 ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "CHANDON ROSE 750ml": {
+        "min": 1,
+        "frac": 1
+      },
+      "COCA COLA 1.5/1.75 L.": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 2.25/2.35/2.5": {
+        "min": 16,
+        "frac": 8
+      },
+      "COCA COLA 354 CC. LATA": {
+        "min": 13,
+        "frac": 6
+      },
+      "COCA COLA 500 CC. BOTELLA": {
+        "min": 68,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCAR 500 CC.": {
+        "min": 17,
+        "frac": 6
+      },
+      "COCA COLA SIN AZUCARES 1.75 CC.": {
+        "min": 6,
+        "frac": 8
+      },
+      "CORDERO CONPIEL DE LOBO": {
+        "min": 2,
+        "frac": 6
+      },
+      "CORONA 330 CC. CERVEZA RUBIA": {
+        "min": 3,
+        "frac": 24
+      },
+      "CORONA 710 CC. CERVEZA RUBIA": {
+        "min": 5,
+        "frac": 24
+      },
+      "COSECHA TARDIA BLANCO": {
+        "min": 2,
+        "frac": 6
+      },
+      "FANTA NARANJA 1.5/1.75 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "FANTA NARANJA 2,25 L": {
+        "min": 1,
+        "frac": 8
+      },
+      "FANTA NARANJA 354 CC.": {
+        "min": 1,
+        "frac": 6
+      },
+      "FANTA NARANJA 500 ML": {
+        "min": 7,
+        "frac": 6
+      },
+      "FEDERICO DE ALVEAR EXTRA DULCE 750CC": {
+        "min": 2,
+        "frac": 6
+      },
+      "FERNET BRANCA 450 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "FERNET BRANCA 750 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "GANCIA 950ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "Heineken 473cc lata": {
+        "min": 15,
+        "frac": 24
+      },
+      "Heineken Laton": {
+        "min": 19,
+        "frac": 24
+      },
+      "ISENBECK": {
+        "min": 51,
+        "frac": 24
+      },
+      "MONSTER 473 MANGO LOCO": {
+        "min": 10,
+        "frac": 6
+      },
+      "Monster 473 Blanco": {
+        "min": 4,
+        "frac": 6
+      },
+      "Monster 473 Negro comun": {
+        "min": 11,
+        "frac": 6
+      },
+      "Monster 473 Pipeline Punch": {
+        "min": 4,
+        "frac": 6
+      },
+      "POWERADE BLAST 500 CC.": {
+        "min": 9,
+        "frac": 6
+      },
+      "POWERADE FRUTAS TOPICALES 500 CC.": {
+        "min": 7,
+        "frac": 6
+      },
+      "POWERADE MANZANA 500 CC.": {
+        "min": 6,
+        "frac": 6
+      },
+      "Quilmes clásica 473cc": {
+        "min": 5,
+        "frac": 24
+      },
+      "Red Bull Original": {
+        "min": 7,
+        "frac": 24
+      },
+      "SCHNEIDER 710 CC CERVEZA": {
+        "min": 42,
+        "frac": 24
+      },
+      "SPEED 250 CC.": {
+        "min": 19,
+        "frac": 24
+      },
+      "SPEED 473 ML": {
+        "min": 14,
+        "frac": 12
+      },
+      "SPRITE 2,25L": {
+        "min": 4,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 1.75 L.": {
+        "min": 6,
+        "frac": 8
+      },
+      "SPRITE LIMA LIMON 354 CC.": {
+        "min": 2,
+        "frac": 6
+      },
+      "SPRITE LIMA LIMON 500 CC.": {
+        "min": 15,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR 600 CC.": {
+        "min": 5,
+        "frac": 6
+      },
+      "SPRITE SIN AZUCAR LIMA-LIMON 1,75 LT": {
+        "min": 1,
+        "frac": 8
+      },
+      "SPRITE SIN AZUCARES LIMA LIMON 2.25 L.": {
+        "min": 2,
+        "frac": 8
+      },
+      "STELLA 710 LATON": {
+        "min": 1,
+        "frac": 16
+      },
+      "VILLAVICENCIO 1.5 L. SIN GAS": {
+        "min": 1,
+        "frac": 6
+      },
+      "VILLAVICENCIO 2 L. SIN GAS": {
+        "min": 12,
+        "frac": 6
+      },
+      "VILLAVICENCIO 500": {
+        "min": 20,
+        "frac": 12
+      },
+      "VILLAVICENCIO 500 CC. CON GAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "VINO ALMA MORA": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO NICASIA": {
+        "min": 1,
+        "frac": 6
+      },
+      "VINO OTRO LOCO MAS MALBEC": {
+        "min": 2,
+        "frac": 6
+      },
+      "VINO TINTO BORGONA VIÑAS DE BALBO 1125 CC.": {
+        "min": 4,
+        "frac": 6
+      },
+      "VODKA SKYY COSMIC": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY ORIGINAL": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SKYY RASPBERRY 750ML": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF GREEN APPLE 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF RASPBERRY 700 CC.": {
+        "min": 1,
+        "frac": 1
+      },
+      "VODKA SMIRNOFF WATERMELON": {
+        "min": 1,
+        "frac": 1
+      }
+    }
+  },
+  "CELESTINO": {
+    "AVELLANEDA": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 49,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 29,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 8,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 10,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 9,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 12,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 7,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 9,
+        "frac": 30
+      },
+      "PRIME ULTRA FINO": {
+        "min": 7,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 5,
+        "frac": 20
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 5,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 3,
+        "frac": 1
+      },
+      "MAXI BIC": {
+        "min": 6,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 2,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 6,
+        "frac": 16
+      },
+      "TULIPAN CLASICO": {
+        "min": 5,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 5,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 2,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 2,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME TACHAS": {
+        "min": 3,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 3,
+        "frac": 6
+      },
+      "D.R.F. NARANJA 23 G.": {
+        "min": 2,
+        "frac": 12
+      },
+      "MENTOS DE FRUTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 3,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 2,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 2,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 2,
+        "frac": 8
+      },
+      "TAFIROL PLUS RAPIDA ACCION": {
+        "min": 1,
+        "frac": 1
+      },
+      "D.R.F. MENTOL 23 GR.": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME ANATOMICO": {
+        "min": 1,
+        "frac": 4
+      },
+      "POXIRAN  PEGAMENTO 23G": {
+        "min": 1,
+        "frac": 6
+      }
+    },
+    "BELGRANO": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 76,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 27,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 9,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 16,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 28,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 18,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 12,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 19,
+        "frac": 30
+      },
+      "FANTOCHE RED VELVET": {
+        "min": 4,
+        "frac": 12
+      },
+      "PRIME ULTRA FINO": {
+        "min": 9,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 2,
+        "frac": 20
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 12,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 4,
+        "frac": 1
+      },
+      "D.R.F. MENTA  23 GR.": {
+        "min": 12,
+        "frac": 12
+      },
+      "MAXI BIC": {
+        "min": 5,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 10,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 9,
+        "frac": 16
+      },
+      "PILAS ENERGIZER AA": {
+        "min": 6,
+        "frac": 20
+      },
+      "TULIPAN CLASICO": {
+        "min": 8,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 5,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 3,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 5,
+        "frac": 12
+      },
+      "PRIME TACHAS": {
+        "min": 2,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 3,
+        "frac": 6
+      },
+      "D.R.F. NARANJA 23 G.": {
+        "min": 4,
+        "frac": 12
+      },
+      "MENTOS DE FRUTA": {
+        "min": 2,
+        "frac": 12
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 3,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 2,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 2,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 1,
+        "frac": 8
+      },
+      "D.R.F. PASTILLA LIMON": {
+        "min": 3,
+        "frac": 12
+      },
+      "MENTOS DE MENTA": {
+        "min": 2,
+        "frac": 12
+      },
+      "D.R.F. MENTOL 23 GR.": {
+        "min": 2,
+        "frac": 12
+      },
+      "REFRESCO DE MENTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "BABY DOLL ACIDO": {
+        "min": 1,
+        "frac": 16
+      },
+      "PRIME ANATOMICO": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME ESPERMICIDA": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME STRONGG": {
+        "min": 1,
+        "frac": 4
+      },
+      "BIC CONFORT 3 AZUL": {
+        "min": 1,
+        "frac": 1
+      },
+      "PRIME TURBO": {
+        "min": 1,
+        "frac": 4
+      }
+    },
+    "GAONA": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 27,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 29,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 7,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 11,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 9,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 22,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 12,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 18,
+        "frac": 30
+      },
+      "PRIME ULTRA FINO": {
+        "min": 6,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 4,
+        "frac": 20
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 4,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 3,
+        "frac": 1
+      },
+      "D.R.F. MENTA  23 GR.": {
+        "min": 4,
+        "frac": 12
+      },
+      "MAXI BIC": {
+        "min": 6,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 5,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 5,
+        "frac": 16
+      },
+      "PILAS ENERGIZER AA": {
+        "min": 1,
+        "frac": 20
+      },
+      "TULIPAN CLASICO": {
+        "min": 8,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 3,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 3,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 3,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 2,
+        "frac": 12
+      },
+      "PRIME TACHAS": {
+        "min": 2,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 3,
+        "frac": 6
+      },
+      "D.R.F. NARANJA 23 G.": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS DE FRUTA": {
+        "min": 3,
+        "frac": 12
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 2,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 1,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 2,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 1,
+        "frac": 8
+      },
+      "D.R.F. PASTILLA LIMON": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS DE MENTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "REFRESCO DE MENTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME ANATOMICO": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME SKYN ELITE": {
+        "min": 1,
+        "frac": 4
+      }
+    },
+    "JBJ": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 83,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 66,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 3,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 33,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 20,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 31,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 25,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 20,
+        "frac": 30
+      },
+      "FANTOCHE RED VELVET": {
+        "min": 19,
+        "frac": 12
+      },
+      "PRIME ULTRA FINO": {
+        "min": 8,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 13,
+        "frac": 20
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 6,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 4,
+        "frac": 1
+      },
+      "D.R.F. MENTA  23 GR.": {
+        "min": 7,
+        "frac": 12
+      },
+      "MAXI BIC": {
+        "min": 6,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 3,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 8,
+        "frac": 16
+      },
+      "PILAS ENERGIZER AA": {
+        "min": 9,
+        "frac": 20
+      },
+      "TULIPAN CLASICO": {
+        "min": 6,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 7,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 5,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 5,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 4,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME TACHAS": {
+        "min": 3,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 4,
+        "frac": 6
+      },
+      "MENTOS DE FRUTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 3,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 1,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 1,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 3,
+        "frac": 8
+      },
+      "D.R.F. PASTILLA LIMON": {
+        "min": 2,
+        "frac": 12
+      },
+      "MENTOS DE MENTA": {
+        "min": 2,
+        "frac": 12
+      },
+      "CHUPETON LHERITIER": {
+        "min": 2,
+        "frac": 1
+      },
+      "TAFIROL PLUS RAPIDA ACCION": {
+        "min": 2,
+        "frac": 1
+      },
+      "D.R.F. MENTOL 23 GR.": {
+        "min": 1,
+        "frac": 12
+      },
+      "REFRESCO DE MENTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS TUTTI FRUTTI": {
+        "min": 2,
+        "frac": 12
+      },
+      "PRIME ANATOMICO": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME STRONGG": {
+        "min": 1,
+        "frac": 4
+      },
+      "BIC CONFORT 3 AZUL": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "JONTE": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 97,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 51,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 25,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 24,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 33,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 27,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 21,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 20,
+        "frac": 30
+      },
+      "FANTOCHE RED VELVET": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME ULTRA FINO": {
+        "min": 16,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 7,
+        "frac": 20
+      },
+      "MARROC CRIC": {
+        "min": 7,
+        "frac": 60
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 7,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 7,
+        "frac": 1
+      },
+      "D.R.F. MENTA  23 GR.": {
+        "min": 1,
+        "frac": 12
+      },
+      "MAXI BIC": {
+        "min": 10,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 6,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 3,
+        "frac": 16
+      },
+      "PILAS ENERGIZER AA": {
+        "min": 3,
+        "frac": 20
+      },
+      "TULIPAN CLASICO": {
+        "min": 6,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 7,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 6,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 3,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 3,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 3,
+        "frac": 12
+      },
+      "WACKYMONKEY BAND": {
+        "min": 2,
+        "frac": 8
+      },
+      "PRIME TACHAS": {
+        "min": 4,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 3,
+        "frac": 6
+      },
+      "D.R.F. NARANJA 23 G.": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS DE FRUTA": {
+        "min": 4,
+        "frac": 12
+      },
+      "MAGIC CLICK MARIMBA": {
+        "min": 3,
+        "frac": 15
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 2,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 2,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 3,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 1,
+        "frac": 8
+      },
+      "MENTOS DE MENTA": {
+        "min": 2,
+        "frac": 12
+      },
+      "CHUPETON LHERITIER": {
+        "min": 3,
+        "frac": 1
+      },
+      "D.R.F. MENTOL 23 GR.": {
+        "min": 1,
+        "frac": 12
+      },
+      "REFRESCO DE MENTA": {
+        "min": 2,
+        "frac": 12
+      },
+      "BABY DOLL ACIDO": {
+        "min": 2,
+        "frac": 16
+      },
+      "MENTOS FRUTILLA": {
+        "min": 1,
+        "frac": 12
+      },
+      "PUSH POP CHUPETIN": {
+        "min": 1,
+        "frac": 24
+      },
+      "PEGAMENTO LA GOTITA GEL": {
+        "min": 1,
+        "frac": 6
+      },
+      "PRIME ANATOMICO": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME ESPERMICIDA": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME STRONGG": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME TURBO": {
+        "min": 1,
+        "frac": 4
+      },
+      "REFRESCO DE NARANJA": {
+        "min": 1,
+        "frac": 12
+      },
+      "UNI POP": {
+        "min": 1,
+        "frac": 8
+      },
+      "PRIME RETARDANTE": {
+        "min": 1,
+        "frac": 4
+      }
+    },
+    "KIOSKO NICO": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 27,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 48,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 18,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 10,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 30,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 8,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 16,
+        "frac": 30
+      },
+      "FANTOCHE RED VELVET": {
+        "min": 5,
+        "frac": 12
+      },
+      "PRIME ULTRA FINO": {
+        "min": 10,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 9,
+        "frac": 20
+      },
+      "MARROC CRIC": {
+        "min": 13,
+        "frac": 60
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 10,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 12,
+        "frac": 1
+      },
+      "D.R.F. MENTA  23 GR.": {
+        "min": 5,
+        "frac": 12
+      },
+      "MAXI BIC": {
+        "min": 11,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 4,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 5,
+        "frac": 16
+      },
+      "PILAS ENERGIZER AA": {
+        "min": 7,
+        "frac": 20
+      },
+      "TULIPAN CLASICO": {
+        "min": 7,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 6,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 5,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 3,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 4,
+        "frac": 12
+      },
+      "WACKYMONKEY BAND": {
+        "min": 5,
+        "frac": 8
+      },
+      "PRIME TACHAS": {
+        "min": 3,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 3,
+        "frac": 6
+      },
+      "D.R.F. NARANJA 23 G.": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS DE FRUTA": {
+        "min": 2,
+        "frac": 12
+      },
+      "MAGIC CLICK MARIMBA": {
+        "min": 4,
+        "frac": 15
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 3,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 2,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 2,
+        "frac": 8
+      },
+      "D.R.F. PASTILLA LIMON": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS DE MENTA": {
+        "min": 3,
+        "frac": 12
+      },
+      "REFRESCO DE MENTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "MENTOS FRUTILLA": {
+        "min": 2,
+        "frac": 12
+      },
+      "PUSH POP CHUPETIN": {
+        "min": 2,
+        "frac": 24
+      },
+      "PEGAMENTO LA GOTITA GEL": {
+        "min": 2,
+        "frac": 6
+      },
+      "D.R.F FRUTOS ROJOS": {
+        "min": 2,
+        "frac": 12
+      },
+      "PRIME ANATOMICO": {
+        "min": 1,
+        "frac": 4
+      },
+      "PRIME STRONGG": {
+        "min": 1,
+        "frac": 4
+      },
+      "BIC CONFORT 3 AZUL": {
+        "min": 1,
+        "frac": 1
+      },
+      "PRIME TURBO": {
+        "min": 1,
+        "frac": 4
+      },
+      "UNI POP": {
+        "min": 1,
+        "frac": 8
+      },
+      "ENCENDEDORES SHARK": {
+        "min": 1,
+        "frac": 1
+      },
+      "CANARIAS ORIGINAL 1KG": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "RIVADAVIA": {
+      "PAPELILLO OCB NEGRO": {
+        "min": 71,
+        "frac": 25
+      },
+      "MARROC": {
+        "min": 24,
+        "frac": 60
+      },
+      "PAÑUELOS MANHATTAN": {
+        "min": 3,
+        "frac": 6
+      },
+      "FANTOCHE NEGRO TRIPLE ALFAJOR": {
+        "min": 11,
+        "frac": 12
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 19,
+        "frac": 25
+      },
+      "BONAFIDE CAFE EN SAQUITOS SENSACIONES": {
+        "min": 10,
+        "frac": 18
+      },
+      "FANTOCHE BLANCO TRIPLE ALFAJOR": {
+        "min": 8,
+        "frac": 12
+      },
+      "FEELING MARROC": {
+        "min": 17,
+        "frac": 30
+      },
+      "PRIME ULTRA FINO": {
+        "min": 6,
+        "frac": 4
+      },
+      "PILAS ENERGIZER AAA": {
+        "min": 5,
+        "frac": 20
+      },
+      "REFRESCO PASTILLA ORIGINAL": {
+        "min": 6,
+        "frac": 12
+      },
+      "GONGYS MASHMELOWS": {
+        "min": 3,
+        "frac": 1
+      },
+      "MAXI BIC": {
+        "min": 5,
+        "frac": 12
+      },
+      "REFRESCO DE TUTTI FRUTTI": {
+        "min": 5,
+        "frac": 12
+      },
+      "BABY DOLL CHUPETIN": {
+        "min": 7,
+        "frac": 16
+      },
+      "PILAS ENERGIZER AA": {
+        "min": 5,
+        "frac": 20
+      },
+      "TULIPAN CLASICO": {
+        "min": 5,
+        "frac": 16
+      },
+      "Clipper Grande": {
+        "min": 4,
+        "frac": 12
+      },
+      "PRIME SUPER FINO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRIME TEXTURADO": {
+        "min": 4,
+        "frac": 4
+      },
+      "PRESERVATIVO PRIME SKYN ORIGINAL": {
+        "min": 5,
+        "frac": 4
+      },
+      "D.R.F ANIS": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME TACHAS": {
+        "min": 2,
+        "frac": 12
+      },
+      "PEGAMENTO LA GOTITA": {
+        "min": 3,
+        "frac": 6
+      },
+      "D.R.F. NARANJA 23 G.": {
+        "min": 4,
+        "frac": 12
+      },
+      "MENTOS DE FRUTA": {
+        "min": 1,
+        "frac": 12
+      },
+      "PRIME EXTRA LUBRICADO": {
+        "min": 2,
+        "frac": 4
+      },
+      "PRIME WARNING": {
+        "min": 2,
+        "frac": 4
+      },
+      "ECOLE PEGAMENTO": {
+        "min": 1,
+        "frac": 6
+      },
+      "EMOJI POP": {
+        "min": 1,
+        "frac": 8
+      },
+      "D.R.F. PASTILLA LIMON": {
+        "min": 2,
+        "frac": 12
+      },
+      "CHUPETON LHERITIER": {
+        "min": 2,
+        "frac": 1
+      },
+      "D.R.F. MENTOL 23 GR.": {
+        "min": 2,
+        "frac": 12
+      }
+    }
+  }
+};
 
 const PD_PROVEEDORES = {
   MASSALIN: {
