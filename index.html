@@ -60,6 +60,7 @@ body {
 #drawer {
   position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 82vw;
   background: #0a0f1a; z-index: 201; transform: translateX(-100%);
+  display: flex; flex-direction: column; overflow-y: auto;
   transition: transform .2s cubic-bezier(.25,0,.2,1);
   will-change: transform;
   display: flex; flex-direction: column;
@@ -70,6 +71,7 @@ body {
 .drawer-header {
   background: linear-gradient(160deg, #0a1428 0%, #0f1c35 100%);
   border-bottom: 1px solid var(--border); color: white;
+  position: sticky; top: 0; z-index: 2; flex-shrink: 0;
   padding: 24px 18px 18px;
   padding-top: calc(24px + env(safe-area-inset-top));
 }
@@ -107,10 +109,12 @@ body {
 }
 .drawer-nav-item .nav-icon { font-size: 22px; flex-shrink: 0; }
 .drawer-close {
-  margin: auto 16px 20px; padding: 14px; border-radius: 12px; border: 1px solid var(--border);
+  margin: 16px 16px 20px; padding: 14px; border-radius: 12px; border: 1px solid var(--border);
   background: var(--surface); color: var(--text-sub); font-size: 13px; font-weight: 700;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
   min-height: 52px; transition: background .15s;
+  position: sticky; bottom: 0; z-index: 2; flex-shrink: 0;
+  box-shadow: 0 -8px 20px #0a0f1a;
 }
 .drawer-close:active { background: var(--surface2); }
 
@@ -3197,7 +3201,7 @@ async function fbDeleteRemito(fbId) { if (!db) return; try { await db.collection
 
 /* ── PEDIDOS AUTOMÁTICOS ─────────────────────────────────────────────────── */
 const PD_MIN_LS = 'pd_minimos_v2'; // fallback cache key
-const PD_FORCE_RESYNC_LS = 'pd_force_resync_v3';
+const PD_FORCE_RESYNC_LS = 'pd_force_resync_v4';
 const PD_FORCE_RESYNC_PROVS = ['PULPO','FACUNDO','CELESTINO']; // re-sembrar una sola vez con los mínimos/fraccion nuevos
 let _pdMinCache = {}; // in-memory cache loaded from Firestore
 const PD_DEFAULT_MINIMOS = {
@@ -5280,494 +5284,120 @@ const PD_DEFAULT_MINIMOS = {
     }
   },
   "PULPO": {
-    "KIOSKO NICO": {
-      "ACHALAY MENTOLADO": {
-        "min": 1,
-        "frac": 5
-      },
-      "ACHALAY VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "Achalay Virginia Original": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO BROW": {
-        "min": 1,
-        "frac": 5
-      },
-      "CERRITO ORIGINAL": {
-        "min": 7,
-        "frac": 5
-      },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO YELLOW": {
-        "min": 7,
-        "frac": 5
-      },
-      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
-        "min": 7,
-        "frac": 20
-      },
-      "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
-        "frac": 20
-      },
-      "FILTROS GIZEH MENTHOL 6MM": {
-        "min": 4,
-        "frac": 10
-      },
-      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
-        "min": 1,
-        "frac": 10
-      },
-      "FILTROS LIBELLA 200U NEGRO": {
-        "min": 9,
-        "frac": 16
-      },
-      "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
-        "frac": 21
-      },
-      "FILTROS OCB EXTRA SLIM GRIS": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA ORIGINAL NEGRO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SAUVAGE TOBACO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SILVER EXTRA BLOND": {
-        "min": 2,
-        "frac": 5
-      },
-      "FLANDRIA VIRGINIA GOLDEN BLEND": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA YELLOW": {
-        "min": 9,
-        "frac": 5
-      },
-      "LAS HOJAS TABACO": {
-        "min": 16,
-        "frac": 10
-      },
-      "LAS HOJAS VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
-        "frac": 25
-      },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
-      },
-      "PAPELILLO OCB GRIS": {
-        "min": 10,
-        "frac": 25
-      },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
-        "frac": 25
-      },
-      "REDFIELD NATURAL": {
-        "min": 1,
-        "frac": 5
-      },
-      "REDFIELD VAINILLA": {
-        "min": 3,
-        "frac": 5
-      },
-      "SAYRI CLARO": {
-        "min": 5,
-        "frac": 5
-      },
-      "SAYRI ORIGNAL": {
-        "min": 4,
-        "frac": 5
-      },
-      "STAMPS Cedas": {
-        "min": 7,
-        "frac": 25
-      },
-      "Stamps Celulosa": {
-        "min": 18,
-        "frac": 25
-      },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
-        "min": 1,
-        "frac": 5
-      },
-      "TIPS TONKING FILTROS CARTON": {
-        "min": 15,
-        "frac": 24
-      },
-      "TONKING CELULOSA": {
-        "min": 3,
-        "frac": 15
-      },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
-      },
-      "VAN HAASEN NATIVO": {
-        "min": 4,
-        "frac": 5
-      },
-      "VAN HAASEN VAINILLA": {
-        "min": 7,
-        "frac": 5
-      },
-      "VAN HASSEN ORIGINAL BLEND": {
-        "min": 2,
-        "frac": 5
-      }
-    },
-    "JBJ": {
-      "ACHALAY MENTOLADO": {
-        "min": 1,
-        "frac": 5
-      },
-      "ACHALAY VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "Achalay Virginia Original": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO BROW": {
-        "min": 1,
-        "frac": 5
-      },
-      "CERRITO ORIGINAL": {
-        "min": 7,
-        "frac": 5
-      },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO YELLOW": {
-        "min": 7,
-        "frac": 5
-      },
-      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
-        "min": 7,
-        "frac": 20
-      },
-      "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
-        "frac": 20
-      },
-      "FILTROS GIZEH MENTHOL 6MM": {
-        "min": 4,
-        "frac": 10
-      },
-      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
-        "min": 1,
-        "frac": 10
-      },
-      "FILTROS LIBELLA 200U NEGRO": {
-        "min": 9,
-        "frac": 16
-      },
-      "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
-        "frac": 21
-      },
-      "FILTROS OCB EXTRA SLIM GRIS": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA ORIGINAL NEGRO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SAUVAGE TOBACO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SILVER EXTRA BLOND": {
-        "min": 2,
-        "frac": 5
-      },
-      "FLANDRIA VIRGINIA GOLDEN BLEND": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA YELLOW": {
-        "min": 9,
-        "frac": 5
-      },
-      "LAS HOJAS TABACO": {
-        "min": 16,
-        "frac": 10
-      },
-      "LAS HOJAS VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
-        "frac": 25
-      },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
-      },
-      "PAPELILLO OCB GRIS": {
-        "min": 10,
-        "frac": 25
-      },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
-        "frac": 25
-      },
-      "REDFIELD NATURAL": {
-        "min": 1,
-        "frac": 5
-      },
-      "REDFIELD VAINILLA": {
-        "min": 3,
-        "frac": 5
-      },
-      "SAYRI CLARO": {
-        "min": 5,
-        "frac": 5
-      },
-      "SAYRI ORIGNAL": {
-        "min": 4,
-        "frac": 5
-      },
-      "STAMPS Cedas": {
-        "min": 7,
-        "frac": 25
-      },
-      "Stamps Celulosa": {
-        "min": 18,
-        "frac": 25
-      },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
-        "min": 1,
-        "frac": 5
-      },
-      "TIPS TONKING FILTROS CARTON": {
-        "min": 15,
-        "frac": 24
-      },
-      "TONKING CELULOSA": {
-        "min": 3,
-        "frac": 15
-      },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
-      },
-      "VAN HAASEN NATIVO": {
-        "min": 4,
-        "frac": 5
-      },
-      "VAN HAASEN VAINILLA": {
-        "min": 7,
-        "frac": 5
-      },
-      "VAN HASSEN ORIGINAL BLEND": {
-        "min": 2,
-        "frac": 5
-      }
-    },
-    "GAONA": {
-      "ACHALAY MENTOLADO": {
-        "min": 1,
-        "frac": 5
-      },
-      "ACHALAY VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "Achalay Virginia Original": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO BROW": {
-        "min": 1,
-        "frac": 5
-      },
-      "CERRITO ORIGINAL": {
-        "min": 7,
-        "frac": 5
-      },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO YELLOW": {
-        "min": 7,
-        "frac": 5
-      },
-      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
-        "min": 7,
-        "frac": 20
-      },
-      "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
-        "frac": 20
-      },
-      "FILTROS GIZEH MENTHOL 6MM": {
-        "min": 4,
-        "frac": 10
-      },
-      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
-        "min": 1,
-        "frac": 10
-      },
-      "FILTROS LIBELLA 200U NEGRO": {
-        "min": 9,
-        "frac": 16
-      },
-      "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
-        "frac": 21
-      },
-      "FILTROS OCB EXTRA SLIM GRIS": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA ORIGINAL NEGRO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SAUVAGE TOBACO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SILVER EXTRA BLOND": {
-        "min": 2,
-        "frac": 5
-      },
-      "FLANDRIA VIRGINIA GOLDEN BLEND": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA YELLOW": {
-        "min": 9,
-        "frac": 5
-      },
-      "LAS HOJAS TABACO": {
-        "min": 16,
-        "frac": 10
-      },
-      "LAS HOJAS VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
-        "frac": 25
-      },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
-      },
-      "PAPELILLO OCB GRIS": {
-        "min": 10,
-        "frac": 25
-      },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
-        "frac": 25
-      },
-      "REDFIELD NATURAL": {
-        "min": 1,
-        "frac": 5
-      },
-      "REDFIELD VAINILLA": {
-        "min": 3,
-        "frac": 5
-      },
-      "SAYRI CLARO": {
-        "min": 5,
-        "frac": 5
-      },
-      "SAYRI ORIGNAL": {
-        "min": 4,
-        "frac": 5
-      },
-      "STAMPS Cedas": {
-        "min": 7,
-        "frac": 25
-      },
-      "Stamps Celulosa": {
-        "min": 18,
-        "frac": 25
-      },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
-        "min": 1,
-        "frac": 5
-      },
-      "TIPS TONKING FILTROS CARTON": {
-        "min": 15,
-        "frac": 24
-      },
-      "TONKING CELULOSA": {
-        "min": 3,
-        "frac": 15
-      },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
-      },
-      "VAN HAASEN NATIVO": {
-        "min": 4,
-        "frac": 5
-      },
-      "VAN HAASEN VAINILLA": {
-        "min": 7,
-        "frac": 5
-      },
-      "VAN HASSEN ORIGINAL BLEND": {
-        "min": 2,
-        "frac": 5
-      }
-    },
     "AVELLANEDA": {
-      "ACHALAY MENTOLADO": {
+      "CERRITO ORIGINAL": {
+        "min": 2,
+        "frac": 5
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 5,
+        "frac": 20
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 5,
+        "frac": 20
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 5,
+        "frac": 16
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 3,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 5,
+        "frac": 10
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 49,
+        "frac": 25
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 9,
+        "frac": 25
+      },
+      "SAYRI ORIGNAL": {
+        "min": 2,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 2,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 13,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 2,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 1,
+        "frac": 5
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
+        "frac": 5
+      },
+      "Stamps Celulosa": {
+        "min": 19,
+        "frac": 25
+      },
+      "CERRITO YELLOW": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 2,
+        "frac": 5
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 1,
+        "frac": 5
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 3,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 2,
+        "frac": 10
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 10,
+        "frac": 24
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 5,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 2,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
         "min": 1,
         "frac": 5
       },
@@ -5775,160 +5405,168 @@ const PD_DEFAULT_MINIMOS = {
         "min": 2,
         "frac": 5
       },
-      "Achalay Virginia Original": {
+      "PAPEL CELULOSA BLOCK": {
+        "min": 2,
+        "frac": 1
+      },
+      "REDFIELD VAINILLA": {
         "min": 2,
         "frac": 5
-      },
-      "CERRITO BROW": {
-        "min": 1,
-        "frac": 5
-      },
-      "CERRITO ORIGINAL": {
-        "min": 7,
-        "frac": 5
-      },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO YELLOW": {
-        "min": 7,
-        "frac": 5
-      },
-      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
-        "min": 7,
-        "frac": 20
-      },
-      "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
-        "frac": 20
-      },
-      "FILTROS GIZEH MENTHOL 6MM": {
-        "min": 4,
-        "frac": 10
       },
       "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
         "min": 1,
         "frac": 10
       },
-      "FILTROS LIBELLA 200U NEGRO": {
-        "min": 9,
-        "frac": 16
-      },
-      "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
-        "frac": 21
-      },
-      "FILTROS OCB EXTRA SLIM GRIS": {
+      "STAMPS Cedas": {
         "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA ORIGINAL NEGRO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SAUVAGE TOBACO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SILVER EXTRA BLOND": {
-        "min": 2,
-        "frac": 5
-      },
-      "FLANDRIA VIRGINIA GOLDEN BLEND": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA YELLOW": {
-        "min": 9,
-        "frac": 5
-      },
-      "LAS HOJAS TABACO": {
-        "min": 16,
-        "frac": 10
-      },
-      "LAS HOJAS VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
-        "frac": 25
-      },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
-      },
-      "PAPELILLO OCB GRIS": {
-        "min": 10,
-        "frac": 25
-      },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
         "frac": 25
       },
       "REDFIELD NATURAL": {
         "min": 1,
         "frac": 5
       },
-      "REDFIELD VAINILLA": {
-        "min": 3,
-        "frac": 5
-      },
-      "SAYRI CLARO": {
-        "min": 5,
-        "frac": 5
-      },
-      "SAYRI ORIGNAL": {
-        "min": 4,
-        "frac": 5
-      },
-      "STAMPS Cedas": {
-        "min": 7,
-        "frac": 25
-      },
-      "Stamps Celulosa": {
-        "min": 18,
-        "frac": 25
-      },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
         "min": 1,
-        "frac": 5
-      },
-      "TIPS TONKING FILTROS CARTON": {
-        "min": 15,
-        "frac": 24
+        "frac": 21
       },
       "TONKING CELULOSA": {
         "min": 3,
         "frac": 15
       },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
-      },
-      "VAN HAASEN NATIVO": {
-        "min": 4,
-        "frac": 5
-      },
-      "VAN HAASEN VAINILLA": {
-        "min": 7,
-        "frac": 5
-      },
-      "VAN HASSEN ORIGINAL BLEND": {
+      "MAXI BIC MUNDIAL": {
         "min": 2,
-        "frac": 5
+        "frac": 1
       }
     },
     "BELGRANO": {
+      "CERRITO ORIGINAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 12,
+        "frac": 20
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 10,
+        "frac": 20
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 12,
+        "frac": 16
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 5,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 5,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 8,
+        "frac": 10
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 76,
+        "frac": 25
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 28,
+        "frac": 25
+      },
+      "SAYRI ORIGNAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 6,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 2,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 2,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 30,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 24,
+        "frac": 25
+      },
+      "CERRITO YELLOW": {
+        "min": 5,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 4,
+        "frac": 5
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 5,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 5,
+        "frac": 5
+      },
+      "REDFIELD NATURAL": {
+        "min": 2,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 5,
+        "frac": 10
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 8,
+        "frac": 24
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 23,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 5,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 5,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 4,
+        "frac": 5
+      },
       "ACHALAY MENTOLADO": {
         "min": 1,
         "frac": 5
@@ -5937,57 +5575,505 @@ const PD_DEFAULT_MINIMOS = {
         "min": 2,
         "frac": 5
       },
-      "Achalay Virginia Original": {
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 4,
+        "frac": 21
+      },
+      "TONKING CELULOSA": {
+        "min": 6,
+        "frac": 15
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 3,
+        "frac": 10
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "GAONA": {
+      "CERRITO ORIGINAL": {
         "min": 2,
         "frac": 5
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 6,
+        "frac": 20
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 2,
+        "frac": 20
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 4,
+        "frac": 16
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 27,
+        "frac": 25
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 9,
+        "frac": 25
+      },
+      "SAYRI ORIGNAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 5,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 12,
+        "frac": 25
+      },
+      "CERRITO YELLOW": {
+        "min": 3,
+        "frac": 5
+      },
+      "TONKING CELULOSA": {
+        "min": 4,
+        "frac": 15
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 3,
+        "frac": 10
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 5,
+        "frac": 24
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 9,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 1,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 1,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 2,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 1,
+        "frac": 10
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 1,
+        "frac": 5
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 1,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 6,
+        "frac": 25
       },
       "CERRITO BROW": {
         "min": 1,
         "frac": 5
       },
-      "CERRITO ORIGINAL": {
-        "min": 7,
-        "frac": 5
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 1,
+        "frac": 21
       },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
+      "REDFIELD VAINILLA": {
         "min": 2,
         "frac": 5
       },
-      "CERRITO YELLOW": {
-        "min": 7,
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 1,
         "frac": 5
       },
-      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
-        "min": 7,
-        "frac": 20
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 1,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 1,
+        "frac": 5
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 2,
+        "frac": 5
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 1,
+        "frac": 1
+      }
+    },
+    "JBJ": {
+      "CERRITO ORIGINAL": {
+        "min": 6,
+        "frac": 5
       },
       "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
+        "min": 12,
         "frac": 20
       },
-      "FILTROS GIZEH MENTHOL 6MM": {
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 8,
+        "frac": 20
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
+      },
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 6,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 5,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 5,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 10,
+        "frac": 10
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 83,
+        "frac": 25
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 20,
+        "frac": 25
+      },
+      "SAYRI ORIGNAL": {
         "min": 4,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 6,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 7,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 2,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 2,
+        "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 16,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 16,
+        "frac": 25
+      },
+      "CERRITO YELLOW": {
+        "min": 6,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 3,
+        "frac": 5
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 4,
+        "frac": 21
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 4,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 5,
+        "frac": 5
+      },
+      "REDFIELD NATURAL": {
+        "min": 3,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 3,
         "frac": 10
       },
       "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
         "min": 1,
         "frac": 10
       },
-      "FILTROS LIBELLA 200U NEGRO": {
+      "TONKING CELULOSA XL": {
+        "min": 1,
+        "frac": 15
+      },
+      "TIPS TONKING FILTROS CARTON": {
         "min": 9,
+        "frac": 24
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 14,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 5,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 4,
+        "frac": 5
+      },
+      "Achalay Virginia Original": {
+        "min": 2,
+        "frac": 5
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 1,
+        "frac": 5
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "REDFIELD MENTA": {
+        "min": 1,
+        "frac": 1
+      },
+      "TONKING CELULOSA": {
+        "min": 1,
+        "frac": 15
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 7,
+        "frac": 1
+      }
+    },
+    "JONTE": {
+      "CERRITO ORIGINAL": {
+        "min": 6,
+        "frac": 5
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 13,
+        "frac": 20
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 10,
+        "frac": 20
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 10,
         "frac": 16
       },
-      "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
-        "frac": 21
+      "FLANDRIA SAUVAGE TOBACO": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA SILVER EXTRA BLOND": {
+        "min": 5,
+        "frac": 5
+      },
+      "FLANDRIA VIRGINIA GOLDEN BLEND": {
+        "min": 3,
+        "frac": 5
+      },
+      "FLANDRIA YELLOW": {
+        "min": 8,
+        "frac": 5
+      },
+      "LAS HOJAS TABACO": {
+        "min": 17,
+        "frac": 10
+      },
+      "PAPELILLO OCB NEGRO": {
+        "min": 97,
+        "frac": 25
+      },
+      "PAPELILLO OCB GRIS": {
+        "min": 33,
+        "frac": 25
+      },
+      "SAYRI ORIGNAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "SAYRI CLARO": {
+        "min": 5,
+        "frac": 5
+      },
+      "LIBELLA EXTRA THIN": {
+        "min": 5,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 5,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
       },
       "FILTROS OCB EXTRA SLIM GRIS": {
         "min": 3,
         "frac": 5
+      },
+      "STAMPS Cedas": {
+        "min": 22,
+        "frac": 25
+      },
+      "Stamps Celulosa": {
+        "min": 29,
+        "frac": 25
+      },
+      "CERRITO YELLOW": {
+        "min": 5,
+        "frac": 5
+      },
+      "CERRITO BROW": {
+        "min": 4,
+        "frac": 5
+      },
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 8,
+        "frac": 21
+      },
+      "LAS HOJAS VAINILLA": {
+        "min": 5,
+        "frac": 5
+      },
+      "VAN HAASEN NATIVO": {
+        "min": 5,
+        "frac": 5
+      },
+      "VAN HAASEN VAINILLA": {
+        "min": 6,
+        "frac": 5
+      },
+      "REDFIELD NATURAL": {
+        "min": 4,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 4,
+        "frac": 5
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 3,
+        "frac": 10
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 12,
+        "frac": 24
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 16,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 5,
+        "frac": 5
+      },
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 1,
+        "frac": 5
+      },
+      "TONKING CELULOSA": {
+        "min": 7,
+        "frac": 15
+      },
+      "TONKING CELULOSA XL": {
+        "min": 2,
+        "frac": 15
+      },
+      "Achalay Virginia Original": {
+        "min": 3,
+        "frac": 5
+      },
+      "FILTROS OCB aZUL": {
+        "min": 1,
+        "frac": 1
+      },
+      "FLANDRIA ORIGINAL NEGRO": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD MENTA": {
+        "min": 1,
+        "frac": 1
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 2,
+        "frac": 1
+      }
+    },
+    "KIOSKO NICO": {
+      "CERRITO ORIGINAL": {
+        "min": 7,
+        "frac": 5
+      },
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 16,
+        "frac": 20
+      },
+      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
+        "min": 7,
+        "frac": 20
+      },
+      "FILTROS LIBELLA 200U NEGRO": {
+        "min": 9,
+        "frac": 16
       },
       "FLANDRIA ORIGINAL NEGRO": {
         "min": 1,
@@ -6013,44 +6099,36 @@ const PD_DEFAULT_MINIMOS = {
         "min": 16,
         "frac": 10
       },
-      "LAS HOJAS VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
+      "PAPELILLO OCB NEGRO": {
+        "min": 56,
         "frac": 25
-      },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
       },
       "PAPELILLO OCB GRIS": {
         "min": 10,
         "frac": 25
       },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
-        "frac": 25
-      },
-      "REDFIELD NATURAL": {
-        "min": 1,
-        "frac": 5
-      },
-      "REDFIELD VAINILLA": {
-        "min": 3,
+      "SAYRI ORIGNAL": {
+        "min": 4,
         "frac": 5
       },
       "SAYRI CLARO": {
         "min": 5,
         "frac": 5
       },
-      "SAYRI ORIGNAL": {
-        "min": 4,
+      "LIBELLA EXTRA THIN": {
+        "min": 14,
+        "frac": 25
+      },
+      "TABACO CUATRO LEGUAS(RUBIO)": {
+        "min": 1,
+        "frac": 5
+      },
+      "VAN HASSEN ORIGINAL BLEND": {
+        "min": 2,
+        "frac": 5
+      },
+      "FILTROS OCB EXTRA SLIM GRIS": {
+        "min": 3,
         "frac": 5
       },
       "STAMPS Cedas": {
@@ -6061,21 +6139,17 @@ const PD_DEFAULT_MINIMOS = {
         "min": 18,
         "frac": 25
       },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
-        "min": 1,
+      "CERRITO YELLOW": {
+        "min": 7,
         "frac": 5
       },
-      "TIPS TONKING FILTROS CARTON": {
-        "min": 15,
-        "frac": 24
+      "FILTROS LIBELLA EXTRA SLIM GRIS": {
+        "min": 6,
+        "frac": 21
       },
-      "TONKING CELULOSA": {
-        "min": 3,
-        "frac": 15
-      },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
+      "LAS HOJAS VAINILLA": {
+        "min": 2,
+        "frac": 5
       },
       "VAN HAASEN NATIVO": {
         "min": 4,
@@ -6085,333 +6159,223 @@ const PD_DEFAULT_MINIMOS = {
         "min": 7,
         "frac": 5
       },
-      "VAN HASSEN ORIGINAL BLEND": {
+      "REDFIELD NATURAL": {
+        "min": 1,
+        "frac": 5
+      },
+      "REDFIELD VAINILLA": {
+        "min": 3,
+        "frac": 5
+      },
+      "FILTROS GIZEH MENTHOL 6MM": {
+        "min": 4,
+        "frac": 10
+      },
+      "TONKING CELULOSA XL": {
+        "min": 4,
+        "frac": 15
+      },
+      "TIPS TONKING FILTROS CARTON": {
+        "min": 15,
+        "frac": 24
+      },
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 3,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 2,
+        "frac": 5
+      },
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 2,
+        "frac": 5
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 1,
+        "frac": 10
+      },
+      "CERRITO BROW": {
+        "min": 1,
+        "frac": 5
+      },
+      "TONKING CELULOSA": {
+        "min": 3,
+        "frac": 15
+      },
+      "Achalay Virginia Original": {
         "min": 2,
         "frac": 5
       }
     },
     "RIVADAVIA": {
-      "ACHALAY MENTOLADO": {
-        "min": 1,
-        "frac": 5
-      },
-      "ACHALAY VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "Achalay Virginia Original": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO BROW": {
-        "min": 1,
-        "frac": 5
-      },
       "CERRITO ORIGINAL": {
         "min": 7,
         "frac": 5
       },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
-        "min": 2,
-        "frac": 5
-      },
-      "CERRITO YELLOW": {
-        "min": 7,
-        "frac": 5
+      "FILTROS GIZEH 6MM SLIM": {
+        "min": 11,
+        "frac": 20
       },
       "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
         "min": 7,
         "frac": 20
       },
-      "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
-        "frac": 20
-      },
-      "FILTROS GIZEH MENTHOL 6MM": {
-        "min": 4,
-        "frac": 10
-      },
-      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
-        "min": 1,
-        "frac": 10
-      },
       "FILTROS LIBELLA 200U NEGRO": {
-        "min": 9,
+        "min": 6,
         "frac": 16
       },
-      "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
-        "frac": 21
-      },
-      "FILTROS OCB EXTRA SLIM GRIS": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA ORIGINAL NEGRO": {
-        "min": 1,
-        "frac": 5
-      },
       "FLANDRIA SAUVAGE TOBACO": {
-        "min": 1,
+        "min": 4,
         "frac": 5
       },
       "FLANDRIA SILVER EXTRA BLOND": {
-        "min": 2,
+        "min": 5,
         "frac": 5
       },
       "FLANDRIA VIRGINIA GOLDEN BLEND": {
-        "min": 3,
+        "min": 4,
         "frac": 5
       },
       "FLANDRIA YELLOW": {
-        "min": 9,
+        "min": 8,
         "frac": 5
       },
       "LAS HOJAS TABACO": {
-        "min": 16,
+        "min": 11,
         "frac": 10
       },
-      "LAS HOJAS VAINILLA": {
-        "min": 2,
-        "frac": 5
-      },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
+      "PAPELILLO OCB NEGRO": {
+        "min": 71,
         "frac": 25
-      },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
       },
       "PAPELILLO OCB GRIS": {
-        "min": 10,
+        "min": 19,
         "frac": 25
       },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
-        "frac": 25
-      },
-      "REDFIELD NATURAL": {
-        "min": 1,
-        "frac": 5
-      },
-      "REDFIELD VAINILLA": {
-        "min": 3,
+      "SAYRI ORIGNAL": {
+        "min": 5,
         "frac": 5
       },
       "SAYRI CLARO": {
         "min": 5,
         "frac": 5
       },
-      "SAYRI ORIGNAL": {
-        "min": 4,
-        "frac": 5
-      },
-      "STAMPS Cedas": {
-        "min": 7,
+      "LIBELLA EXTRA THIN": {
+        "min": 10,
         "frac": 25
-      },
-      "Stamps Celulosa": {
-        "min": 18,
-        "frac": 25
-      },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
-        "min": 1,
-        "frac": 5
-      },
-      "TIPS TONKING FILTROS CARTON": {
-        "min": 15,
-        "frac": 24
-      },
-      "TONKING CELULOSA": {
-        "min": 3,
-        "frac": 15
-      },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
-      },
-      "VAN HAASEN NATIVO": {
-        "min": 4,
-        "frac": 5
-      },
-      "VAN HAASEN VAINILLA": {
-        "min": 7,
-        "frac": 5
       },
       "VAN HASSEN ORIGINAL BLEND": {
         "min": 2,
         "frac": 5
-      }
-    },
-    "JONTE": {
-      "ACHALAY MENTOLADO": {
-        "min": 1,
-        "frac": 5
       },
-      "ACHALAY VAINILLA": {
+      "FILTROS OCB EXTRA SLIM GRIS": {
         "min": 2,
         "frac": 5
       },
-      "Achalay Virginia Original": {
-        "min": 2,
-        "frac": 5
+      "STAMPS Cedas": {
+        "min": 18,
+        "frac": 25
       },
-      "CERRITO BROW": {
-        "min": 1,
-        "frac": 5
-      },
-      "CERRITO ORIGINAL": {
-        "min": 7,
-        "frac": 5
-      },
-      "CERRITO SILVER": {
-        "min": 3,
-        "frac": 5
-      },
-      "CERRITO VIRGINIA": {
-        "min": 2,
-        "frac": 5
+      "Stamps Celulosa": {
+        "min": 16,
+        "frac": 25
       },
       "CERRITO YELLOW": {
         "min": 7,
         "frac": 5
       },
-      "FILTROS GIZEH 150U 5MM EXTRA SLIM": {
-        "min": 7,
-        "frac": 20
-      },
-      "FILTROS GIZEH 6MM SLIM": {
-        "min": 16,
-        "frac": 20
-      },
-      "FILTROS GIZEH MENTHOL 6MM": {
-        "min": 4,
-        "frac": 10
-      },
-      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
-        "min": 1,
-        "frac": 10
-      },
-      "FILTROS LIBELLA 200U NEGRO": {
-        "min": 9,
-        "frac": 16
+      "CERRITO BROW": {
+        "min": 3,
+        "frac": 5
       },
       "FILTROS LIBELLA EXTRA SLIM GRIS": {
-        "min": 6,
+        "min": 4,
         "frac": 21
       },
-      "FILTROS OCB EXTRA SLIM GRIS": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA ORIGINAL NEGRO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SAUVAGE TOBACO": {
-        "min": 1,
-        "frac": 5
-      },
-      "FLANDRIA SILVER EXTRA BLOND": {
-        "min": 2,
-        "frac": 5
-      },
-      "FLANDRIA VIRGINIA GOLDEN BLEND": {
-        "min": 3,
-        "frac": 5
-      },
-      "FLANDRIA YELLOW": {
-        "min": 9,
-        "frac": 5
-      },
-      "LAS HOJAS TABACO": {
-        "min": 16,
-        "frac": 10
-      },
       "LAS HOJAS VAINILLA": {
-        "min": 2,
+        "min": 5,
         "frac": 5
       },
-      "LIBELLA EXTRA THIN": {
-        "min": 14,
-        "frac": 25
+      "VAN HAASEN NATIVO": {
+        "min": 5,
+        "frac": 5
       },
-      "LIBELLA ORGANICO PURE": {
-        "min": 15,
-        "frac": 25
-      },
-      "PAPEL CELULOSA BLOCK": {
-        "min": 1,
-        "frac": 1
-      },
-      "PAPELILLO OCB GRIS": {
-        "min": 10,
-        "frac": 25
-      },
-      "PAPELILLO OCB NEGRO": {
-        "min": 56,
-        "frac": 25
-      },
-      "REDFIELD NATURAL": {
-        "min": 1,
+      "VAN HAASEN VAINILLA": {
+        "min": 5,
         "frac": 5
       },
       "REDFIELD VAINILLA": {
         "min": 3,
         "frac": 5
       },
-      "SAYRI CLARO": {
+      "FILTROS GIZEH MENTHOL 6MM": {
         "min": 5,
-        "frac": 5
-      },
-      "SAYRI ORIGNAL": {
-        "min": 4,
-        "frac": 5
-      },
-      "STAMPS Cedas": {
-        "min": 7,
-        "frac": 25
-      },
-      "Stamps Celulosa": {
-        "min": 18,
-        "frac": 25
-      },
-      "TABACO CUATRO LEGUAS(RUBIO)": {
-        "min": 1,
-        "frac": 5
+        "frac": 10
       },
       "TIPS TONKING FILTROS CARTON": {
         "min": 15,
         "frac": 24
       },
-      "TONKING CELULOSA": {
+      "LIBELLA ORGANICO PURE": {
+        "min": 15,
+        "frac": 25
+      },
+      "CERRITO SILVER": {
+        "min": 4,
+        "frac": 5
+      },
+      "CERRITO VIRGINIA": {
+        "min": 4,
+        "frac": 5
+      },
+      "PAPEL CELULOSA BLOCK": {
+        "min": 1,
+        "frac": 1
+      },
+      "REDFIELD NATURAL": {
         "min": 3,
-        "frac": 15
-      },
-      "TONKING CELULOSA XL": {
-        "min": 4,
-        "frac": 15
-      },
-      "VAN HAASEN NATIVO": {
-        "min": 4,
         "frac": 5
       },
-      "VAN HAASEN VAINILLA": {
-        "min": 7,
-        "frac": 5
+      "TONKING CELULOSA": {
+        "min": 5,
+        "frac": 15
       },
-      "VAN HASSEN ORIGINAL BLEND": {
+      "FILTROS GIZEH XL ORGANICO SLIM 6MM": {
+        "min": 2,
+        "frac": 10
+      },
+      "FILTROS OCB aZUL": {
+        "min": 1,
+        "frac": 1
+      },
+      "Achalay Virginia Original": {
         "min": 2,
         "frac": 5
+      },
+      "ACHALAY MENTOLADO": {
+        "min": 1,
+        "frac": 5
+      },
+      "ACHALAY VAINILLA": {
+        "min": 1,
+        "frac": 5
+      },
+      "MAXI BIC MUNDIAL": {
+        "min": 1,
+        "frac": 1
       }
     }
   },
