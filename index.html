@@ -9871,10 +9871,10 @@ async function pdLoadStock(files) {
 }
 
 // ── Calculation ──────────────────────────────────────────────────────────
-function pdCalcLocal(local, prov) {
+function pdCalcLocal(local, prov, allProducts) {
   const stockMap = _pdStockData[local] || {};
   const mins = (pdGetMinimos(prov)[local]) || {};
-  const productos = Object.keys(mins).sort();
+  const productos = allProducts ? [...allProducts].sort() : Object.keys(mins).sort();
   return productos.map(prod => {
     const prodU = prod.toUpperCase();
     const stockInfo = stockMap[prodU] || {qty:0, costo:0};
@@ -9926,9 +9926,15 @@ async function pdGenerar() {
     wb.creator = 'POING24';
 
     // ── Per-local sheet data ─────────────────────────────────────────────
+    // Unión de todos los productos del proveedor para lista unificada entre locales
+    const allMins = pdGetMinimos(prov);
+    const allProductsSet = new Set();
+    for (const loc of localesIncl) {
+      Object.keys(allMins[loc] || {}).forEach(p => allProductsSet.add(p));
+    }
     const sheetData = {};
     for (const loc of localesIncl) {
-      sheetData[loc] = pdCalcLocal(loc, prov);
+      sheetData[loc] = pdCalcLocal(loc, prov, allProductsSet);
     }
 
     // ── JONTE (if applicable) ────────────────────────────────────────────
