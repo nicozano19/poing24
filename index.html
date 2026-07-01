@@ -9792,7 +9792,13 @@ async function pdLoadStock(files) {
     // Match sheets to locals by prefix
     for (const local of cfg.locales) {
       const patron = cfg.patron[local];
-      const sheetName = wb.SheetNames.find(s => s.startsWith(patron) || s.toLowerCase().startsWith(patron.toLowerCase()));
+      const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g,'');
+      const sheetName = wb.SheetNames.find(s =>
+        s.startsWith(patron) ||
+        s.toLowerCase().startsWith(patron.toLowerCase()) ||
+        normalize(s).startsWith(normalize(patron)) ||
+        normalize(s).includes(normalize(patron))
+      );
       if (!sheetName) continue;
       const ws = wb.Sheets[sheetName];
       const rows = XLSX.utils.sheet_to_json(ws, {header:1});
@@ -9821,10 +9827,11 @@ async function pdLoadStock(files) {
     _pdStockLoaded = true;
     const matched = Object.keys(_pdStockData).length;
     const total = cfg.locales.length;
+    const missing = cfg.locales.filter(l => !_pdStockData[l]);
     document.getElementById('pd-fileName').textContent = `✓ ${file.name} — ${matched}/${total} locales encontrados`;
     document.getElementById('pd-uploadArea').classList.add('has-file');
     document.getElementById('pd-genStatus').innerHTML = matched < total
-      ? `<span class="pd-status-err">⚠ Solo ${matched} de ${total} locales encontrados en el archivo. Los faltantes quedarán con stock 0.</span>`
+      ? `<span class="pd-status-err">⚠ Solo ${matched} de ${total} locales encontrados. Faltantes: ${missing.join(', ')}.</span>`
       : `<span class="pd-status-ok">✓ Stock cargado para ${matched} locales.</span>`;
   } catch(e) {
     document.getElementById('pd-fileName').textContent = 'Error al leer el archivo';
